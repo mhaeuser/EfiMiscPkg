@@ -1,0 +1,7 @@
+[Defines]
+  DEC_SPECIFICATION = 0x00010005
+  PACKAGE_NAME      = EfiMiscPkg
+  PACKAGE_GUID      = A10BE46B-35C3-4B0B-9B9C-3F02051D782F
+
+[Includes]
+  Include
