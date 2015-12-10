@@ -1,5 +1,31 @@
-#ifndef _EFI_MEMORY_LIB_H_
-#define _EFI_MEMORY_LIB_H_
+//
+// Copyright 2015 CupertinoNet
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+///
+/// @file      Include/Library/EfiMemoryLib.h
+///
+///            
+///
+/// @author    Download-Fritz
+/// @date      15/09/2015: Initial version
+/// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
+///
+
+#ifndef __EFI_MEMORY_LIB_H__
+#define __EFI_MEMORY_LIB_H__
 
 // GetMemoryMap
 /// Returns the current memory map.
@@ -28,9 +54,9 @@ EFI_STATUS
 GetMemoryMap (
   IN OUT UINTN                  *MemoryMapSize,
   IN OUT EFI_MEMORY_DESCRIPTOR  *MemoryMap,
-     OUT UINTN                  *MapKey,
-     OUT UINTN                  *DescriptorSize,
-     OUT UINT32                 *DescriptorVersion
+  OUT    UINTN                  *MapKey,
+  OUT    UINTN                  *DescriptorSize,
+  OUT    UINT32                 *DescriptorVersion
   );
 
 // SetVirtualAddressMap
@@ -77,11 +103,11 @@ ConvertPointer (
   IN OUT VOID   **Address
   );
 
-// InternalAllocatePages
+// AllocatePages
 /// Allocates one or more 4KB pages of a certain memory type.
 ///
 /// Allocates the number of 4KB pages of a certain memory type and returns a pointer to the allocated
-/// buffer.  The buffer returned is aligned on a 4KB boundary.  If Pages is 0, then NULL is returned.
+/// buffer. The buffer returned is aligned on a 4KB boundary. If Pages is 0, then NULL is returned.
 /// If there is not enough memory remaining to satisfy the request, then NULL is returned.
 ///
 /// @param[in] MemoryType The type of memory to allocate.
@@ -89,9 +115,9 @@ ConvertPointer (
 ///
 /// @return A pointer to the allocated buffer or NULL if allocation fails.
 VOID *
-InternalAllocatePages (
+AllocatePages (
   IN EFI_MEMORY_TYPE  MemoryType,
   IN UINTN            Pages
   );
 
-#endif // ifndef _EFI_MEMORY_LIB_H_
+#endif // ifndef __EFI_MEMORY_LIB_H__

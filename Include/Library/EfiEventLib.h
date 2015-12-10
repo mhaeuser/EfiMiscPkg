@@ -1,8 +1,32 @@
-// 18/08/2015
-// 14/09/2015: Added gBS wrappers
+//
+// Copyright 2015 CupertinoNet
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
 
-#ifndef _EFI_EVENT_LIB_H_
-#define _EFI_EVENT_LIB_H_
+///
+/// @file      Include/Library/EfiEventLib.h
+///
+///            
+///
+/// @author    Download-Fritz
+/// @date      18/08/2015: Initial version
+/// @date      14/09/2015: Added BootServices wrappers
+/// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
+///
+
+#ifndef __EFI_EVENT_LIB_H__
+#define __EFI_EVENT_LIB_H__
 
 #ifndef TPL_APPLICATION
   #define TPL_APPLICATION EFI_TPL_APPLICATION
@@ -156,85 +180,137 @@ CheckEvent (
   );
 
 // CreateTimerEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
 CreateTimerEvent (
-	IN EFI_EVENT_NOTIFY  NotifyFunction,
-	IN VOID              *NotifyContext,
-	IN UINT64            TriggerTime,
-	IN BOOLEAN           SignalPeriodic,
-	IN EFI_TPL           NotifyTpl
-	);
+  IN EFI_EVENT_NOTIFY  NotifyFunction,
+  IN VOID              *NotifyContext,
+  IN UINT64            TriggerTime,
+  IN BOOLEAN           SignalPeriodic,
+  IN EFI_TPL           NotifyTpl
+  );
 
 // CreateNotifyEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
 CreateNotifyEvent (
-	IN EFI_EVENT_NOTIFY  NotifyFunction,
-	IN VOID              *NotifyContext,
-	IN UINT64            TriggerTime,
-	IN BOOLEAN           SignalPeriodic
-	);
+  IN EFI_EVENT_NOTIFY  NotifyFunction,
+  IN VOID              *NotifyContext,
+  IN UINT64            TriggerTime,
+  IN BOOLEAN           SignalPeriodic
+  );
 
 // CancelEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 VOID
 CancelEvent (
-	IN EFI_EVENT  Event
-	);
+  IN EFI_EVENT  Event
+  );
 
 // CreateEfiVirtualAddressChangeEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
 CreateEfiVirtualAddressChangeEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   );
 
-// CreateEfiExitBootServicesEvent
+// CreateExitBootServicesEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
-CreateEfiExitBootServicesEvent (
+CreateExitBootServicesEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   );
 
-
-// CreateEfiExitBootServicesEvent
+// CreateVirtualAddressChangeEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
-CreateEfiExitBootServicesEvent (
-  IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
-  IN CONST VOID        *NotifyContext OPTIONAL
-  );
-
-// CreateEfiVirtualAddressChangeEvent
-EFI_EVENT
-CreateEfiVirtualAddressChangeEvent (
-  IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
-  IN CONST VOID        *NotifyContext OPTIONAL
-  );
-
-// CreateEfiExitBootServicesEvent
-EFI_EVENT
-CreateEfiExitBootServicesEvent (
-  IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
-  IN CONST VOID        *NotifyContext OPTIONAL
-  );
-
-// CreateEfiExitBootServicesEvent
-EFI_EVENT
-CreateEfiReadyToBootEvent (
+CreateVirtualAddressChangeEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   );
 
 // CreateEfiExitBootServicesEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
-CreateEfiEventDxeDispatchEvent (
+CreateMemoryMapChangeEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   );
 
 // CreateEfiExitBootServicesEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
-CreateEfiEndOfDxeEvent (
+CreateReadyToBootEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   );
 
-#endif // ifndef _EFI_EVENT_LIB_H_
+// CreateEfiExitBootServicesEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
+EFI_EVENT
+CreateDxeDispatchEvent (
+  IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
+  IN CONST VOID        *NotifyContext OPTIONAL
+  );
+
+// CreateEndOfDxeEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
+EFI_EVENT
+CreateEndOfDxeEvent (
+  IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
+  IN CONST VOID        *NotifyContext OPTIONAL
+  );
+
+#endif // ifndef __EFI_EVENT_LIB_H__

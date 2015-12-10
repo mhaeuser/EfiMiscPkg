@@ -5,3 +5,17 @@
 
 [Includes]
   Include
+
+[LibraryClasses]
+  EfiChecksumLib|Include/Library/EfiChecksumLib.h
+  EfiEventLib|Include/Library/EfiEventLib.h
+  EfiFileLib|Include/Library/EfiFileLib.h
+  EfiImageLib|Include/Library/EfiImageLib.h
+  EfiMemoryLib|Include/Library/EfiMemoryLib.h
+  EfiMiscLib|Include/Library/EfiMiscLib.h
+  EfiOverrideLib|Include/Library/EfiOverrideLib.h
+  EfiProtocolLib|Include/Library/EfiProtocolLib.h
+  EfiRuntimeLib|Include/Library/EfiRuntimeLib.h
+  EfiSortLib|Include/Library/EfiSortLib.h
+  EfiVariableLib|Include/Library/EfiVariableLib.h
+  UsbHidLib|Include/Library/UsbHidLib.h

@@ -1,4 +1,28 @@
-// 18/07/2015
+//
+// Copyright 2015 CupertinoNet
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+///
+/// @file      Library/EfiFileLib/EfiFileLib.c
+///
+///            
+///
+/// @author    Download-Fritz
+/// @date      18/07/2015: Initial version
+/// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
+///
 
 #include <Uefi.h>
 
@@ -47,12 +71,18 @@ FileExists (
 }
 
 // LoadFile
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval
 EFI_STATUS
 LoadFile (
-  IN     EFI_FILE_HANDLE  Root,
-  IN     CHAR16           *FileName,
-     OUT UINTN            *BufferSize,
-     OUT VOID             **Buffer
+  IN  EFI_FILE_HANDLE  Root,
+  IN  CHAR16           *FileName,
+  OUT UINTN            *BufferSize,
+  OUT VOID             **Buffer
   )
 {
   EFI_STATUS      Status;
@@ -103,6 +133,12 @@ LoadFile (
 }
 
 // GetFileExtension
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval
 CHAR16 *
 GetFileExtension (
   IN CHAR16  *FileName
@@ -118,6 +154,12 @@ GetFileExtension (
 }
 
 // GetFilePrimaryExtension
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval
 CHAR16 *
 GetFilePrimaryExtension (
   IN CHAR16  *FileName
@@ -143,6 +185,12 @@ GetFilePrimaryExtension (
 }
 
 // CompareExtension
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval
 static
 INTN
 CompareExtension (
@@ -162,6 +210,12 @@ CompareExtension (
 }
 
 // FindNextFileByExtension
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval
 EFI_STATUS
 FindNextFileByExtension (
   IN  EFI_FILE_HANDLE  DirHandle,
@@ -198,12 +252,18 @@ FindNextFileByExtension (
 }
 
 // FindFirstFileByExtension
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval
 EFI_STATUS
 FindFirstFileByExtension (
-  IN     EFI_FILE_HANDLE  DirHandle,
-     OUT EFI_FILE_INFO    **Buffer,
-  IN     CHAR16           *Extension,
-  IN     BOOLEAN          PrimaryExtension
+  IN  EFI_FILE_HANDLE  DirHandle,
+  OUT EFI_FILE_INFO    **Buffer,
+  IN  CHAR16           *Extension,
+  IN  BOOLEAN          PrimaryExtension
   )
 {
   EFI_STATUS Status;
@@ -226,10 +286,16 @@ FindFirstFileByExtension (
 }
 
 // FindNextDirectory
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval
 EFI_STATUS
 FindNextDirectory (
-  IN     EFI_FILE_HANDLE  DirHandle,
-     OUT EFI_FILE_INFO    *Buffer
+  IN  EFI_FILE_HANDLE  DirHandle,
+  OUT EFI_FILE_INFO    *Buffer
   )
 {
   EFI_STATUS      Status;
@@ -261,10 +327,16 @@ FindNextDirectory (
 }
 
 // FindFirstDirectory
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval
 EFI_STATUS
 FindFirstDirectory (
-  IN     EFI_FILE_HANDLE  DirHandle,
-     OUT EFI_FILE_INFO    **Buffer
+  IN  EFI_FILE_HANDLE  DirHandle,
+  OUT EFI_FILE_INFO    **Buffer
   )
 {
   EFI_STATUS Status;
@@ -286,12 +358,18 @@ FindFirstDirectory (
 }
 
 // FindNextDirectoryByExtension
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval
 EFI_STATUS
 FindNextDirectoryByExtension (
-  IN     EFI_FILE_HANDLE  DirHandle,
-     OUT EFI_FILE_INFO    *Buffer,
-  IN     CHAR16           *Extension,
-  IN     BOOLEAN          PrimaryExtension
+  IN  EFI_FILE_HANDLE  DirHandle,
+  OUT EFI_FILE_INFO    *Buffer,
+  IN  CHAR16           *Extension,
+  IN  BOOLEAN          PrimaryExtension
   )
 {
   EFI_STATUS Status;
@@ -308,12 +386,18 @@ FindNextDirectoryByExtension (
 }
 
 // FindFirstDirectoryByExtension
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval
 EFI_STATUS
 FindFirstDirectoryByExtension (
-  IN     EFI_FILE_HANDLE  DirHandle,
-     OUT EFI_FILE_INFO    **Buffer,
-  IN     CHAR16           *Extension,
-  IN     BOOLEAN          PrimaryExtension
+  IN  EFI_FILE_HANDLE  DirHandle,
+  OUT EFI_FILE_INFO    **Buffer,
+  IN  CHAR16           *Extension,
+  IN  BOOLEAN          PrimaryExtension
   )
 {
   EFI_STATUS Status;

@@ -1,5 +1,29 @@
-// 18/08/2015
-// 14/09/2015: Added gBS wrappers
+//
+// Copyright 2015 CupertinoNet
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+///
+/// @file      Library/EfiEventLib/EfiEventLib.c
+///
+///            
+///
+/// @author    Download-Fritz
+/// @date      18/08/2015: Initial version
+/// @date      14/09/2015: Added BootServices wrappers
+/// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
+///
 
 #include <Uefi.h>
 
@@ -176,7 +200,7 @@ WaitForEvent (
   EFI_STATUS Status;
 
   ASSERT (!EfiAtRuntime ());
-  ASSERT (NumberOfEvents != 0);
+  ASSERT (NumberOfEvents > 0);
   ASSERT (Event != NULL);
   ASSERT (Index != NULL);
 
@@ -240,6 +264,12 @@ CheckEvent (
 }
 
 // CreateTimerEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
 CreateTimerEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction,
@@ -278,6 +308,12 @@ CreateTimerEvent (
 }
 
 // CreateNotifyEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
 CreateNotifyEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction,
@@ -290,6 +326,12 @@ CreateNotifyEvent (
 }
 
 // CancelTimer
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_STATUS
 CancelTimer (
   IN EFI_EVENT  Event
@@ -299,6 +341,12 @@ CancelTimer (
 }
 
 // CancelEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 VOID
 CancelEvent (
   IN EFI_EVENT  Event
@@ -314,6 +362,12 @@ CancelEvent (
 }
 
 // CreateSignalEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
 CreateSignalEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
@@ -330,9 +384,15 @@ CreateSignalEvent (
            );
 }
 
-// CreateEfiExitBootServicesEvent
+// CreateExitBootServicesEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
-CreateEfiExitBootServicesEvent (
+CreateExitBootServicesEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   )
@@ -344,9 +404,15 @@ CreateEfiExitBootServicesEvent (
            );
 }
 
-// CreateEfiVirtualAddressChangeEvent
+// CreateVirtualAddressChangeEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
-CreateEfiVirtualAddressChangeEvent (
+CreateVirtualAddressChangeEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   )
@@ -358,9 +424,15 @@ CreateEfiVirtualAddressChangeEvent (
            );
 }
 
-// CreateEfiExitBootServicesEvent
+// CreateMemoryMapChangeEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
-CreateEfiExitBootServicesEvent (
+CreateMemoryMapChangeEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   )
@@ -372,9 +444,15 @@ CreateEfiExitBootServicesEvent (
            );
 }
 
-// CreateEfiExitBootServicesEvent
+// CreateReadyToBootEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
-CreateEfiReadyToBootEvent (
+CreateReadyToBootEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   )
@@ -386,9 +464,15 @@ CreateEfiReadyToBootEvent (
            );
 }
 
-// CreateEfiExitBootServicesEvent
+// CreateEventDxeDispatchGuidEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
-CreateEfiEventDxeDispatchEvent (
+CreateDxeDispatchGuidEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   )
@@ -400,9 +484,15 @@ CreateEfiEventDxeDispatchEvent (
            );
 }
 
-// CreateEfiExitBootServicesEvent
+// CreateEndOfDxeEvent
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval 
 EFI_EVENT
-CreateEfiEndOfDxeEvent (
+CreateEndOfDxeEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   )

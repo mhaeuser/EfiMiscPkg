@@ -1,12 +1,37 @@
-// 13/09/2015
+//
+// Copyright 2015 CupertinoNet
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+///
+/// @file      Library/EfiProtocolLib/EfiProtocolLib.c
+///
+///            
+///
+/// @author    Download-Fritz
+/// @date      13/09/2015: Initial version
+/// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
+///
 
 #include <Uefi.h>
 
-#include <CMisc.h>
+#include <MiscBase.h>
 
 #include <Library/UefiBootServicesTableLib.h>
+#include <Library/MemoryAllocationLib.h>
 #include <Library/DebugLib.h>
-#include <Library/EfiProtocolLib/EfiProtocolLib.h>
+#include <Library/EfiProtocolLib.h>
 
 // InstallProtocolInterface
 /// Installs a protocol interface on a device handle. If the handle does not exist, it is created and added
@@ -145,9 +170,9 @@ UninstallProtocolInterface (
 /// @retval EFI_INVALID_PARAMETER Interface is NULL.
 EFI_STATUS
 HandleProtocol (
-  IN     EFI_HANDLE  Handle,
-  IN     EFI_GUID    *Protocol,
-     OUT VOID        **Interface
+  IN  EFI_HANDLE  Handle,
+  IN  EFI_GUID    *Protocol,
+  OUT VOID        **Interface
   )
 {
   EFI_STATUS Status;
@@ -194,12 +219,12 @@ HandleProtocol (
 ///                               handle is the same as AgentHandle.
 EFI_STATUS
 OpenProtocol (
-  IN     EFI_HANDLE  Handle,
-  IN     EFI_GUID    *Protocol,
-     OUT VOID        **Interface, OPTIONAL
-  IN     EFI_HANDLE  AgentHandle,
-  IN     EFI_HANDLE  ControllerHandle,
-  IN     UINT32      Attributes
+  IN  EFI_HANDLE  Handle,
+  IN  EFI_GUID    *Protocol,
+  OUT VOID        **Interface, OPTIONAL
+  IN  EFI_HANDLE  AgentHandle,
+  IN  EFI_HANDLE  ControllerHandle,
+  IN  UINT32      Attributes
   )
 {
   EFI_STATUS Status;
@@ -207,7 +232,7 @@ OpenProtocol (
   ASSERT (Handle != NULL);
   ASSERT (Protocol != NULL);
   ASSERT ((Interface != NULL) || ((Attributes & EFI_OPEN_PROTOCOL_TEST_PROTOCOL) == EFI_OPEN_PROTOCOL_TEST_PROTOCOL));
-  ASSERT ((Attributes != 0) || (Attributes >= BIT (6)));
+  ASSERT ((Attributes != 0) && ((Attributes & 0x3F) == 0));
   ASSERT (((AgentHandle != NULL) && (ControllerHandle != NULL) && (ControllerHandle != Handle)) || (Attributes != EFI_OPEN_PROTOCOL_BY_CHILD_CONTROLLER));
   ASSERT (((AgentHandle != NULL) && (ControllerHandle != NULL)) || (Attributes != EFI_OPEN_PROTOCOL_BY_DRIVER));
   ASSERT ((AgentHandle != NULL) || (Attributes != EFI_OPEN_PROTOCOL_EXCLUSIVE));
@@ -279,10 +304,10 @@ CloseProtocol (
 /// @retval EFI_NOT_FOUND        Handle does not support the protocol specified by Protocol.
 EFI_STATUS
 OpenProtocolInformation (
-  IN     EFI_HANDLE                           Handle,
-  IN     EFI_GUID                             *Protocol,
-     OUT EFI_OPEN_PROTOCOL_INFORMATION_ENTRY  **EntryBuffer,
-     OUT UINTN                                *EntryCount
+  IN  EFI_HANDLE                           Handle,
+  IN  EFI_GUID                             *Protocol,
+  OUT EFI_OPEN_PROTOCOL_INFORMATION_ENTRY  **EntryBuffer,
+  OUT UINTN                                *EntryCount
   )
 {
   return gBS->OpenProtocolInformation (Handle, Protocol, EntryBuffer, EntryCount);
@@ -309,9 +334,9 @@ OpenProtocolInformation (
 /// @retval EFI_INVALID_PARAMETER ProtocolBufferCount is NULL.
 EFI_STATUS
 ProtocolsPerHandle (
-  IN     EFI_HANDLE  Handle,
-     OUT EFI_GUID    ***ProtocolBuffer,
-     OUT UINTN       *ProtocolBufferCount
+  IN  EFI_HANDLE  Handle,
+  OUT EFI_GUID    ***ProtocolBuffer,
+  OUT UINTN       *ProtocolBufferCount
   )
 {
   EFI_STATUS Status;
@@ -346,9 +371,9 @@ ProtocolsPerHandle (
 /// @retval EFI_INVALID_PARAMETER Registration is NULL.
 EFI_STATUS
 RegisterProtocolNotify (
-  IN     EFI_GUID   *Protocol,
-  IN     EFI_EVENT  Event,
-     OUT VOID       **Registration
+  IN  EFI_GUID   *Protocol,
+  IN  EFI_EVENT  Event,
+  OUT VOID       **Registration
   )
 {
   EFI_STATUS Status;
@@ -394,12 +419,12 @@ LocateHandle (
   IN     EFI_GUID                *Protocol, OPTIONAL
   IN     VOID                    *SearchKey, OPTIONAL
   IN OUT UINTN                   *BufferSize,
-     OUT EFI_HANDLE              *Buffer
+  OUT    EFI_HANDLE              *Buffer
   )
 {
   EFI_STATUS Status;
 
-  ASSERT ((SearchKey >= AllHandles) && (SearchKey <= ByProtocol));
+  ASSERT ((SearchType >= AllHandles) && (SearchType <= ByProtocol));
   ASSERT ((SearchKey != NULL) || (SearchType != ByRegisterNotify));
   ASSERT ((Protocol != NULL) || (SearchType != ByProtocol));
 
@@ -431,7 +456,7 @@ EFI_STATUS
 LocateDevicePath (
   IN     EFI_GUID                  *Protocol,
   IN OUT EFI_DEVICE_PATH_PROTOCOL  **DevicePath,
-     OUT EFI_HANDLE                *Device
+  OUT    EFI_HANDLE                *Device
   )
 {
   EFI_STATUS Status;
@@ -505,7 +530,7 @@ LocateHandleBuffer (
   IN     EFI_GUID                *Protocol, OPTIONAL
   IN     VOID                    *SearchKey, OPTIONAL
   IN OUT UINTN                   *NoHandles,
-     OUT EFI_HANDLE              **Buffer
+  OUT    EFI_HANDLE              **Buffer
   )
 {
   EFI_STATUS Status;
@@ -540,9 +565,9 @@ LocateHandleBuffer (
 /// @retval EFI_INVALID_PARAMETER Interface is NULL.
 EFI_STATUS
 LocateProtocol (
-  IN     EFI_GUID  *Protocol,
-  IN     VOID      *Registration, OPTIONAL
-     OUT VOID      **Interface
+  IN  EFI_GUID  *Protocol,
+  IN  VOID      *Registration, OPTIONAL
+  OUT VOID      **Interface
   )
 {
   EFI_STATUS Status;
@@ -665,7 +690,16 @@ SafeInstallProtocolInterface (
   UINTN      NoHandles;
   EFI_HANDLE *Buffer;
 
+  DEBUG_CODE (
+    Buffer = NULL;
+    );
+
   Status = LocateHandleBuffer (ByProtocol, Protocol, NULL, &NoHandles, &Buffer);
+
+  if (!EFI_ERROR (Status)) {
+    ASSERT (Buffer != NULL);
+    FreePool ((VOID *)Buffer);
+  }
 
   return (Status == EFI_NOT_FOUND) ? InstallProtocolInterface (Handle, Protocol, InterfaceType, Interface) : EFI_ALREADY_STARTED;
 }

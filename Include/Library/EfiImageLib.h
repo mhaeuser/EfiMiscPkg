@@ -1,7 +1,31 @@
-// 15/09/2015
+//
+// Copyright 2015 CupertinoNet
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
 
-#ifndef _EFI_IMAGE_LIB_H_
-#define _EFI_IMAGE_LIB_H_
+///
+/// @file      Include/Library/EfiImageLib.h
+///
+///            
+///
+/// @author    Download-Fritz
+/// @date      15/09/2015: Initial version
+/// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
+///
+
+#ifndef __EFI_IMAGE_LIB_H__
+#define __EFI_IMAGE_LIB_H__
 
 // LoadImage
 /// Loads an EFI image into memory.
@@ -34,12 +58,12 @@
 ///                                platform policy specifies that the image should not be started.
 EFI_STATUS
 LoadImage (
-  IN     BOOLEAN                   BootPolicy,
-  IN     EFI_HANDLE                ParentImageHandle,
-  IN     EFI_DEVICE_PATH_PROTOCOL  *DevicePath,
-  IN     VOID                      *SourceBuffer, OPTIONAL
-  IN     UINTN                     SourceSize,
-     OUT EFI_HANDLE                *ImageHandle
+  IN  BOOLEAN                   BootPolicy,
+  IN  EFI_HANDLE                ParentImageHandle,
+  IN  EFI_DEVICE_PATH_PROTOCOL  *DevicePath,
+  IN  VOID                      *SourceBuffer, OPTIONAL
+  IN  UINTN                     SourceSize,
+  OUT EFI_HANDLE                *ImageHandle
   );
 
 // StartImage
@@ -56,9 +80,9 @@ LoadImage (
 /// @return                        Exit code from image
 EFI_STATUS
 StartImage (
-  IN     EFI_HANDLE  ImageHandle,
-     OUT UINTN       *ExitDataSize,
-     OUT CHAR16      **ExitData OPTIONAL
+  IN  EFI_HANDLE  ImageHandle,
+  OUT UINTN       *ExitDataSize,
+  OUT CHAR16      **ExitData OPTIONAL
   );
 
 // Exit
@@ -113,4 +137,4 @@ ExitBootServices (
   IN UINTN       MapKey
   );
 
-#endif // ifndef _EFI_IMAGE_LIB_H_
+#endif // ifndef __EFI_IMAGE_LIB_H__

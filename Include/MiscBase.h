@@ -1,8 +1,33 @@
-// 15/08/2015
+//
+// Copyright 2015 CupertinoNet
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
 
-#ifndef _C_MISC_H_
-#define _C_MISC_H_
+///
+/// @file      Include/MiscBase.h
+///
+///            
+///
+/// @author    Download-Fritz
+/// @date      15/08/2015: Initial version
+/// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
+///
 
+#ifndef __C_MISC_H__
+#define __C_MISC_H__
+
+// FORWARD_DECLARATION
 #ifdef EFI_FORWARD_DECLARATION
   #define FORWARD_DECLARATION(x) EFI_FORWARD_DECLARATION (x)
 #else
@@ -20,7 +45,7 @@
 // CONVERT_LENGTH
 #define CONVERT_LENGTH(Size, SourceType, DestinationType) (((Size) / sizeof (SourceType)) * sizeof (DestinationType))
 
-// BIT
+/// @{
 #define BIT(Index)                (1 << (Index))
 #define JOIN_MASKS(Mask1, Mask2)  ((Mask1) | (Mask2))
 #define JOIN_BITS(Mask1, Mask2)   JOIN_MASKS ((Mask1), (Mask2))
@@ -35,5 +60,6 @@
 #define SELECT_BITS(Mask1, Mask2) APPLY_MASK ((Mask1), (Mask2))
 #define BIT_SET(Mask1, Mask2)     ((BOOLEAN)(SELECT_BITS ((Mask1), (Mask2)) != 0))
 #define BITS_SET(Mask1, Mask2)    ((BOOLEAN)(SELECT_BITS ((Mask1), (Mask2)) == (Mask2)))
+/// @}
 
-#endif // ifndef _C_MISC_H_
+#endif // ifndef __C_MISC_H__

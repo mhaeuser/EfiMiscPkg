@@ -1,4 +1,4 @@
-## @file Library/EfiFileLib/EfiFileLib.inf
+## @file Library/EfiVariableLib/EfiVariableLib.inf
 #
 #  
 #
@@ -20,15 +20,15 @@
 ##
 
 [Defines]
-  BASE_NAME     = EfiFileLib
+  BASE_NAME     = EfiVariableLib
   MODULE_TYPE   = BASE
   INF_VERSION   = 0x00010005
-  LIBRARY_CLASS = EfiFileLib
+  LIBRARY_CLASS = EfiVariableLib
 
 [Packages]
   MdePkg/MdePkg.dec
   EfiMiscPkg/EfiMiscPkg.dec
 
 [Sources]
-  ../../Include/Library/EfiFileLib.h
-  EfiFileLib.c
+  ../../Include/Library/EfiVariableLib.h
+  EfiVariableLib.c

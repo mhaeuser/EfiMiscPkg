@@ -1,5 +1,31 @@
-#ifndef _USB_HID_H_
-#define _USB_HID_H_
+//
+// Copyright 2015 CupertinoNet
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+///
+/// @file      Include/IndustryStandard/UsbHid.h
+///
+///            
+///
+/// @author    Download-Fritz
+/// @date      31/02/2015: Initial version
+/// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
+///
+
+#ifndef __USB_HID_H__
+#define __USB_HID_H__
 
 // http://www.usb.org/developers/hidpage/Hut1_12v2.pdf
 
@@ -8,7 +34,6 @@
 //
 
 // USB_HID_PAGE_USAGE
-///
 #define USB_HID_USAGE(UsageId, PageId) (((PageId) << 16) | (UsageId))
 
 // _USB_HID_PAGES
@@ -77,7 +102,7 @@ typedef UINT32 USB_HID_USAGE;
 #define USB_HID_KB_KP_USAGE(UsageId) USB_HID_USAGE (UsbHidKeyboardKeypadPage, (UsageId))
 
 // USB HID Modifier Map
-///@{
+/// @{
 #define USB_HID_KB_KP_MODIFIER_LEFT_CONTROL   BIT (0)
 #define USB_HID_KB_KP_MODIFIER_LEFT_SHIFT     BIT (1)
 #define USB_HID_KB_KP_MODIFIER_LEFT_ALT       BIT (2)
@@ -86,15 +111,15 @@ typedef UINT32 USB_HID_USAGE;
 #define USB_HID_KB_KP_MODIFIER_RIGHT_SHIFT    BIT (5)
 #define USB_HID_KB_KP_MODIFIER_RIGHT_ALT      BIT (6)
 #define USB_HID_KB_KP_MODIFIER_RIGHT_GUI      BIT (7)
-///@}
+/// @}
 
 // Shortcuts for multiple modifers
-///@{
+/// @{
 #define USB_HID_KB_KP_MODIFIERS_CONTROL  (USB_HID_KB_KP_MODIFIER_LEFT_CONTROL | USB_HID_KB_KP_MODIFIER_RIGHT_CONTROL)
 #define USB_HID_KB_KP_MODIFIERS_SHIFT    (USB_HID_KB_KP_MODIFIER_LEFT_SHIFT | USB_HID_KB_KP_MODIFIER_RIGHT_SHIFT)
 #define USB_HID_KB_KP_MODIFIERS_ALT      (USB_HID_KB_KP_MODIFIER_LEFT_ALT | USB_HID_KB_KP_MODIFIER_RIGHT_ALT)
 #define USB_HID_KB_KP_MODIFIERS_GUI      (USB_HID_KB_KP_MODIFIER_LEFT_GUI | USB_HID_KB_KP_MODIFIER_RIGHT_GUI)
-///@}
+/// @}
 
 // USB_HID_MODIFIERS
 typedef UINT8 USB_HID_KB_MODIFIER_MAP;
@@ -544,4 +569,4 @@ enum _USB_HID_KB_USAGE {
   UsbHidUsageKbKpModifierKeyRightCommand = USB_HID_KB_KP_USAGE (UsbHidUsageIdKbKpModifierKeyRightGui)
 };
 
-#endif // ifndef _USB_HID_H_
+#endif // ifndef __USB_HID_H__

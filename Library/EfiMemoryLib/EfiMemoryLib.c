@@ -1,12 +1,36 @@
-// 15/09/2015
+//
+// Copyright 2015 CupertinoNet
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
+
+///
+/// @file      Library/EfiMemoryLib/EfiMemoryLib.c
+///
+///            
+///
+/// @author    Download-Fritz
+/// @date      15/09/2015: Initial version
+/// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
+///
 
 #include <Uefi.h>
 
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/UefiRuntimeServicesTableLib.h>
 #include <Library/DebugLib.h>
-#include <Library/EfiRuntimeLib/EfiRuntimeLib.h>
-#include <Library/EfiMemoryLib/EfiMemoryLib.h>
+#include <Library/EfiRuntimeLib.h>
+#include <Library/EfiMemoryLib.h>
 
 #ifndef MDEPKG_NDEBUG
 
@@ -42,16 +66,16 @@ EFI_STATUS
 GetMemoryMap (
   IN OUT UINTN                  *MemoryMapSize,
   IN OUT EFI_MEMORY_DESCRIPTOR  *MemoryMap,
-     OUT UINTN                  *MapKey,
-     OUT UINTN                  *DescriptorSize,
-     OUT UINT32                 *DescriptorVersion
+  OUT    UINTN                  *MapKey,
+  OUT    UINTN                  *DescriptorSize,
+  OUT    UINT32                 *DescriptorVersion
   )
 {
   EFI_STATUS Status;
 
   ASSERT (!EfiAtRuntime ());
   ASSERT (MemoryMapSize != NULL);
-  ASSERT ((*MemoryMapSize != 0) || (MemoryMap == NULL));
+  ASSERT ((*MemoryMapSize > 0) || (MemoryMap == NULL));
 
   Status = gBS->GetMemoryMap (MemoryMapSize, MemoryMap, MapKey, DescriptorSize, DescriptorVersion);
 
@@ -91,8 +115,8 @@ SetVirtualAddressMap (
 {
   EFI_STATUS Status;
 
-  ASSERT (MemoryMapSize != 0);
-  ASSERT (DescriptorSize != 0);
+  ASSERT (MemoryMapSize > 0);
+  ASSERT (DescriptorSize > 0);
   ASSERT (VirtualMap != NULL);
 
   Status = gRT->SetVirtualAddressMap (MemoryMapSize, DescriptorSize, DescriptorVersion, VirtualMap);
@@ -152,11 +176,11 @@ ConvertPointer (
   return Status;
 }
 
-// InternalAllocatePages
+// AllocatePages
 /// Allocates one or more 4KB pages of a certain memory type.
 ///
 /// Allocates the number of 4KB pages of a certain memory type and returns a pointer to the allocated
-/// buffer.  The buffer returned is aligned on a 4KB boundary.  If Pages is 0, then NULL is returned.
+/// buffer. The buffer returned is aligned on a 4KB boundary. If Pages is 0, then NULL is returned.
 /// If there is not enough memory remaining to satisfy the request, then NULL is returned.
 ///
 /// @param[in] MemoryType The type of memory to allocate.
@@ -164,22 +188,22 @@ ConvertPointer (
 ///
 /// @return A pointer to the allocated buffer or NULL if allocation fails.
 VOID *
-InternalAllocatePages (
+AllocatePages (
   IN EFI_MEMORY_TYPE  MemoryType,
   IN UINTN            Pages
   )
 {
-  VOID       *Memory;
+  EFI_PHYSICAL_ADDRESS Memory;
 
-  EFI_STATUS Status;
+  EFI_STATUS           Status;
 
   ASSERT (!EfiAtRuntime ());
-  ASSERT (Pages != 0);
+  ASSERT (Pages > 0);
 
-  Status = gBS->AllocatePages (AllocateAddress, MemoryType, Pages, (EFI_PHYSICAL_ADDRESS *)&Memory);
+  Status = gBS->AllocatePages (AllocateAddress, MemoryType, Pages, &Memory);
 
   if (EFI_ERROR (Status)) {
-    Memory = NULL;
+    Memory = 0;
   }
 
   return (VOID *)(UINTN)Memory;

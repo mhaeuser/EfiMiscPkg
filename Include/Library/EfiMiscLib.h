@@ -1,7 +1,31 @@
-// 15/09/2015
+//
+// Copyright 2015 CupertinoNet
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
 
-#ifndef _EFI_MISC_LIB_H_
-#define _EFI_MISC_LIB_H_
+///
+/// @file      Include/Library/EfiMiscLib.h
+///
+///            
+///
+/// @author    Download-Fritz
+/// @date      15/09/2015: Initial version
+/// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
+///
+
+#ifndef __EFI_MISC_LIB_H__
+#define __EFI_MISC_LIB_H__
 
 // RaiseTpl
 /// Raises a task's priority level and returns its previous level.
@@ -100,4 +124,4 @@ GetNextHighMonotonicCount (
   OUT UINT32  *HighCount
   );
 
-#endif // ifndef _EFI_MISC_LIB_H_
+#endif // ifndef __EFI_MISC_LIB_H__

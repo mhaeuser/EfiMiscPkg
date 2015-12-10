@@ -1,7 +1,31 @@
-// 13/09/2015
+//
+// Copyright 2015 CupertinoNet
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+//     http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+//
 
-#ifndef _EFI_PROTOCOL_LIB_H_
-#define _EFI_PROTOCOL_LIB_H_
+///
+/// @file      Include/Library/EfiProtocolLib.h
+///
+///            
+///
+/// @author    Download-Fritz
+/// @date      13/09/2015: Initial version
+/// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
+///
+
+#ifndef __EFI_PROTOCOL_LIB_H__
+#define __EFI_PROTOCOL_LIB_H__
 
 // InstallMultipleProtocolInterfaces
 /// Installs one or more protocol interfaces into the boot services environment.
@@ -42,7 +66,7 @@
 ///
 /// @retval EFI_SUCCESS           All the protocol interfaces were removed.
 /// @retval EFI_INVALID_PARAMETER One of the protocol interfaces was not previously installed on Handle.
-#define InstallMultipleProtocolInterfaces(                                  \
+#define UninstallMultipleProtocolInterfaces(                                  \
   Handle,                                                                   \
   ...                                                                       \
   )                                                                         \
@@ -139,9 +163,9 @@ UninstallProtocolInterface (
 /// @retval EFI_INVALID_PARAMETER Interface is NULL.
 EFI_STATUS
 HandleProtocol (
-  IN     EFI_HANDLE  Handle,
-  IN     EFI_GUID    *Protocol,
-     OUT VOID        **Interface
+  IN  EFI_HANDLE  Handle,
+  IN  EFI_GUID    *Protocol,
+  OUT VOID        **Interface
   );
 
 // OpenProtocol
@@ -171,12 +195,12 @@ HandleProtocol (
 ///                               handle is the same as AgentHandle.
 EFI_STATUS
 OpenProtocol (
-  IN     EFI_HANDLE  Handle,
-  IN     EFI_GUID    *Protocol,
-     OUT VOID        **Interface, OPTIONAL
-  IN     EFI_HANDLE  AgentHandle,
-  IN     EFI_HANDLE  ControllerHandle,
-  IN     UINT32      Attributes
+  IN  EFI_HANDLE  Handle,
+  IN  EFI_GUID    *Protocol,
+  OUT VOID        **Interface, OPTIONAL
+  IN  EFI_HANDLE  AgentHandle,
+  IN  EFI_HANDLE  ControllerHandle,
+  IN  UINT32      Attributes
   );
 
 // CloseProtocol
@@ -221,10 +245,10 @@ CloseProtocol (
 /// @retval EFI_NOT_FOUND        Handle does not support the protocol specified by Protocol.
 EFI_STATUS
 OpenProtocolInformation (
-  IN     EFI_HANDLE                           Handle,
-  IN     EFI_GUID                             *Protocol,
-     OUT EFI_OPEN_PROTOCOL_INFORMATION_ENTRY  **EntryBuffer,
-     OUT UINTN                                *EntryCount
+  IN  EFI_HANDLE                           Handle,
+  IN  EFI_GUID                             *Protocol,
+  OUT EFI_OPEN_PROTOCOL_INFORMATION_ENTRY  **EntryBuffer,
+  OUT UINTN                                *EntryCount
   );
 
 // ProtocolsPerHandle
@@ -248,9 +272,9 @@ OpenProtocolInformation (
 /// @retval EFI_INVALID_PARAMETER ProtocolBufferCount is NULL.
 EFI_STATUS
 ProtocolsPerHandle (
-  IN     EFI_HANDLE  Handle,
-     OUT EFI_GUID    ***ProtocolBuffer,
-     OUT UINTN       *ProtocolBufferCount
+  IN  EFI_HANDLE  Handle,
+  OUT EFI_GUID    ***ProtocolBuffer,
+  OUT UINTN       *ProtocolBufferCount
   );
 
 // RegisterProtocolNotify
@@ -268,9 +292,9 @@ ProtocolsPerHandle (
 /// @retval EFI_INVALID_PARAMETER Registration is NULL.
 EFI_STATUS
 RegisterProtocolNotify (
-  IN     EFI_GUID   *Protocol,
-  IN     EFI_EVENT  Event,
-     OUT VOID       **Registration
+  IN  EFI_GUID   *Protocol,
+  IN  EFI_EVENT  Event,
+  OUT VOID       **Registration
   );
 
 // LocateHandle
@@ -299,7 +323,7 @@ LocateHandle (
   IN     EFI_GUID                *Protocol, OPTIONAL
   IN     VOID                    *SearchKey, OPTIONAL
   IN OUT UINTN                   *BufferSize,
-     OUT EFI_HANDLE              *Buffer
+  OUT    EFI_HANDLE              *Buffer
   );
 
 // LocateDevicePath
@@ -319,7 +343,7 @@ EFI_STATUS
 LocateDevicePath (
   IN     EFI_GUID                  *Protocol,
   IN OUT EFI_DEVICE_PATH_PROTOCOL  **DevicePath,
-     OUT EFI_HANDLE                *Device
+  OUT    EFI_HANDLE                *Device
   );
 
 // InstallConfigurationTable
@@ -362,7 +386,7 @@ LocateHandleBuffer (
   IN     EFI_GUID                *Protocol, OPTIONAL
   IN     VOID                    *SearchKey, OPTIONAL
   IN OUT UINTN                   *NoHandles,
-     OUT EFI_HANDLE              **Buffer
+  OUT    EFI_HANDLE              **Buffer
   );
 
 // LocateProtocol
@@ -381,9 +405,9 @@ LocateHandleBuffer (
 /// @retval EFI_INVALID_PARAMETER Interface is NULL.
 EFI_STATUS
 LocateProtocol (
-  IN     EFI_GUID  *Protocol,
-  IN     VOID      *Registration, OPTIONAL
-     OUT VOID      **Interface
+  IN  EFI_GUID  *Protocol,
+  IN  VOID      *Registration, OPTIONAL
+  OUT VOID      **Interface
   );
 
 // ConnectController
@@ -448,6 +472,12 @@ DisconnectController (
   );
 
 // SafeInstallProtocolInterface
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval
 EFI_STATUS
 SafeInstallProtocolInterface (
   IN OUT EFI_HANDLE          *Handle,
@@ -457,6 +487,12 @@ SafeInstallProtocolInterface (
   );
 
 // InstallVersionedProtocol
+/// 
+///
+/// @param 
+///
+/// @return 
+/// @retval
 EFI_STATUS
 InstallVersionedProtocolInterface (
   IN OUT EFI_HANDLE          *Handle,
@@ -465,4 +501,4 @@ InstallVersionedProtocolInterface (
   IN     VOID                *Interface
   );
 
-#endif // ifndef _EFI_PROTOCOL_LIB_H_
+#endif // ifndef __EFI_PROTOCOL_LIB_H__

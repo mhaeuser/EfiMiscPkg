@@ -15,47 +15,21 @@
 //
 
 ///
-/// @file      Library/EfiChecksumLib/EfiChecksumLib.c
+/// @file      Include/Library/UsbHidLib.h
 ///
 ///            
 ///
 /// @author    Download-Fritz
-/// @date      18/07/2015: Initial version
+/// @date      10/12/2015: Initial version
 /// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
 ///
 
-#include <Uefi.h>
+#ifndef __USB_HID_LIB_H__
+#define __USB_HID_LIB_H__
 
-#include <Library/UefiBootServicesTableLib.h>
-#include <Library/DebugLib.h>
-#include <Library/EfiRuntimeLib.h>
-#include <Library/EfiChecksumLib.h>
+#include <IndustryStandard/UsbHid.h>
 
-// CalculateCrc32
-/// 
-///
-/// @param 
-///
-/// @return 
-/// @retval
-EFI_STATUS
-CalculateCrc32 (
-  IN  VOID    *Data,
-  IN  UINTN   DataSize,
-  OUT UINT32  *Crc32
-  )
-{
-  EFI_STATUS Status;
+// EfiKeyToUsbKeyCodeConvertionTable
+extern USB_HID_USAGE_ID EfiKeyToUsbKeyCodeConvertionTable[];
 
-  ASSERT (!EfiAtRuntime ());
-  ASSERT (Data != NULL);
-  ASSERT (DataSize > 0);
-  ASSERT (Crc32 != NULL);
-
-  *Crc32 = 0;
-  Status = gBS->CalculateCrc32 (Data, DataSize, Crc32);
-
-  ASSERT_EFI_ERROR (Status);
-
-  return Status;
-}
+#endif // ifndef __USB_HID_LIB_H__
