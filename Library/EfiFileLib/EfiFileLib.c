@@ -42,8 +42,8 @@
 // FileExists
 /// Checks whether the given file exists or not.
 ///
-/// @param[in] Root     The volume's opened root.
-/// @param[in] FileName The path of the file to check.
+/// @param[in] Root      The volume's opened root.
+/// @param[in] FileName  The path of the file to check.
 ///
 /// @return Returned is whether the specified file exists or not.
 BOOLEAN

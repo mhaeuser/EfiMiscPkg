@@ -61,18 +61,18 @@ EfiGoneVirtual (
 /// This service is a wrapper for the UEFI Runtime Function ConvertPointer().  
 ///
 /// The ConvertPointer() function is used by an EFI component during the SetVirtualAddressMap() operation.
-/// ConvertPointer()must be called using physical address pointers during the execution of SetVirtualAddressMap().
+/// ConvertPointer() must be called using physical address pointers during the execution of SetVirtualAddressMap().
 ///
-/// @param[in]      DebugDisposition Supplies type information for the pointer being converted.
-/// @param[in, out] Address          The pointer to a pointer that is to be fixed to be the
-///                                  value needed for the new virtual address mapping being
-///                                  applied.
+/// @param[in]      DebugDisposition  Supplies type information for the pointer being converted.
+/// @param[in, out] Address           The pointer to a pointer that is to be fixed to be the
+///                                   value needed for the new virtual address mapping being
+///                                   applied.
 ///
-/// @retval EFI_SUCCESS           The pointer pointed to by Address was modified.
-/// @retval EFI_NOT_FOUND         The pointer pointed to by Address was not found to be part of
-///                               the current memory map. This is normally fatal.
-/// @retval EFI_INVALID_PARAMETER Address is NULL.
-/// @retval EFI_INVALID_PARAMETER *Address is NULL and DebugDispositinon
+/// @retval EFI_SUCCESS            The pointer pointed to by Address was modified.
+/// @retval EFI_NOT_FOUND          The pointer pointed to by Address was not found to be part of
+///                                the current memory map. This is normally fatal.
+/// @retval EFI_INVALID_PARAMETER  Address is NULL.
+/// @retval EFI_INVALID_PARAMETER  *Address is NULL and DebugDispositinon
 EFI_STATUS
 ConvertPointer (
   IN     UINTN  DebugDisposition,
@@ -93,12 +93,12 @@ ConvertPointer (
 /// of EntryPoint fails, then neither EntryPoint nor GP are modified.  See the UEFI
 /// Specification for details on the UEFI Runtime Function ConvertPointer().
 ///
-/// @param[in]      DebugDisposition Supplies type information for the pointer being converted.
-/// @param[in, out] Address          The pointer to a pointer that is to be fixed to be the
-///                                  value needed for the new virtual address mapping being
-///                                  applied.
+/// @param[in]      DebugDisposition  Supplies type information for the pointer being converted.
+/// @param[in, out] Address           The pointer to a pointer that is to be fixed to be the
+///                                   value needed for the new virtual address mapping being
+///                                   applied.
 ///
-/// @return EFI_STATUS value from ConvertPointer().
+/// @return EFI_STATUS  value from ConvertPointer().
 EFI_STATUS
 ConvertFunctionPointer (
   IN     UINTN  DebugDisposition,
@@ -112,11 +112,11 @@ ConvertFunctionPointer (
 /// pointers to their virtual mappings. This function is only guaranteed to work during the
 /// EVT_SIGNAL_VIRTUAL_ADDRESS_CHANGE event and calling it at other times has undefined results.
 ///
-/// @param[in]      DebugDisposition Supplies type information for the pointer being converted.
-/// @param[in, out] ListHead         Head of linked list to convert.
+/// @param[in]      DebugDisposition  Supplies type information for the pointer being converted.
+/// @param[in, out] ListHead          Head of linked list to convert.
 ///
-/// @retval EFI_SUCCESS  Success to execute the function.
-/// @retval !EFI_SUCCESS Failed to execute the function.
+/// @retval EFI_SUCCESS   Success to execute the function.
+/// @retval !EFI_SUCCESS  Failed to execute the function.
 VOID
 ConvertList (
   IN     UINTN       DebugDisposition,

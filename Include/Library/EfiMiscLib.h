@@ -30,7 +30,7 @@
 // RaiseTpl
 /// Raises a task's priority level and returns its previous level.
 ///
-/// @param[in] NewTpl The new task priority level.
+/// @param[in] NewTpl  The new task priority level.
 ///
 /// @return Previous task priority level
 EFI_TPL
@@ -41,7 +41,7 @@ RaiseTpl (
 // RestoreTpl
 /// Restores a task's priority level to its previous value.
 ///
-/// @param[in] OldTpl The previous task priority level to restore.
+/// @param[in] OldTpl  The previous task priority level to restore.
 VOID
 RestoreTpl (
   IN EFI_TPL  OldTpl
@@ -50,10 +50,10 @@ RestoreTpl (
 // Stall
 /// Induces a fine-grained stall.
 ///
-/// @param[in] Microseconds The number of microseconds to stall execution.
+/// @param[in] Microseconds  The number of microseconds to stall execution.
 ///
-/// @retval EFI_SUCCESS Execution was stalled at least the requested number of
-/// Microseconds.
+/// @retval EFI_SUCCESS  Execution was stalled at least the requested number of
+///                      Microseconds.
 EFI_STATUS
 Stall (
   IN UINTN  Microseconds
@@ -62,17 +62,17 @@ Stall (
 // SetWatchdogTimer
 /// Sets the system's watchdog timer.
 ///
-/// @param[in] Timeout      The number of seconds to set the watchdog timer to.
-/// @param[in] WatchdogCode The numeric code to log on a watchdog timer timeout event.
-/// @param[in] DataSize     The size, in bytes, of WatchdogData.
-/// @param[in] WatchdogData A data buffer that includes a Null-terminated string, optionally
-///                         followed by additional binary data.
+/// @param[in] Timeout       The number of seconds to set the watchdog timer to.
+/// @param[in] WatchdogCode  The numeric code to log on a watchdog timer timeout event.
+/// @param[in] DataSize      The size, in bytes, of WatchdogData.
+/// @param[in] WatchdogData  A data buffer that includes a Null-terminated string, optionally
+///                          followed by additional binary data.
 ///
-/// @retval EFI_SUCCESS           The timeout has been set.
-/// @retval EFI_INVALID_PARAMETER The supplied WatchdogCode is invalid.
-/// @retval EFI_UNSUPPORTED       The system does not have a watchdog timer.
-/// @retval EFI_DEVICE_ERROR      The watchdog timer could not be programmed due to a hardware
-/// error.
+/// @retval EFI_SUCCESS            The timeout has been set.
+/// @retval EFI_INVALID_PARAMETER  The supplied WatchdogCode is invalid.
+/// @retval EFI_UNSUPPORTED        The system does not have a watchdog timer.
+/// @retval EFI_DEVICE_ERROR       The watchdog timer could not be programmed due to a hardware
+///                                error.
 EFI_STATUS
 SetWatchdogTimer (
   IN UINTN   Timeout,
@@ -84,12 +84,12 @@ SetWatchdogTimer (
 // ResetSystem
 /// Resets the entire platform.
 ///
-/// @param[in] ResetType   The type of reset to perform.
-/// @param[in] ResetStatus The status code for the reset.
-/// @param[in] DataSize    The size, in bytes, of WatchdogData.
-/// @param[in] ResetData   For a ResetType of EfiResetCold, EfiResetWarm, or
-///                        EfiResetShutdown the data buffer starts with a Null-terminated
-///                        string, optionally followed by additional binary data.
+/// @param[in] ResetType    The type of reset to perform.
+/// @param[in] ResetStatus  The status code for the reset.
+/// @param[in] DataSize     The size, in bytes, of WatchdogData.
+/// @param[in] ResetData    For a ResetType of EfiResetCold, EfiResetWarm, or
+///                         EfiResetShutdown the data buffer starts with a Null-terminated
+///                         string, optionally followed by additional binary data.
 VOID
 ResetSystem (
   IN EFI_RESET_TYPE  ResetType,
@@ -101,11 +101,11 @@ ResetSystem (
 // GetNextMonotonicCount
 /// Returns a monotonically increasing count for the platform.
 ///
-/// @param[out] Count The pointer to returned value.
+/// @param[out] Count  The pointer to returned value.
 ///
-/// @retval EFI_SUCCESS           The next monotonic count was returned.
-/// @retval EFI_INVALID_PARAMETER Count is NULL.
-/// @retval EFI_DEVICE_ERROR      The device is not functioning properly.
+/// @retval EFI_SUCCESS            The next monotonic count was returned.
+/// @retval EFI_INVALID_PARAMETER  Count is NULL.
+/// @retval EFI_DEVICE_ERROR       The device is not functioning properly.
 EFI_STATUS
 GetNextMonotonicCount (
   OUT UINT64  *Count
@@ -114,11 +114,11 @@ GetNextMonotonicCount (
 // GetNextHighMonotonicCount
 /// Returns the next high 32 bits of the platform's monotonic counter.
 ///
-/// @param[out] HighCount The pointer to returned value.
+/// @param[out] HighCount  The pointer to returned value.
 ///
-/// @retval EFI_SUCCESS           The next high monotonic count was returned.
-/// @retval EFI_INVALID_PARAMETER HighCount is NULL.
-/// @retval EFI_DEVICE_ERROR      The device is not functioning properly.
+/// @retval EFI_SUCCESS            The next high monotonic count was returned.
+/// @retval EFI_INVALID_PARAMETER  HighCount is NULL.
+/// @retval EFI_DEVICE_ERROR       The device is not functioning properly.
 EFI_STATUS
 GetNextHighMonotonicCount (
   OUT UINT32  *HighCount

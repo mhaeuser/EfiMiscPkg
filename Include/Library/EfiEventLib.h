@@ -61,15 +61,15 @@
 // CreateEvent
 /// Creates an event.
 ///
-/// @param[in] Type           The type of event to create and its mode and attributes.
-/// @param[in] NotifyTpl      The task priority level of event notifications, if needed.
-/// @param[in] NotifyFunction The pointer to the event's notification function, if any.
-/// @param[in] NotifyContext  The pointer to the notification function's context; corresponds to parameter
+/// @param[in] Type            The type of event to create and its mode and attributes.
+/// @param[in] NotifyTpl       The task priority level of event notifications, if needed.
+/// @param[in] NotifyFunction  The pointer to the event's notification function, if any.
+/// @param[in] NotifyContext   The pointer to the notification function's context; corresponds to parameter
 ///                            Context in the notification function.
 ///
-/// @retval EFI_SUCCESS           The event structure was created.
-/// @retval EFI_INVALID_PARAMETER One or more parameters are invalid.
-/// @retval EFI_OUT_OF_RESOURCES  The event could not be allocated.
+/// @retval EFI_SUCCESS            The event structure was created.
+/// @retval EFI_INVALID_PARAMETER  One or more parameters are invalid.
+/// @retval EFI_OUT_OF_RESOURCES   The event could not be allocated.
 EFI_EVENT
 CreateEvent (
   IN UINT32            Type,
@@ -81,20 +81,20 @@ CreateEvent (
 // CreateEventEx
 /// Creates an event in a group.
 ///
-/// @param[in]  Type           The type of event to create and its mode and attributes.
-/// @param[in]  NotifyTpl      The task priority level of event notifications,if needed.
-/// @param[in]  NotifyFunction The pointer to the event's notification function, if any.
-/// @param[in]  NotifyContext  The pointer to the notification function's context; corresponds to parameter
-///                            Context in the notification function.
-/// @param[in]  EventGroup     The pointer to the unique identifier of the group to which this event belongs.
-///                            If this is NULL, then the function behaves as if the parameters were passed
-///                            to CreateEvent.
-/// @param[out] Event          The pointer to the newly created event if the call succeeds; undefined
-///                            otherwise.
+/// @param[in]  Type            The type of event to create and its mode and attributes.
+/// @param[in]  NotifyTpl       The task priority level of event notifications,if needed.
+/// @param[in]  NotifyFunction  The pointer to the event's notification function, if any.
+/// @param[in]  NotifyContext   The pointer to the notification function's context; corresponds to parameter
+///                             Context in the notification function.
+/// @param[in]  EventGroup      The pointer to the unique identifier of the group to which this event belongs.
+///                             If this is NULL, then the function behaves as if the parameters were passed
+///                             to CreateEvent.
+/// @param[out] Event           The pointer to the newly created event if the call succeeds; undefined
+///                             otherwise.
 ///
-/// @retval EFI_SUCCESS           The event structure was created.
-/// @retval EFI_INVALID_PARAMETER One or more parameters are invalid.
-/// @retval EFI_OUT_OF_RESOURCES  The event could not be allocated.
+/// @retval EFI_SUCCESS            The event structure was created.
+/// @retval EFI_INVALID_PARAMETER  One or more parameters are invalid.
+/// @retval EFI_OUT_OF_RESOURCES   The event could not be allocated.
 EFI_EVENT
 CreateEventEx (
   IN UINT32            Type,
@@ -107,17 +107,17 @@ CreateEventEx (
 // SetTimer
 /// Sets the type of timer and the trigger time for a timer event.
 ///
-/// @param[in] Event       The timer event that is to be signaled at the specified time.
-/// @param[in] Type        The type of time that is specified in TriggerTime.
-/// @param[in] TriggerTime The number of 100ns units until the timer expires.
-///                        A TriggerTime of 0 is legal.
-///                        If Type is TimerRelative and TriggerTime is 0, then the timer
-///                        event will be signaled on the next timer tick.
-///                        If Type is TimerPeriodic and TriggerTime is 0, then the timer
-///                        event will be signaled on every timer tick.
+/// @param[in] Event        The timer event that is to be signaled at the specified time.
+/// @param[in] Type         The type of time that is specified in TriggerTime.
+/// @param[in] TriggerTime  The number of 100ns units until the timer expires.
+///                         A TriggerTime of 0 is legal.
+///                         If Type is TimerRelative and TriggerTime is 0, then the timer
+///                         event will be signaled on the next timer tick.
+///                         If Type is TimerPeriodic and TriggerTime is 0, then the timer
+///                         event will be signaled on every timer tick.
 ///
-/// @retval EFI_SUCCESS           The event has been set to be signaled at the requested time.
-/// @retval EFI_INVALID_PARAMETER Event or Type is not valid.
+/// @retval EFI_SUCCESS            The event has been set to be signaled at the requested time.
+/// @retval EFI_INVALID_PARAMETER  Event or Type is not valid.
 EFI_STATUS
 SetTimer (
   IN EFI_EVENT        Event,
@@ -128,7 +128,7 @@ SetTimer (
 // SignalEvent
 /// Signals an event.
 ///
-/// @param[in] Event The event to signal.
+/// @param[in] Event  The event to signal.
 ///
 /// @retval EFI_SUCCESS The event has been signaled.
 EFI_STATUS
@@ -139,15 +139,15 @@ SignalEvent (
 // WaitForEvent
 /// Stops execution until an event is signaled.
 ///
-/// @param[in]  NumberOfEvents The number of events in the Event array.
-/// @param[in]  Event          An array of EFI_EVENT.
-/// @param[out] Index          The pointer to the index of the event which satisfied the wait condition.
+/// @param[in]  NumberOfEvents  The number of events in the Event array.
+/// @param[in]  Event           An array of EFI_EVENT.
+/// @param[out] Index           The pointer to the index of the event which satisfied the wait condition.
 ///
-/// @retval EFI_SUCCESS           The event indicated by Index was signaled.
-/// @retval EFI_INVALID_PARAMETER 1) NumberOfEvents is 0.
-///                               2) The event indicated by Index is of type
-///                               EVT_NOTIFY_SIGNAL.
-/// @retval EFI_UNSUPPORTED       The current TPL is not TPL_APPLICATION.
+/// @retval EFI_SUCCESS            The event indicated by Index was signaled.
+/// @retval EFI_INVALID_PARAMETER  1) NumberOfEvents is 0.
+///                                2) The event indicated by Index is of type
+///                                EVT_NOTIFY_SIGNAL.
+/// @retval EFI_UNSUPPORTED        The current TPL is not TPL_APPLICATION.
 EFI_STATUS
 WaitForEvent (
   IN     UINTN      NumberOfEvents,
@@ -158,9 +158,9 @@ WaitForEvent (
 // CloseEvent
 /// Closes an event.
 ///
-/// @param[in] Event The event to close.
+/// @param[in] Event  The event to close.
 ///
-/// @retval EFI_SUCCESS The event has been closed.
+/// @retval EFI_SUCCESS  The event has been closed.
 EFI_STATUS
 CloseEvent (
   IN EFI_EVENT  Event
@@ -169,11 +169,11 @@ CloseEvent (
 // CheckEvent
 /// Checks whether an event is in the signaled state.
 ///
-/// @param[in] Event The event to check.
+/// @param[in] Event  The event to check.
 ///
-/// @retval EFI_SUCCESS           The event is in the signaled state.
-/// @retval EFI_NOT_READY         The event is not in the signaled state.
-/// @retval EFI_INVALID_PARAMETER Event is of type EVT_NOTIFY_SIGNAL.
+/// @retval EFI_SUCCESS            The event is in the signaled state.
+/// @retval EFI_NOT_READY          The event is not in the signaled state.
+/// @retval EFI_INVALID_PARAMETER  Event is of type EVT_NOTIFY_SIGNAL.
 EFI_STATUS
 CheckEvent (
   IN EFI_EVENT  Event
