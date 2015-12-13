@@ -155,7 +155,7 @@ Exit (
 
   ASSERT (!EfiAtRuntime ());
   ASSERT (ImageHandle != NULL);
-  ASSERT ((ExitDataSize > 0) || (ExitData == NULL));
+  ASSERT ((ExitDataSize == 0) || (ExitData != NULL));
 
   Status = gBS->Exit (ImageHandle, ExitStatus, ExitDataSize, ExitData);
 

@@ -38,16 +38,16 @@
 EFI_RUNTIME_SERVICES *gPhysicalRT;
 
 // mEfiVirtualNotifyEvent
-static EFI_EVENT mEfiVirtualNotifyEvent;
+STATIC EFI_EVENT mEfiVirtualNotifyEvent;
 
 // mEfiExitBootServicesEvent
-static EFI_EVENT mEfiExitBootServicesEvent;
+STATIC EFI_EVENT mEfiExitBootServicesEvent;
 
 // mEfiGoneVirtual
-static BOOLEAN mEfiGoneVirtual = FALSE;
+STATIC BOOLEAN mEfiGoneVirtual = FALSE;
 
 // mEfiAtRuntime
-static BOOLEAN mEfiAtRuntime = FALSE;
+STATIC BOOLEAN mEfiAtRuntime = FALSE;
 
 // RuntimeLibExitBootServicesEvent
 /// Set AtRuntime flag as TRUE after ExitBootServices.

@@ -35,7 +35,7 @@
 #ifndef MDEPKG_NDEBUG
 
 // mSetVirtualAddressMapReturned
-static BOOLEAN mSetVirtualAddressMapReturned = FALSE;
+STATIC BOOLEAN mSetVirtualAddressMapReturned = FALSE;
 
 #endif
 
@@ -75,7 +75,7 @@ GetMemoryMap (
 
   ASSERT (!EfiAtRuntime ());
   ASSERT (MemoryMapSize != NULL);
-  ASSERT ((*MemoryMapSize > 0) || (MemoryMap == NULL));
+  ASSERT ((*MemoryMapSize == 0) || (MemoryMap != NULL));
 
   Status = gBS->GetMemoryMap (MemoryMapSize, MemoryMap, MapKey, DescriptorSize, DescriptorVersion);
 

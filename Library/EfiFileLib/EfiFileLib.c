@@ -191,7 +191,7 @@ GetFilePrimaryExtension (
 ///
 /// @return 
 /// @retval
-static
+STATIC
 INTN
 CompareExtension (
   IN CHAR16   *FileName,
