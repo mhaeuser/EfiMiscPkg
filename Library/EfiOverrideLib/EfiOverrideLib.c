@@ -1,28 +1,18 @@
-//
-// Copyright 2015 CupertinoNet
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
+/** @file
+  Copyright (C) 2015 CupertinoNet.  All rights reserved.<BR>
 
-///
-/// @file      Library/EfiOverrideLib/EfiOverrideLib.c
-///
-///            
-///
-/// @author    Download-Fritz
-/// @date      07/10/2015: initial version
-/// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
-///
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+**/
 
 #include <Uefi.h>
 #include <PiDxe.h>
@@ -30,18 +20,22 @@
 
 #include <Framework/SmmCis.h>
 
-#include <Library/MemoryAllocationLib.h>
 #include <Library/BaseLib.h>
 #include <Library/DebugLib.h>
+#include <Library/MemoryAllocationLib.h>
 
 /// @{
 #define OVERRIDE_IDENTIFIER_SIGNATURE                  SIGNATURE_32 ('o', 'v', 'r', 'r')
-#define OVERRIDE_IDENTIFIER_FROM_LIST_ENTRY(ListEntry) CR ((ListEntry), EFI_OVERRIDE_IDENTIFIER, This, OVERRIDE_IDENTIFIER_SIGNATURE)
-#define OVERRIDE_IDENTIFIER_FUNCTION (Identfier, Type) ((Type)OVERRIDE_IDENTIFIER_FROM_LIST_ENTRY ((Identifier)->This.BackLink)->Function)
+
+#define OVERRIDE_IDENTIFIER_FROM_LIST_ENTRY(ListEntry) \
+  CR ((ListEntry), EFI_OVERRIDE_IDENTIFIER, This, OVERRIDE_IDENTIFIER_SIGNATURE)
+
+#define OVERRIDE_IDENTIFIER_FUNCTION (Identfier, Type) \
+  ((Type)OVERRIDE_IDENTIFIER_FROM_LIST_ENTRY ((Identifier)->This.BackLink)->Function)
 /// @}
 
-// _EFI_SMM_SERVICE
-typedef union _EFI_SMM_SERVICE {
+// EFI_SMM_SERVICE
+typedef union {
   EFI_SMM_INSTALL_CONFIGURATION_TABLE SmmInstallConfigurationTable;
   EFI_SMMCORE_ALLOCATE_POOL           SmmAllocatePool;
   EFI_SMMCORE_FREE_POOL               SmmFreePool;
@@ -49,8 +43,8 @@ typedef union _EFI_SMM_SERVICE {
   EFI_SMMCORE_FREE_PAGES              SmmFreePages;
 } EFI_SMM_SERVICE;
 
-// _EFI_SMM_SERVICE2
-typedef union _EFI_SMM_SERVICE2 {
+// EFI_SMM_SERVICE2
+typedef union {
   EFI_SMM_INSTALL_CONFIGURATION_TABLE2 InstallConfigurationTable;
   EFI_ALLOCATE_POOL                    AllocatePool;
   EFI_FREE_POOL                        FreePool;
@@ -67,8 +61,8 @@ typedef union _EFI_SMM_SERVICE2 {
   EFI_SMM_INTERRUPT_UNREGISTER         SmiHandlerUnRegister;
 } EFI_SMM_SERVICE2;
 
-// _EFI_DXE_SERVICE
-typedef union _EFI_DXE_SERVICE {
+// EFI_DXE_SERVICE
+typedef union {
   EFI_ADD_MEMORY_SPACE              AddMemorySpace;
   EFI_ALLOCATE_MEMORY_SPACE         AllocateMemorySpace;
   EFI_FREE_MEMORY_SPACE             FreeMemorySpace;
@@ -89,8 +83,8 @@ typedef union _EFI_DXE_SERVICE {
   EFI_SET_MEMORY_SPACE_CAPABILITIES SetMemorySpaceCapabilities;
 } EFI_DXE_SERVICE;
 
-// _EFI_BOOT_SERVICE
-typedef union _EFI_BOOT_SERVICE {
+// EFI_BOOT_SERVICE
+typedef union {
   EFI_RAISE_TPL                              RaiseTPL;
   EFI_RESTORE_TPL                            RestoreTPL;
   EFI_ALLOCATE_PAGES                         AllocatePages;
@@ -136,8 +130,8 @@ typedef union _EFI_BOOT_SERVICE {
   EFI_CREATE_EVENT_EX                        CreateEventEx;
 } EFI_BOOT_SERVICE;
 
-// _EFI_RUNTIME_SERVICE
-typedef union _EFI_RUNTIME_SERVICE {
+// EFI_RUNTIME_SERVICE
+typedef union {
   EFI_GET_TIME                   GetTime;
   EFI_SET_TIME                   SetTime;
   EFI_GET_WAKEUP_TIME            GetWakeupTime;
@@ -154,8 +148,8 @@ typedef union _EFI_RUNTIME_SERVICE {
   EFI_QUERY_VARIABLE_INFO        QueryVariableInfo;
 } EFI_RUNTIME_SERVICE;
 
-// _EFI_SERVICE
-typedef union _EFI_SERVICE {
+// EFI_SERVICE
+typedef union {
   EFI_SMM_SERVICE     SmmService;
   EFI_SMM_SERVICE2    SmmService2;
   EFI_DXE_SERVICE     DxeService;
@@ -163,15 +157,15 @@ typedef union _EFI_SERVICE {
   EFI_RUNTIME_SERVICE RuntimeService;
 } EFI_SERVICE;
 
-// _EFI_OVERRIDE
-typedef struct _EFI_OVERRIDE {
+// EFI_OVERRIDE
+typedef struct {
   VOID       **Destination;  ///< 
   VOID       *Original;      ///< 
   LIST_ENTRY Identifiers;    ///< 
 } EFI_OVERRIDE;
 
-// _EFI_OVERRIDE_IDENTIFIER
-typedef struct _EFI_OVERRIDE_IDENTIFIER {
+// EFI_OVERRIDE_IDENTIFIER
+typedef struct {
   UINTN      Signature;    ///< 
   LIST_ENTRY This;         ///< 
   VOID       **Function;   ///< 
@@ -179,12 +173,6 @@ typedef struct _EFI_OVERRIDE_IDENTIFIER {
 } EFI_OVERRIDE_IDENTIFIER;
 
 // InitializeOverride
-/// 
-///
-/// @param 
-///
-/// @return 
-/// @retval 
 EFI_OVERRIDE *
 InitializeOverride (
   IN VOID **Function
@@ -207,12 +195,6 @@ InitializeOverride (
 }
 
 // AddOverride
-/// 
-///
-/// @param 
-///
-/// @return 
-/// @retval 
 EFI_OVERRIDE_IDENTIFIER *
 AddOverride (
   IN OUT EFI_OVERRIDE *Override,
@@ -236,12 +218,6 @@ AddOverride (
 }
 
 // RemoveOverride
-/// 
-///
-/// @param 
-///
-/// @return 
-/// @retval 
 VOID
 RemoveOverride (
   IN OUT EFI_OVERRIDE            *Override,
@@ -258,12 +234,6 @@ RemoveOverride (
 }
 
 // RestoreOriginal
-/// 
-///
-/// @param 
-///
-/// @return 
-/// @retval 
 VOID
 RestoreOriginal (
   IN OUT EFI_OVERRIDE *Override
@@ -289,12 +259,6 @@ RestoreOriginal (
 }
 
 // UpdatePointers
-/// 
-///
-/// @param 
-///
-/// @return 
-/// @retval 
 VOID
 UpdatePointers (
   

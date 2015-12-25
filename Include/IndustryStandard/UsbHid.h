@@ -1,31 +1,21 @@
-//
-// Copyright 2015 CupertinoNet
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
+/** @file
+  Copyright (C) 2015 CupertinoNet.  All rights reserved.<BR>
 
-///
-/// @file      Include/IndustryStandard/UsbHid.h
-///
-///            
-///
-/// @author    Download-Fritz
-/// @date      31/02/2015: Initial version
-/// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
-///
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-#ifndef __USB_HID_H__
-#define __USB_HID_H__
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+**/
+
+#ifndef USB_HID_H_
+#define USB_HID_H_
 
 // http://www.usb.org/developers/hidpage/Hut1_12v2.pdf
 
@@ -36,8 +26,8 @@
 // USB_HID_PAGE_USAGE
 #define USB_HID_USAGE(UsageId, PageId) (((PageId) << 16) | (UsageId))
 
-// _USB_HID_PAGES
-enum _USB_HID_PAGE_ID {
+// USB_HID_PAGES
+enum {
   UsbHidUndefined                       = 0x00,
   UsbHidGenericDesktopPage              = 0x01,
   UsbHidSimulationControlsPage          = 0x02,
@@ -124,8 +114,11 @@ typedef UINT32 USB_HID_USAGE;
 // USB_HID_MODIFIERS
 typedef UINT8 USB_HID_KB_MODIFIER_MAP;
 
-// _USB_HID_KB_USAGE_ID
-enum _USB_HID_KB_USAGE_ID {
+// USBKBD_VALID_KEYCODE
+#define USB_HID_KB_KP_VALID_KEYCODE(Key) ((UINT8)(Key) > 3)
+
+// USB_HID_KB_USAGE_ID
+enum {
   UsbHidUsageIdKbKpKeyReserved             = 0x00,
   UsbHidUsageIdKbKpKeyErrorRollOver        = 0x01,
   UsbHidUsageIdKbKpKeyPostFail             = 0x02,
@@ -350,8 +343,8 @@ enum _USB_HID_KB_USAGE_ID {
   // E8 - FFFF = Reserved
 };
 
-// _USB_HID_KB_USAGE
-enum _USB_HID_KB_USAGE {
+// USB_HID_KB_USAGE
+enum {
   UsbHidUsageKbKpKeyA                    = USB_HID_KB_KP_USAGE (UsbHidUsageIdKbKpKeyA),
   UsbHidUsageKbKpKeyB                    = USB_HID_KB_KP_USAGE (UsbHidUsageIdKbKpKeyB),
   UsbHidUsageKbKpKeyC                    = USB_HID_KB_KP_USAGE (UsbHidUsageIdKbKpKeyC),
@@ -569,4 +562,4 @@ enum _USB_HID_KB_USAGE {
   UsbHidUsageKbKpModifierKeyRightCommand = USB_HID_KB_KP_USAGE (UsbHidUsageIdKbKpModifierKeyRightGui)
 };
 
-#endif // ifndef __USB_HID_H__
+#endif // USB_HID_H_

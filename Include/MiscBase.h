@@ -1,43 +1,28 @@
-//
-// Copyright 2015 CupertinoNet
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-//
+/** @file
+  Copyright (C) 2015 CupertinoNet.  All rights reserved.<BR>
 
-///
-/// @file      Include/MiscBase.h
-///
-///            
-///
-/// @author    Download-Fritz
-/// @date      15/08/2015: Initial version
-/// @copyright Copyright (C) 2015 CupertinoNet. All rights reserved.
-///
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
 
-#ifndef __C_MISC_H__
-#define __C_MISC_H__
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+**/
+
+#ifndef MISC_BASE_H_
+#define MISC_BASE_H_
 
 // FORWARD_DECLARATION
-#ifdef EFI_FORWARD_DECLARATION
-  #define FORWARD_DECLARATION(x) EFI_FORWARD_DECLARATION (x)
+#if defined (EFI_NO_INTERFACE_DECL) || defined (NO_INTERFACE_DECL)
+  #define FORWARD_DECLARATION(x)
 #else
-  #if defined (EFI_NO_INTERFACE_DECL) || defined (NO_INTERFACE_DECL)
-    #define FORWARD_DECLARATION(x)
-  #else
-    #define FORWARD_DECLARATION(x) typedef struct _##x x
-  #endif // ifdef (EFI_NO_INTERFACE_DECL || NO_INTERFACE_DECL)
-  #define EFI_FORWARD_DECLARATION(x) FORWARD_DECLARATION (x)
-#endif // ifdef EFI_FORWARD_DECLARATION
+  #define FORWARD_DECLARATION(x) typedef struct x x
+#endif // (EFI_NO_INTERFACE_DECL || NO_INTERFACE_DECL)
 
 // ARRAY_LENGTH
 #define ARRAY_LENGTH(Array) (sizeof (Array) / sizeof (*(Array)))
@@ -62,4 +47,4 @@
 #define BITS_SET(Mask1, Mask2)    ((BOOLEAN)(SELECT_BITS ((Mask1), (Mask2)) == (Mask2)))
 /// @}
 
-#endif // ifndef __C_MISC_H__
+#endif // MISC_BASE_H_
