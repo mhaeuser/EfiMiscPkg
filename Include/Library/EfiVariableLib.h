@@ -1,5 +1,5 @@
 /** @file
-  Copyright (C) 2015 CupertinoNet.  All rights reserved.<BR>
+  Copyright (C) 2015, CupertinoNet.  All rights reserved.<BR>
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -115,6 +115,13 @@ SetVariable (
   IN UINT32    Attributes,
   IN UINTN     DataSize,
   IN VOID      *Data
+  );
+
+// VariableExists
+BOOLEAN
+VariableExists (
+  IN CHAR16    *VariableName,
+  IN EFI_GUID  *VendorGuid
   );
 
 #endif // EFI_VARIABLE_LIB_H_

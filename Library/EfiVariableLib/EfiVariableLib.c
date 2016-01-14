@@ -1,5 +1,5 @@
 /** @file
-  Copyright (C) 2015 CupertinoNet.  All rights reserved.<BR>
+  Copyright (C) 2015, CupertinoNet.  All rights reserved.<BR>
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -56,6 +56,7 @@ GetVariable (
   EFI_STATUS Status;
 
   ASSERT (VariableName != NULL);
+  ASSERT (VariableName[0] != L'\0');
   ASSERT (VendorGuid != NULL);
   ASSERT (DataSize != NULL);
   ASSERT ((*DataSize == 0) || (Data != NULL));
@@ -249,4 +250,20 @@ DeleteEfiGlobalVariable (
   ASSERT (VariableName[0] != L'\0');
 
   return DeleteVariable (VariableName, &gEfiGlobalVariableGuid);
+}
+
+// VariableExists
+BOOLEAN
+VariableExists (
+  IN CHAR16    *VariableName,
+  IN EFI_GUID  *VendorGuid
+  )
+{
+  UINTN      Size;
+  EFI_STATUS Status;
+
+  Size   = 0;
+  Status = GetVariable (VariableName, VendorGuid, 0, &Size, NULL);
+
+  return (Status == EFI_BUFFER_TOO_SMALL);
 }
