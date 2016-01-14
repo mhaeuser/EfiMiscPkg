@@ -17,38 +17,7 @@
 #ifndef EFI_EVENT_LIB_H_
 #define EFI_EVENT_LIB_H_
 
-#ifndef TPL_APPLICATION
-  #define TPL_APPLICATION EFI_TPL_APPLICATION
-#endif
-
-#ifndef TPL_CALLBACK
-  #define TPL_CALLBACK EFI_TPL_CALLBACK
-#endif
-
-#ifndef TPL_HIGH_LEVEL
-  #define TPL_HIGH_LEVEL EFI_TPL_HIGH_LEVEL
-#endif
-
-#ifndef TPL_NOTIFY
-  #define TPL_NOTIFY EFI_TPL_NOTIFY
-#endif
-
-#ifndef EFI_TIMER_PERIOD_MILLISECONDS
-
-// EFI_TIMER_PERIOD_MILLISECONDS
-/** Macro that returns the number of 100 ns units for a specified number of milliseconds.
-  This is useful for managing EFI timer events.
-
-  @param Milliseconds The number of milliseconds.
-
-  @return  The number of 100 ns units equivalent to the number of milliseconds specified
-  by Milliseconds.
-**/
-#define EFI_TIMER_PERIOD_MILLISECONDS(Milliseconds) MultU64x32 ((UINT64)(Milliseconds), 10000)
-
-#endif // EFI_TIMER_PERIOD_MILLISECONDS
-
-// CreateEvent
+// EfiCreateEvent
 /** Creates an event.
 
   @param[in] Type            The type of event to create and its mode and attributes.
@@ -62,14 +31,14 @@
   @retval EFI_OUT_OF_RESOURCES   The event could not be allocated.
 **/
 EFI_EVENT
-CreateEvent (
+EfiCreateEvent (
   IN UINT32            Type,
   IN EFI_TPL           NotifyTpl,
   IN EFI_EVENT_NOTIFY  NotifyFunction,
   IN VOID              *NotifyContext
   );
 
-// CreateEventEx
+// EfiCreateEventEx
 /** Creates an event in a group.
 
   @param[in]  Type            The type of event to create and its mode and attributes.
@@ -88,7 +57,7 @@ CreateEvent (
   @retval EFI_OUT_OF_RESOURCES   The event could not be allocated.
 **/
 EFI_EVENT
-CreateEventEx (
+EfiCreateEventEx (
   IN UINT32            Type,
   IN EFI_TPL           NotifyTpl,
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
@@ -96,7 +65,7 @@ CreateEventEx (
   IN CONST EFI_GUID    *EventGroup OPTIONAL
   );
 
-// SetTimer
+// EfiSetTimer
 /** Sets the type of timer and the trigger time for a timer event.
 
   @param[in] Event        The timer event that is to be signaled at the specified time.
@@ -112,13 +81,13 @@ CreateEventEx (
   @retval EFI_INVALID_PARAMETER  Event or Type is not valid.
 **/
 EFI_STATUS
-SetTimer (
+EfiSetTimer (
   IN EFI_EVENT        Event,
   IN EFI_TIMER_DELAY  Type,
   IN UINT64           TriggerTime
   );
 
-// SignalEvent
+// EfiSignalEvent
 /** Signals an event.
 
   @param[in] Event  The event to signal.
@@ -126,11 +95,11 @@ SetTimer (
   @retval EFI_SUCCESS The event has been signaled.
 **/
 EFI_STATUS
-SignalEvent (
+EfiSignalEvent (
   IN EFI_EVENT  Event
   );
 
-// WaitForEvent
+// EfiWaitForEvent
 /** Stops execution until an event is signaled.
 
   @param[in]  NumberOfEvents  The number of events in the Event array.
@@ -144,13 +113,13 @@ SignalEvent (
   @retval EFI_UNSUPPORTED        The current TPL is not TPL_APPLICATION.
 **/
 EFI_STATUS
-WaitForEvent (
+EfiWaitForEvent (
   IN  UINTN      NumberOfEvents,
   IN  EFI_EVENT  *Event,
   OUT UINTN      *Index
   );
 
-// CloseEvent
+// EfiCloseEvent
 /** Closes an event.
 
   @param[in] Event  The event to close.
@@ -158,11 +127,11 @@ WaitForEvent (
   @retval EFI_SUCCESS  The event has been closed.
 **/
 EFI_STATUS
-CloseEvent (
+EfiCloseEvent (
   IN EFI_EVENT  Event
   );
 
-// CheckEvent
+// EfiCheckEvent
 /** Checks whether an event is in the signaled state.
 
   @param[in] Event  The event to check.
@@ -172,7 +141,7 @@ CloseEvent (
   @retval EFI_INVALID_PARAMETER  Event is of type EVT_NOTIFY_SIGNAL.
 **/
 EFI_STATUS
-CheckEvent (
+EfiCheckEvent (
   IN EFI_EVENT  Event
   );
 

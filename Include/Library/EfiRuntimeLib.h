@@ -49,7 +49,7 @@ EfiGoneVirtual (
   VOID
   );
 
-// ConvertPointer
+// EfiConvertPointer
 /** This service is a wrapper for the UEFI Runtime Function ConvertPointer().
 
   The ConvertPointer() function is used by an EFI component during the SetVirtualAddressMap() operation.
@@ -70,7 +70,7 @@ EfiGoneVirtual (
                                  of the current memory map.  This is normally fatal.
 **/
 EFI_STATUS
-ConvertPointer (
+EfiConvertPointer (
   IN     UINTN  DebugDisposition,
   IN OUT VOID   **Address
   );

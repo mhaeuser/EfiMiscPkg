@@ -14,23 +14,22 @@
   limitations under the License.
 **/
 
-
 #include <Uefi.h>
 
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/UefiRuntimeServicesTableLib.h>
 #include <Library/DebugLib.h>
-#include <Library/EfiRuntimeLib.h>
 #include <Library/EfiEventLib.h>
+#include <Library/EfiRuntimeLib.h>
 
 // gPhysicalRT
-EFI_RUNTIME_SERVICES *gPhysicalRT;
+EFI_RUNTIME_SERVICES *gPhysicalRT = NULL;
 
 // mEfiVirtualNotifyEvent
-STATIC EFI_EVENT mEfiVirtualNotifyEvent;
+STATIC EFI_EVENT mEfiVirtualNotifyEvent = NULL;
 
 // mEfiExitBootServicesEvent
-STATIC EFI_EVENT mEfiExitBootServicesEvent;
+STATIC EFI_EVENT mEfiExitBootServicesEvent = NULL;
 
 // mEfiGoneVirtual
 STATIC BOOLEAN mEfiGoneVirtual = FALSE;
@@ -73,11 +72,10 @@ RuntimeLibVirtualNotifyEvent (
   IN VOID       *Context
   )
 {
-  //
   // Update global for Runtime Services Table and IO
-  //
-  ConvertPointer (0, (VOID **)&gST);
-  ConvertPointer (0, (VOID **)&gRT);
+
+  EfiConvertPointer (0, (VOID **)&gST);
+  EfiConvertPointer (0, (VOID **)&gRT);
 
   mEfiGoneVirtual = TRUE;
 }
@@ -107,6 +105,7 @@ RuntimeDriverLibConstruct (
                                 RuntimeLibVirtualNotifyEvent,
                                 NULL
                                 );
+
   mEfiExitBootServicesEvent = CreateExitBootServicesEvent (
                                 RuntimeLibExitBootServicesEvent,
                                 NULL
@@ -134,11 +133,10 @@ RuntimeDriverLibDeconstruct (
   IN EFI_SYSTEM_TABLE  *SystemTable
   )
 {
-  //
   // Close SetVirtualAddressMap () notify function
-  //
-  CloseEvent (mEfiVirtualNotifyEvent);
-  CloseEvent (mEfiExitBootServicesEvent);
+
+  EfiCloseEvent (mEfiVirtualNotifyEvent);
+  EfiCloseEvent (mEfiExitBootServicesEvent);
 
   return EFI_SUCCESS;
 }
@@ -181,7 +179,7 @@ EfiGoneVirtual (
   return mEfiGoneVirtual;
 }
 
-// ConvertPointer
+// EfiConvertPointer
 /** This service is a wrapper for the UEFI Runtime Function ConvertPointer().
 
   The ConvertPointer() function is used by an EFI component during the SetVirtualAddressMap() operation.
@@ -202,7 +200,7 @@ EfiGoneVirtual (
                                  of the current memory map.  This is normally fatal.
 **/
 EFI_STATUS
-ConvertPointer (
+EfiConvertPointer (
   IN     UINTN  DebugDisposition,
   IN OUT VOID   **Address
   )
@@ -240,7 +238,7 @@ ConvertFunctionPointer (
   IN OUT VOID   **Address
   )
 {
-  return ConvertPointer (DebugDisposition, Address);
+  return EfiConvertPointer (DebugDisposition, Address);
 }
 
 // ConvertList
@@ -273,12 +271,12 @@ ConvertList (
   do {
     NextLink = Link->ForwardLink;
 
-    ConvertPointer (
+    EfiConvertPointer (
       ((Link->ForwardLink == ListHead) ? DebugDisposition : 0),
       (VOID **)&Link->ForwardLink
       );
 
-    ConvertPointer (
+    EfiConvertPointer (
       ((Link->BackLink == ListHead) ? DebugDisposition : 0),
       (VOID **)&Link->BackLink
       );

@@ -23,7 +23,7 @@
 #include <Library/EfiRuntimeLib.h>
 #include <Library/EfiEventLib.h>
 
-// CreateEvent
+// EfiCreateEvent
 /** Creates an event.
  
   @param[in] Type            The type of event to create and its mode and attributes.
@@ -37,7 +37,7 @@
   @retval EFI_OUT_OF_RESOURCES   The event could not be allocated.
 **/
 EFI_EVENT
-CreateEvent (
+EfiCreateEvent (
   IN UINT32            Type,
   IN EFI_TPL           NotifyTpl,
   IN EFI_EVENT_NOTIFY  NotifyFunction,
@@ -63,7 +63,7 @@ CreateEvent (
   return Event;
 }
 
-// CreateEventEx
+// EfiCreateEventEx
 /** Creates an event in a group.
 
   @param[in]  Type            The type of event to create and its mode and attributes.
@@ -82,7 +82,7 @@ CreateEvent (
   @retval EFI_OUT_OF_RESOURCES   The event could not be allocated.
 **/
 EFI_EVENT
-CreateEventEx (
+EfiCreateEventEx (
   IN UINT32            Type,
   IN EFI_TPL           NotifyTpl,
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
@@ -94,8 +94,8 @@ CreateEventEx (
 
   EFI_STATUS Status;
 
-  ASSERT (!EfiAtRuntime ());
   ASSERT ((NotifyFunction != NULL) || ((Type & (EVT_NOTIFY_SIGNAL | EVT_NOTIFY_WAIT)) == 0));
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->CreateEventEx (Type, NotifyTpl, NotifyFunction, NotifyContext, EventGroup, &Event);
 
@@ -110,7 +110,7 @@ CreateEventEx (
   return Event;
 }
 
-// SetTimer
+// EfiSetTimer
 /** Sets the type of timer and the trigger time for a timer event.
 
   @param[in] Event        The timer event that is to be signaled at the specified time.
@@ -126,7 +126,7 @@ CreateEventEx (
   @retval EFI_INVALID_PARAMETER  Event or Type is not valid.
 **/
 EFI_STATUS
-SetTimer (
+EfiSetTimer (
   IN EFI_EVENT        Event,
   IN EFI_TIMER_DELAY  Type,
   IN UINT64           TriggerTime
@@ -134,9 +134,9 @@ SetTimer (
 {
   EFI_STATUS Status;
 
-  ASSERT (!EfiAtRuntime ());
   ASSERT (Event != NULL);
   ASSERT ((Type >= TimerCancel) && (Type <= TimerRelative));
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->SetTimer (Event, Type, TriggerTime);
 
@@ -145,7 +145,7 @@ SetTimer (
   return Status;
 }
 
-// SignalEvent
+// EfiSignalEvent
 /** Signals an event.
 
   @param[in] Event  The event to signal.
@@ -153,14 +153,14 @@ SetTimer (
   @retval EFI_SUCCESS  The event has been signaled.
 **/
 EFI_STATUS
-SignalEvent (
+EfiSignalEvent (
   IN EFI_EVENT  Event
   )
 {
   EFI_STATUS Status;
 
-  ASSERT (!EfiAtRuntime ());
   ASSERT (Event != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->SignalEvent (Event);
 
@@ -169,7 +169,7 @@ SignalEvent (
   return Status;
 }
 
-// WaitForEvent
+// EfiWaitForEvent
 /** Stops execution until an event is signaled.
 
   @param[in]  NumberOfEvents  The number of events in the Event array.
@@ -183,7 +183,7 @@ SignalEvent (
   @retval EFI_UNSUPPORTED        The current TPL is not TPL_APPLICATION.
 **/
 EFI_STATUS
-WaitForEvent (
+EfiWaitForEvent (
   IN  UINTN      NumberOfEvents,
   IN  EFI_EVENT  *Event,
   OUT UINTN      *Index
@@ -191,10 +191,10 @@ WaitForEvent (
 {
   EFI_STATUS Status;
 
-  ASSERT (!EfiAtRuntime ());
   ASSERT (NumberOfEvents > 0);
   ASSERT (Event != NULL);
   ASSERT (Index != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->WaitForEvent (NumberOfEvents, Event, Index);
 
@@ -203,7 +203,7 @@ WaitForEvent (
   return Status;
 }
 
-// CloseEvent
+// EfiCloseEvent
 /** Closes an event.
 
   @param[in] Event  The event to close.
@@ -211,14 +211,14 @@ WaitForEvent (
   @retval EFI_SUCCESS  The event has been closed.
 **/
 EFI_STATUS
-CloseEvent (
+EfiCloseEvent (
   IN EFI_EVENT  Event
   )
 {
   EFI_STATUS Status;
 
-  ASSERT (!EfiAtRuntime ());
   ASSERT (Event != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->CloseEvent (Event);
 
@@ -227,7 +227,7 @@ CloseEvent (
   return Status;
 }
 
-// CheckEvent
+// EfiCheckEvent
 /** Checks whether an event is in the signaled state.
 
   @param[in] Event  The event to check.
@@ -237,14 +237,14 @@ CloseEvent (
   @retval EFI_INVALID_PARAMETER  Event is of type EVT_NOTIFY_SIGNAL.
 **/
 EFI_STATUS
-CheckEvent (
+EfiCheckEvent (
   IN EFI_EVENT  Event
   )
 {
   EFI_STATUS Status;
 
-  ASSERT (!EfiAtRuntime ());
   ASSERT (Event != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->CheckEvent (Event);
 
@@ -274,7 +274,7 @@ CreateTimerEvent (
   Event = NULL;
 
   if (NotifyTpl < TPL_CALLBACK) {
-    Event = CreateEvent (
+    Event = EfiCreateEvent (
               ((NotifyFunction != NULL) ? (EVT_TIMER | EVT_NOTIFY_SIGNAL) : EVT_TIMER),
               NotifyTpl,
               NotifyFunction,
@@ -282,10 +282,10 @@ CreateTimerEvent (
               );
 
     if (Event != NULL) {
-      Status = SetTimer (Event, (SignalPeriodic ? TimerPeriodic : TimerRelative), TriggerTime);
+      Status = EfiSetTimer (Event, (SignalPeriodic ? TimerPeriodic : TimerRelative), TriggerTime);
 
       if (EFI_ERROR (Status)) {
-        CloseEvent (Event);
+        EfiCloseEvent (Event);
 
         Event = NULL;
       }
@@ -315,7 +315,7 @@ CancelTimer (
   IN EFI_EVENT  Event
   )
 {
-  return SetTimer (Event, TimerCancel, 0);
+  return EfiSetTimer (Event, TimerCancel, 0);
 }
 
 // CancelEvent
@@ -329,7 +329,7 @@ CancelEvent (
   Status = CancelTimer (Event);
 
   if (!EFI_ERROR (Status)) {
-    CloseEvent (Event);
+    EfiCloseEvent (Event);
   }
 }
 
@@ -341,7 +341,7 @@ CreateSignalEvent (
   IN CONST EFI_GUID    *EventGroup OPTIONAL
   )
 {
-  return CreateEventEx (
+  return EfiCreateEventEx (
            EVT_NOTIFY_SIGNAL,
            TPL_NOTIFY,
            NotifyFunction,

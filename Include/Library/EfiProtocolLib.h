@@ -17,7 +17,7 @@
 #ifndef EFI_PROTOCOL_LIB_H_
 #define EFI_PROTOCOL_LIB_H_
 
-// InstallMultipleProtocolInterfaces
+// EfiInstallMultipleProtocolInterfaces
 /** Installs one or more protocol interfaces into the boot services environment.
 
   @param[in, out] Handle  The pointer to a handle to install the new protocol interfaces on,
@@ -32,7 +32,7 @@
   @retval EFI_INVALID_PARAMETER  Handle is NULL.
   @retval EFI_INVALID_PARAMETER  Protocol is already installed on the handle specified by Handle.
 **/
-#define InstallMultipleProtocolInterfaces(                                \
+#define EfiInstallMultipleProtocolInterfaces(                                \
   Handle,                                                                 \
   ...                                                                     \
   )                                                                       \
@@ -44,7 +44,7 @@
   ASSERT_EFI_ERROR (Status);                                              \
 }
 
-// UninstallMultipleProtocolInterfaces
+// EfiUninstallMultipleProtocolInterfaces
 /** Removes one or more protocol interfaces into the boot services environment.
 
   @param[in] Handle  The handle to remove the protocol interfaces from.
@@ -54,7 +54,7 @@
   @retval EFI_SUCCESS            All the protocol interfaces were removed.
   @retval EFI_INVALID_PARAMETER  One of the protocol interfaces was not previously installed on Handle.
 **/
-#define UninstallMultipleProtocolInterfaces(                                \
+#define EfiUninstallMultipleProtocolInterfaces(                                \
   Handle,                                                                   \
   ...                                                                       \
   )                                                                         \
@@ -64,7 +64,7 @@
   ASSERT_EFI_ERROR (Status);                                                \
 }
 
-// InstallProtocolInterface
+// EfiInstallProtocolInterface
 /** Installs a protocol interface on a device handle.  If the handle does not exist, it is created and added
     to the list of handles in the system.  InstallMultipleProtocolInterfaces() performs
     more error checking than InstallProtocolInterface(), so it is recommended that
@@ -84,14 +84,14 @@
   @retval EFI_INVALID_PARAMETER  Protocol is already installed on the handle specified by Handle.
 **/
 EFI_STATUS
-InstallProtocolInterface (
+EfiInstallProtocolInterface (
   IN OUT EFI_HANDLE          *Handle,
   IN     EFI_GUID            *Protocol,
   IN     EFI_INTERFACE_TYPE  InterfaceType,
   IN     VOID                *Interface
   );
 
-// ReinstallProtocolInterface
+// EfiReinstallProtocolInterface
 /** Reinstalls a protocol interface on a device handle.
 
   @param[in] Handle        Handle on which the interface is to be reinstalled.
@@ -109,14 +109,14 @@ InstallProtocolInterface (
   @retval EFI_INVALID_PARAMETER  Protocol is NULL.
 **/
 EFI_STATUS
-ReinstallProtocolInterface (
+EfiReinstallProtocolInterface (
   IN EFI_HANDLE  Handle,
   IN EFI_GUID    *Protocol,
   IN VOID        *OldInterface,
   IN VOID        *NewInterface
   );
 
-// UninstallProtocolInterface
+// EfiUninstallProtocolInterface
 /** Removes a protocol interface from a device handle.  It is recommended that
     UninstallMultipleProtocolInterfaces() be used in place of
     UninstallProtocolInterface().
@@ -133,13 +133,13 @@ ReinstallProtocolInterface (
   @retval EFI_INVALID_PARAMETER  Protocol is NULL.
 **/
 EFI_STATUS
-UninstallProtocolInterface (
+EfiUninstallProtocolInterface (
   IN EFI_HANDLE  Handle,
   IN EFI_GUID    *Protocol,
   IN VOID        *Interface
   );
 
-// HandleProtocol
+// EfiHandleProtocol
 /** Queries a handle to determine if it supports a specified protocol.
 
   @param[in]  Handle     The handle being queried.
@@ -154,13 +154,13 @@ UninstallProtocolInterface (
   @retval EFI_INVALID_PARAMETER  Interface is NULL.
 **/
 EFI_STATUS
-HandleProtocol (
+EfiHandleProtocol (
   IN  EFI_HANDLE  Handle,
   IN  EFI_GUID    *Protocol,
   OUT VOID        **Interface
   );
 
-// OpenProtocol
+// EfiOpenProtocol
 /** Queries a handle to determine if it supports a specified protocol.  If the protocol is supported by the
     handle, it opens the protocol on behalf of the calling agent.
 
@@ -187,7 +187,7 @@ HandleProtocol (
                                  handle is the same as AgentHandle.
 **/
 EFI_STATUS
-OpenProtocol (
+EfiOpenProtocol (
   IN  EFI_HANDLE  Handle,
   IN  EFI_GUID    *Protocol,
   OUT VOID        **Interface, OPTIONAL
@@ -196,7 +196,7 @@ OpenProtocol (
   IN  UINT32      Attributes
   );
 
-// CloseProtocol
+// EfiCloseProtocol
 /** Closes a protocol on a handle that was opened using OpenProtocol().
 
   @param[in] Handle            The handle for the protocol interface that was previously opened
@@ -217,14 +217,14 @@ OpenProtocol (
                                  currently open by AgentHandle and ControllerHandle.
 **/
 EFI_STATUS
-CloseProtocol (
+EfiCloseProtocol (
   IN EFI_HANDLE  Handle,
   IN EFI_GUID    *Protocol,
   IN EFI_HANDLE  AgentHandle,
   IN EFI_HANDLE  ControllerHandle
   );
 
-// OpenProtocolInformation
+// EfiOpenProtocolInformation
 /** Retrieves the list of agents that currently have a protocol interface opened.
 
   @param[in]  Handle       The handle for the protocol interface that is being queried.
@@ -239,14 +239,14 @@ CloseProtocol (
   @retval EFI_NOT_FOUND         Handle does not support the protocol specified by Protocol.
 **/
 EFI_STATUS
-OpenProtocolInformation (
+EfiOpenProtocolInformation (
   IN  EFI_HANDLE                           Handle,
   IN  EFI_GUID                             *Protocol,
   OUT EFI_OPEN_PROTOCOL_INFORMATION_ENTRY  **EntryBuffer,
   OUT UINTN                                *EntryCount
   );
 
-// ProtocolsPerHandle
+// EfiProtocolsPerHandle
 /** Retrieves the list of protocol interface GUIDs that are installed on a handle in a buffer allocated
     from pool.
 
@@ -267,13 +267,13 @@ OpenProtocolInformation (
   @retval EFI_INVALID_PARAMETER  ProtocolBufferCount is NULL.
 **/
 EFI_STATUS
-ProtocolsPerHandle (
+EfiProtocolsPerHandle (
   IN  EFI_HANDLE  Handle,
   OUT EFI_GUID    ***ProtocolBuffer,
   OUT UINTN       *ProtocolBufferCount
   );
 
-// RegisterProtocolNotify
+// EfiRegisterProtocolNotify
 /** Creates an event that is to be signaled whenever an interface is installed for a specified protocol.
 
   @param[in]  Protocol      The numeric ID of the protocol for which the event is to be registered.
@@ -288,13 +288,13 @@ ProtocolsPerHandle (
   @retval EFI_INVALID_PARAMETER  Registration is NULL.
 **/
 EFI_STATUS
-RegisterProtocolNotify (
+EfiRegisterProtocolNotify (
   IN  EFI_GUID   *Protocol,
   IN  EFI_EVENT  Event,
   OUT VOID       **Registration
   );
 
-// LocateHandle
+// EfiLocateHandle
 /** Returns an array of handles that support a specified protocol.
 
   @param[in]      SearchType  Specifies which handle(s) are to be returned.
@@ -316,7 +316,7 @@ RegisterProtocolNotify (
   @retval EFI_INVALID_PARAMETER  BufferSize is large enough for the result and Buffer is NULL.
 **/
 EFI_STATUS
-LocateHandle (
+EfiLocateHandle (
   IN     EFI_LOCATE_SEARCH_TYPE  SearchType,
   IN     EFI_GUID                *Protocol, OPTIONAL
   IN     VOID                    *SearchKey, OPTIONAL
@@ -324,7 +324,7 @@ LocateHandle (
   OUT    EFI_HANDLE              *Buffer
   );
 
-// LocateDevicePath
+// EfiLocateDevicePath
 /** Locates the handle to a device on the device path that supports the specified protocol.
 
   @param[in]      Protocol    Specifies the protocol to search for.
@@ -339,13 +339,13 @@ LocateHandle (
   @retval EFI_INVALID_PARAMETER  A handle matched the search and Device is NULL.
 **/
 EFI_STATUS
-LocateDevicePath (
+EfiLocateDevicePath (
   IN     EFI_GUID                  *Protocol,
   IN OUT EFI_DEVICE_PATH_PROTOCOL  **DevicePath,
   OUT    EFI_HANDLE                *Device
   );
 
-// InstallConfigurationTable
+// EfiInstallConfigurationTable
 /** Adds, updates, or removes a configuration table entry from the EFI System Table.
 
   @param[in] Guid   A pointer to the GUID for the entry to add, update, or remove.
@@ -358,12 +358,12 @@ LocateDevicePath (
   @retval EFI_OUT_OF_RESOURCES   There is not enough memory available to complete the operation.
 **/
 EFI_STATUS
-InstallConfigurationTable (
+EfiInstallConfigurationTable (
   IN EFI_GUID  *Guid,
-  IN VOID      *Table
+  IN VOID      *Table OPTIONAL
   );
 
-// LocateHandleBuffer
+// EfiLocateHandleBuffer
 /** Returns an array of handles that support the requested protocol in a buffer allocated from pool.
 
   @param[in]      SearchType  Specifies which handle(s) are to be returned.
@@ -382,7 +382,7 @@ InstallConfigurationTable (
   @retval EFI_INVALID_PARAMETER  Buffer is NULL.
 **/
 EFI_STATUS
-LocateHandleBuffer (
+EfiLocateHandleBuffer (
   IN     EFI_LOCATE_SEARCH_TYPE  SearchType,
   IN     EFI_GUID                *Protocol, OPTIONAL
   IN     VOID                    *SearchKey, OPTIONAL
@@ -390,7 +390,7 @@ LocateHandleBuffer (
   OUT    EFI_HANDLE              **Buffer
   );
 
-// LocateProtocol
+// EfiLocateProtocol
 /** Returns the first protocol instance that matches the given protocol.
 
   @param[in]  Protocol      Provides the protocol to search for.
@@ -406,13 +406,13 @@ LocateHandleBuffer (
   @retval EFI_INVALID_PARAMETER  Interface is NULL.
 **/
 EFI_STATUS
-LocateProtocol (
+EfiLocateProtocol (
   IN  EFI_GUID  *Protocol,
   IN  VOID      *Registration, OPTIONAL
   OUT VOID      **Interface
   );
 
-// ConnectController
+// EfiConnectController
 /** Connects one or more drivers to a controller.
 
   @param[in] ControllerHandle     The handle of the controller to which driver(s) are to be connected.
@@ -438,14 +438,14 @@ LocateProtocol (
                                   specified by the RemainingDevicePath.
 **/
 EFI_STATUS
-ConnectController (
+EfiConnectController (
   IN EFI_HANDLE                ControllerHandle,
   IN EFI_HANDLE                *DriverImageHandle, OPTIONAL
   IN EFI_DEVICE_PATH_PROTOCOL  *RemainingDevicePath, OPTIONAL
   IN BOOLEAN                   Recursive
   );
 
-// DisconnectController
+// EfiDisconnectController
 /** Disconnects one or more drivers from a controller.
 
   @param[in] ControllerHandle   The handle of the controller from which driver(s) are to be disconnected.
@@ -469,7 +469,7 @@ ConnectController (
   @retval EFI_DEVICE_ERROR       The controller could not be disconnected because of a device error.
 **/
 EFI_STATUS
-DisconnectController (
+EfiDisconnectController (
   IN EFI_HANDLE  ControllerHandle,
   IN EFI_HANDLE  DriverImageHandle, OPTIONAL
   IN EFI_HANDLE  ChildHandle OPTIONAL

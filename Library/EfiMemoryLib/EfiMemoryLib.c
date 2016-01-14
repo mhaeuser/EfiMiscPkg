@@ -29,7 +29,7 @@ STATIC BOOLEAN mSetVirtualAddressMapReturned = FALSE;
 
 #endif
 
-// GetMemoryMap
+// EfiGetMemoryMap
 /** Returns the current memory map.
 
   @param[in, out] MemoryMapSize      A pointer to the size, in bytes, of the MemoryMap Buffer.
@@ -54,7 +54,7 @@ STATIC BOOLEAN mSetVirtualAddressMapReturned = FALSE;
                                  NULL.
 **/
 EFI_STATUS
-GetMemoryMap (
+EfiGetMemoryMap (
   IN OUT UINTN                  *MemoryMapSize,
   IN OUT EFI_MEMORY_DESCRIPTOR  *MemoryMap,
   OUT    UINTN                  *MapKey,
@@ -64,9 +64,9 @@ GetMemoryMap (
 {
   EFI_STATUS Status;
 
-  ASSERT (!EfiAtRuntime ());
   ASSERT (MemoryMapSize != NULL);
   ASSERT ((*MemoryMapSize == 0) || (MemoryMap != NULL));
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->GetMemoryMap (MemoryMapSize, MemoryMap, MapKey, DescriptorSize, DescriptorVersion);
 
@@ -79,7 +79,7 @@ GetMemoryMap (
   return Status;
 }
 
-// SetVirtualAddressMap
+// EfiSetVirtualAddressMap
 /** Changes the runtime addressing mode of EFI firmware from physical to virtual.
 
   @param[in] MemoryMapSize      The size in bytes of VirtualMap.
@@ -98,7 +98,7 @@ GetMemoryMap (
                                  in the memory map.
 **/
 EFI_STATUS
-SetVirtualAddressMap (
+EfiSetVirtualAddressMap (
   IN UINTN                  MemoryMapSize,
   IN UINTN                  DescriptorSize,
   IN UINT32                 DescriptorVersion,
@@ -128,7 +128,7 @@ SetVirtualAddressMap (
   return Status;
 }
 
-// ConvertPointer
+// EfiConvertPointer
 /** Determines the new virtual address that is to be used on subsequent memory accesses.
 
   @param[in]      DebugDisposition  Supplies type information for the pointer being converted.
@@ -143,16 +143,16 @@ SetVirtualAddressMap (
                                  of the current memory map.  This is normally fatal.
 **/
 EFI_STATUS
-ConvertPointer (
+EfiConvertPointer (
   IN     UINTN  DebugDisposition,
   IN OUT VOID   **Address
   )
 {
   EFI_STATUS Status;
 
-  ASSERT (!mSetVirtualAddressMapReturned);
   ASSERT (Address != NULL);
   ASSERT (((DebugDisposition & EFI_OPTIONAL_PTR) != 0) || (*Address != NULL));
+  ASSERT (!mSetVirtualAddressMapReturned);
 
   // calls to ConvertPointer are illegal after SetVirtualAddressMap returned, so do not use updated RT.
   // also, calls to the updated RT pointer with the virtual address are illegal till SetVirtualAddressMap returned.
@@ -167,7 +167,7 @@ ConvertPointer (
   return Status;
 }
 
-// AllocatePages
+// EfiAllocatePages
 /** Allocates one or more 4KB pages of a certain memory type.
 
   Allocates the number of 4KB pages of a certain memory type and returns a pointer to the allocated
@@ -181,7 +181,7 @@ ConvertPointer (
   @return  A pointer to the allocated Buffer or NULL if allocation fails.
 **/
 VOID *
-AllocatePages (
+EfiAllocatePages (
   IN EFI_ALLOCATE_TYPE  Type,
   IN EFI_MEMORY_TYPE    MemoryType,
   IN UINTN              Pages
@@ -191,9 +191,9 @@ AllocatePages (
 
   EFI_STATUS           Status;
 
-  ASSERT (!EfiAtRuntime ());
   ASSERT ((MemoryType > EfiReservedMemoryType) && (MemoryType < EfiMaxMemoryType));
   ASSERT (Pages > 0);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->AllocatePages (Type, MemoryType, Pages, &Memory);
 

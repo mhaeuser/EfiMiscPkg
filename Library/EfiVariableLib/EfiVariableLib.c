@@ -22,7 +22,7 @@
 #include <Library/DebugLib.h>
 #include <Library/EfiVariableLib.h>
 
-// GetVariable
+// EfiGetVariable
 /** Returns the value of a variable.
 
   @param[in]      VariableName  A Null-terminated string that is the name of the vendor's
@@ -45,7 +45,7 @@
   @retval EFI_SECURITY_VIOLATION  The variable could not be retrieved due to an authentication failure.
 **/
 EFI_STATUS
-GetVariable (
+EfiGetVariable (
   IN     CHAR16    *VariableName,
   IN     EFI_GUID  *VendorGuid,
   OUT    UINT32    *Attributes, OPTIONAL
@@ -86,10 +86,10 @@ GetEfiGlobalVariable (
   ASSERT (VariableName[0] != L'\0');
   ASSERT (DataSize != NULL);
 
-  return GetVariable (VariableName, &gEfiGlobalVariableGuid, Attributes, DataSize, Data);
+  return EfiGetVariable (VariableName, &gEfiGlobalVariableGuid, Attributes, DataSize, Data);
 }
 
-// GetNextVariableName
+// EfiGetNextVariableName
 /** Enumerates the current variable names.
 
   @param[in, out] VariableNameSize  The size of the VariableName Buffer.
@@ -109,7 +109,7 @@ GetEfiGlobalVariable (
   @retval EFI_DEVICE_ERROR       The variable could not be retrieved due to a hardware error.
 **/
 EFI_STATUS
-GetNextVariableName (
+EfiGetNextVariableName (
   IN OUT UINTN     *VariableNameSize,
   IN OUT CHAR16    *VariableName,
   IN OUT EFI_GUID  *VendorGuid
@@ -144,10 +144,10 @@ GetNextEfiGlobalVariableName (
   ASSERT (VariableName != NULL);
   ASSERT (VariableName[0] != L'\0');
 
-  return GetNextVariableName (VariableNameSize, VariableName, &gEfiGlobalVariableGuid);
+  return EfiGetNextVariableName (VariableNameSize, VariableName, &gEfiGlobalVariableGuid);
 }
 
-// SetVariable
+// EfiSetVariable
 /** Sets the value of a variable.
 
   @param[in] VariableName  A Null-terminated string that is the name of the vendor's variable.
@@ -182,7 +182,7 @@ GetNextEfiGlobalVariableName (
   @retval EFI_NOT_FOUND           The variable trying to be updated or deleted was not found.
 **/
 EFI_STATUS
-SetVariable (
+EfiSetVariable (
   IN CHAR16    *VariableName,
   IN EFI_GUID  *VendorGuid,
   IN UINT32    Attributes,
@@ -223,7 +223,7 @@ SetEfiGlobalVariable (
   ASSERT ((DataSize == 0) || (Data != NULL));
   ASSERT ((DataSize != 0) || (Data == NULL));
 
-  return SetVariable (VariableName, &gEfiGlobalVariableGuid, Attributes, DataSize, Data);
+  return EfiSetVariable (VariableName, &gEfiGlobalVariableGuid, Attributes, DataSize, Data);
 }
 
 // DeleteVariable
@@ -237,7 +237,7 @@ DeleteVariable (
   ASSERT (VariableName[0] != L'\0');
   ASSERT (VendorGuid != NULL);
 
-  return SetVariable (VariableName, VendorGuid, 0, 0, NULL);
+  return EfiSetVariable (VariableName, VendorGuid, 0, 0, NULL);
 }
 
 // DeleteEfiGlobalVariable
@@ -263,7 +263,7 @@ VariableExists (
   EFI_STATUS Status;
 
   Size   = 0;
-  Status = GetVariable (VariableName, VendorGuid, 0, &Size, NULL);
+  Status = EfiGetVariable (VariableName, VendorGuid, 0, &Size, NULL);
 
   return (Status == EFI_BUFFER_TOO_SMALL);
 }

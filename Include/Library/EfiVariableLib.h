@@ -17,7 +17,7 @@
 #ifndef EFI_VARIABLE_LIB_H_
 #define EFI_VARIABLE_LIB_H_
 
-// GetVariable
+// EfiGetVariable
 /** Returns the value of a variable.
 
   @param[in]      VariableName  A Null-terminated string that is the name of the vendor's
@@ -40,7 +40,7 @@
   @retval EFI_SECURITY_VIOLATION  The variable could not be retrieved due to an authentication failure.
 **/
 EFI_STATUS
-GetVariable (
+EfiGetVariable (
   IN     CHAR16    *VariableName,
   IN     EFI_GUID  *VendorGuid,
   OUT    UINT32    *Attributes, OPTIONAL
@@ -48,7 +48,7 @@ GetVariable (
   OUT    VOID      *Data
   );
 
-// GetNextVariableName
+// EfiGetNextVariableName
 /** Enumerates the current variable names.
 
   @param[in, out] VariableNameSize  The size of the VariableName buffer.
@@ -68,13 +68,13 @@ GetVariable (
   @retval EFI_DEVICE_ERROR       The variable could not be retrieved due to a hardware error.
 **/
 EFI_STATUS
-GetNextVariableName (
+EfiGetNextVariableName (
   IN OUT UINTN     *VariableNameSize,
   IN OUT CHAR16    *VariableName,
   IN OUT EFI_GUID  *VendorGuid
   );
 
-// SetVariable
+// EfiSetVariable
 /** Sets the value of a variable.
 
   @param[in] VariableName  A Null-terminated string that is the name of the vendor's variable.
@@ -109,7 +109,7 @@ GetNextVariableName (
   @retval EFI_NOT_FOUND           The variable trying to be updated or deleted was not found.
 **/
 EFI_STATUS
-SetVariable (
+EfiSetVariable (
   IN CHAR16    *VariableName,
   IN EFI_GUID  *VendorGuid,
   IN UINT32    Attributes,

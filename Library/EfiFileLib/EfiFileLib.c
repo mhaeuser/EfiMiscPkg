@@ -339,7 +339,8 @@ FindFirstDirectoryByExtension (
   Status = FileHandleFindFirstFile (DirHandle, Buffer);
 
   if (!EFI_ERROR (Status)) {
-    if (!FILE_INFO_IS_DIRECTORY (*Buffer) || (CompareExtension ((*Buffer)->FileName, Extension, PrimaryExtension) == 0)) {
+    if (!FILE_INFO_IS_DIRECTORY (*Buffer)
+     || (CompareExtension ((*Buffer)->FileName, Extension, PrimaryExtension) == 0)) {
       Status = FindNextDirectoryByExtension (DirHandle, *Buffer, Extension, PrimaryExtension);
     }
   } else {

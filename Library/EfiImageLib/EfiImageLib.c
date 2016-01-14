@@ -21,7 +21,7 @@
 #include <Library/EfiRuntimeLib.h>
 #include <Library/EfiImageLib.h>
 
-// LoadImage
+// EfiLoadImage
 /** Loads an EFI image into memory.
 
   @param[in]  BootPolicy         If TRUE, indicates that the request originates from the boot
@@ -52,7 +52,7 @@
                                   platform policy specifies that the image should not be started.
 **/
 EFI_STATUS
-LoadImage (
+EfiLoadImage (
   IN  BOOLEAN                   BootPolicy,
   IN  EFI_HANDLE                ParentImageHandle,
   IN  EFI_DEVICE_PATH_PROTOCOL  *DevicePath,
@@ -63,11 +63,11 @@ LoadImage (
 {
   EFI_STATUS Status;
 
-  ASSERT (!EfiAtRuntime ());
   ASSERT (ParentImageHandle != NULL);
   ASSERT ((DevicePath != NULL) || (SourceBuffer != NULL));
   ASSERT (SourceSize > 0);
   ASSERT (ImageHandle != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->LoadImage (BootPolicy, ParentImageHandle, DevicePath, SourceBuffer, SourceSize, ImageHandle);
 
@@ -80,7 +80,7 @@ LoadImage (
   return Status;
 }
 
-// StartImage
+// EfiStartImage
 /** Transfers control to a loaded image's entry point.
 
   @param[in]  ImageHandle   Handle of image to be started.
@@ -94,7 +94,7 @@ LoadImage (
   @retval EFI_SECURITY_VIOLATION  The current platform policy specifies that the image should not be started.
 **/
 EFI_STATUS
-StartImage (
+EfiStartImage (
   IN  EFI_HANDLE  ImageHandle,
   OUT UINTN       *ExitDataSize,
   OUT CHAR16      **ExitData OPTIONAL
@@ -102,8 +102,8 @@ StartImage (
 {
   EFI_STATUS Status;
 
-  ASSERT (!EfiAtRuntime ());
   ASSERT (ImageHandle != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->StartImage (ImageHandle, ExitDataSize, ExitData);
 
@@ -116,7 +116,7 @@ StartImage (
   return Status;
 }
 
-// Exit
+// EfiExit
 /** Terminates a loaded EFI image and returns control to boot services.
 
   @param[in] ImageHandle   Handle that identifies the image.  This parameter is passed to the
@@ -136,7 +136,7 @@ StartImage (
                                  image is not the currently executing image.
 **/
 EFI_STATUS
-Exit (
+EfiExit (
   IN EFI_HANDLE  ImageHandle,
   IN EFI_STATUS  ExitStatus,
   IN UINTN       ExitDataSize,
@@ -145,9 +145,9 @@ Exit (
 {
   EFI_STATUS Status;
 
-  ASSERT (!EfiAtRuntime ());
   ASSERT (ImageHandle != NULL);
   ASSERT ((ExitDataSize == 0) || (ExitData != NULL));
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->Exit (ImageHandle, ExitStatus, ExitDataSize, ExitData);
 
@@ -156,7 +156,7 @@ Exit (
   return Status;
 }
 
-// UnloadImage
+// EfiUnloadImage
 /** Unloads an image.
 
   @param[in] ImageHandle  Handle that identifies the image to be unloaded.
@@ -165,14 +165,14 @@ Exit (
   @retval EFI_INVALID_PARAMETER  ImageHandle is not a valid image handle.
 **/
 EFI_STATUS
-UnloadImage (
+EfiUnloadImage (
   IN EFI_HANDLE  ImageHandle
   )
 {
   EFI_STATUS Status;
 
-  ASSERT (!EfiAtRuntime ());
   ASSERT (ImageHandle != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->UnloadImage (ImageHandle);
 
@@ -181,7 +181,7 @@ UnloadImage (
   return Status;
 }
 
-// ExitBootServices
+// EfiExitBootServices
 /** Terminates all boot services.
 
   @param[in] ImageHandle  Handle that identifies the exiting image.
@@ -191,16 +191,16 @@ UnloadImage (
   @retval EFI_INVALID_PARAMETER  MapKey is incorrect.
 **/
 EFI_STATUS
-ExitBootServices (
+EfiExitBootServices (
   IN EFI_HANDLE  ImageHandle,
   IN UINTN       MapKey
   )
 {
   EFI_STATUS Status;
 
-  ASSERT (!EfiAtRuntime ());
   ASSERT (ImageHandle != NULL);
   ASSERT (MapKey != 0);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->ExitBootServices (ImageHandle, MapKey);
 

@@ -17,7 +17,7 @@
 #ifndef EFI_MISC_LIB_H_
 #define EFI_MISC_LIB_H_
 
-// RaiseTpl
+// EfiRaiseTpl
 /** Raises a task's priority level and returns its previous level.
 
   @param[in] NewTpl  The new task priority level.
@@ -25,21 +25,21 @@
   @return  Previous task priority level
 **/
 EFI_TPL
-RaiseTpl (
+EfiRaiseTpl (
   IN EFI_TPL  NewTpl
   );
 
-// RestoreTpl
+// EfiRestoreTpl
 /** Restores a task's priority level to its previous value.
 
   @param[in] OldTpl  The previous task priority level to restore.
 **/
 VOID
-RestoreTpl (
+EfiRestoreTpl (
   IN EFI_TPL  OldTpl
   );
 
-// Stall
+// EfiStall
 /** Induces a fine-grained stall.
 
   @param[in] Microseconds  The number of microseconds to stall execution.
@@ -48,11 +48,11 @@ RestoreTpl (
                        Microseconds.
 **/
 EFI_STATUS
-Stall (
+EfiStall (
   IN UINTN  Microseconds
   );
 
-// SetWatchdogTimer
+// EfiSetWatchdogTimer
 /** Sets the system's watchdog timer.
  
   @param[in] Timeout       The number of seconds to set the watchdog timer to.
@@ -68,14 +68,14 @@ Stall (
                                  error.
 **/
 EFI_STATUS
-SetWatchdogTimer (
+EfiSetWatchdogTimer (
   IN UINTN   Timeout,
   IN UINT64  WatchdogCode,
   IN UINTN   DataSize,
   IN CHAR16  *WatchdogData OPTIONAL
   );
 
-// ResetSystem
+// EfiResetSystem
 /** Resets the entire platform.
 
   @param[in] ResetType    The type of reset to perform.
@@ -86,14 +86,14 @@ SetWatchdogTimer (
                           string, optionally followed by additional binary data.
 **/
 VOID
-ResetSystem (
+EfiResetSystem (
   IN EFI_RESET_TYPE  ResetType,
   IN EFI_STATUS      ResetStatus,
   IN UINTN           DataSize,
   IN VOID            *ResetData OPTIONAL
   );
 
-// GetNextMonotonicCount
+// EfiGetNextMonotonicCount
 /** Returns a monotonically increasing count for the platform.
 
   @param[out] Count  The pointer to returned value.
@@ -103,11 +103,11 @@ ResetSystem (
   @retval EFI_DEVICE_ERROR       The device is not functioning properly.
 **/
 EFI_STATUS
-GetNextMonotonicCount (
+EfiGetNextMonotonicCount (
   OUT UINT64  *Count
   );
 
-// GetNextHighMonotonicCount
+// EfiGetNextHighMonotonicCount
 /** Returns the next high 32 bits of the platform's monotonic counter.
 
   @param[out] HighCount  The pointer to returned value.
@@ -117,7 +117,7 @@ GetNextMonotonicCount (
   @retval EFI_DEVICE_ERROR       The device is not functioning properly.
 **/
 EFI_STATUS
-GetNextHighMonotonicCount (
+EfiGetNextHighMonotonicCount (
   OUT UINT32  *HighCount
   );
 

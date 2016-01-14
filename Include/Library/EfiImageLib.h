@@ -17,7 +17,7 @@
 #ifndef EFI_IMAGE_LIB_H_
 #define EFI_IMAGE_LIB_H_
 
-// LoadImage
+// EfiLoadImage
 /** Loads an EFI image into memory.
  
   @param[in]  BootPolicy         If TRUE, indicates that the request originates from the boot
@@ -48,7 +48,7 @@
                                   platform policy specifies that the image should not be started.
 **/
 EFI_STATUS
-LoadImage (
+EfiLoadImage (
   IN  BOOLEAN                   BootPolicy,
   IN  EFI_HANDLE                ParentImageHandle,
   IN  EFI_DEVICE_PATH_PROTOCOL  *DevicePath,
@@ -57,7 +57,7 @@ LoadImage (
   OUT EFI_HANDLE                *ImageHandle
   );
 
-// StartImage
+// EfiStartImage
 /** Transfers control to a loaded image's entry point.
 
   @param[in]  ImageHandle   Handle of image to be started.
@@ -71,13 +71,13 @@ LoadImage (
   @return                         Exit code from image.
   **/
 EFI_STATUS
-StartImage (
+EfiStartImage (
   IN  EFI_HANDLE  ImageHandle,
   OUT UINTN       *ExitDataSize,
   OUT CHAR16      **ExitData OPTIONAL
   );
 
-// Exit
+// EfiExit
 /** Terminates a loaded EFI image and returns control to boot services.
 
   @param[in] ImageHandle   Handle that identifies the image.  This parameter is passed to the
@@ -97,14 +97,14 @@ StartImage (
                                  image is not the currently executing image.
 **/
 EFI_STATUS
-Exit (
+EfiExit (
   IN EFI_HANDLE  ImageHandle,
   IN EFI_STATUS  ExitStatus,
   IN UINTN       ExitDataSize,
   IN CHAR16      *ExitData OPTIONAL
   );
 
-// UnloadImage
+// EfiUnloadImage
 /** Unloads an image.
 
   @param[in] ImageHandle  Handle that identifies the image to be unloaded.
@@ -113,11 +113,11 @@ Exit (
   @retval EFI_INVALID_PARAMETER  ImageHandle is not a valid image handle.
 **/
 EFI_STATUS
-UnloadImage (
+EfiUnloadImage (
   IN EFI_HANDLE  ImageHandle
   );
 
-// ExitBootServices
+// EfiExitBootServices
 /** Terminates all boot services.
 
   @param[in] ImageHandle  Handle that identifies the exiting image.
@@ -127,7 +127,7 @@ UnloadImage (
   @retval EFI_INVALID_PARAMETER  MapKey is incorrect.
 **/
 EFI_STATUS
-ExitBootServices (
+EfiExitBootServices (
   IN EFI_HANDLE  ImageHandle,
   IN UINTN       MapKey
   );

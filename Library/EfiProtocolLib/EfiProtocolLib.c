@@ -16,14 +16,13 @@
 
 #include <Uefi.h>
 
-#include <MiscBase.h>
-
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/MemoryAllocationLib.h>
 #include <Library/DebugLib.h>
+#include <Library/EfiRuntimeLib.h>
 #include <Library/EfiProtocolLib.h>
 
-// InstallProtocolInterface
+// EfiInstallProtocolInterface
 /** Installs a protocol interface on a device handle.  If the handle does not exist, it is created and added
     to the list of handles in the system.  InstallMultipleProtocolInterfaces() performs
     more error checking than InstallProtocolInterface(), so it is recommended that
@@ -43,7 +42,7 @@
   @retval EFI_INVALID_PARAMETER  Protocol is already installed on the handle specified by Handle.
 **/
 EFI_STATUS
-InstallProtocolInterface (
+EfiInstallProtocolInterface (
   IN OUT EFI_HANDLE          *Handle,
   IN     EFI_GUID            *Protocol,
   IN     EFI_INTERFACE_TYPE  InterfaceType,
@@ -55,6 +54,7 @@ InstallProtocolInterface (
   ASSERT (Handle != NULL);
   ASSERT (Protocol != NULL);
   ASSERT (InterfaceType == EFI_NATIVE_INTERFACE);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->InstallProtocolInterface (Handle, Protocol, InterfaceType, Interface);
 
@@ -63,7 +63,7 @@ InstallProtocolInterface (
   return Status;
 }
 
-// ReinstallProtocolInterface
+// EfiReinstallProtocolInterface
 /** Reinstalls a protocol interface on a device handle.
 
   @param[in] Handle        Handle on which the interface is to be reinstalled.
@@ -81,7 +81,7 @@ InstallProtocolInterface (
   @retval EFI_INVALID_PARAMETER  Protocol is NULL.
 **/
 EFI_STATUS
-ReinstallProtocolInterface (
+EfiReinstallProtocolInterface (
   IN EFI_HANDLE  Handle,
   IN EFI_GUID    *Protocol,
   IN VOID        *OldInterface,
@@ -92,6 +92,7 @@ ReinstallProtocolInterface (
 
   ASSERT (Handle != NULL);
   ASSERT (Protocol != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->ReinstallProtocolInterface (Handle, Protocol, OldInterface, NewInterface);
 
@@ -104,7 +105,7 @@ ReinstallProtocolInterface (
   return Status;
 }
 
-// UninstallProtocolInterface
+// EfiUninstallProtocolInterface
 /** Removes a protocol interface from a device handle.  It is recommended that
     UninstallMultipleProtocolInterfaces() be used in place of
     UninstallProtocolInterface().
@@ -121,7 +122,7 @@ ReinstallProtocolInterface (
   @retval EFI_INVALID_PARAMETER  Protocol is NULL.
 **/
 EFI_STATUS
-UninstallProtocolInterface (
+EfiUninstallProtocolInterface (
   IN EFI_HANDLE  Handle,
   IN EFI_GUID    *Protocol,
   IN VOID        *Interface
@@ -131,6 +132,7 @@ UninstallProtocolInterface (
 
   ASSERT (Handle != NULL);
   ASSERT (Protocol != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->UninstallProtocolInterface (Handle, Protocol, Interface);
 
@@ -143,7 +145,7 @@ UninstallProtocolInterface (
   return Status;
 }
 
-// HandleProtocol
+// EfiHandleProtocol
 /** Queries a handle to determine if it supports a specified protocol.
 
   @param[in]  Handle     The handle being queried.
@@ -158,7 +160,7 @@ UninstallProtocolInterface (
   @retval EFI_INVALID_PARAMETER  Interface is NULL.
 **/
 EFI_STATUS
-HandleProtocol (
+EfiHandleProtocol (
   IN  EFI_HANDLE  Handle,
   IN  EFI_GUID    *Protocol,
   OUT VOID        **Interface
@@ -169,6 +171,7 @@ HandleProtocol (
   ASSERT (Handle != NULL);
   ASSERT (Protocol != NULL);
   ASSERT (Interface != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->HandleProtocol (Handle, Protocol, Interface);
 
@@ -181,7 +184,7 @@ HandleProtocol (
   return Status;
 }
 
-// OpenProtocol
+// EfiOpenProtocol
 /** Queries a handle to determine if it supports a specified protocol.  If the protocol is supported by the
     handle, it opens the protocol on behalf of the calling agent.
 
@@ -208,7 +211,7 @@ HandleProtocol (
                                  handle is the same as AgentHandle.
 **/
 EFI_STATUS
-OpenProtocol (
+EfiOpenProtocol (
   IN  EFI_HANDLE  Handle,
   IN  EFI_GUID    *Protocol,
   OUT VOID        **Interface, OPTIONAL
@@ -219,26 +222,23 @@ OpenProtocol (
 {
   EFI_STATUS Status;
 
-  /*
-  If Attributes is not a legal value, then EFI_INVALID_PARAMETER is returned
-  If Attributes is BY_CHILD_CONTROLLER, BY_DRIVER, EXCLUSIVE, or BY_DRIVER|EXCULSIVE, and AgentHandle is not a valid EFI_HANDLE, then EFI_INVALID_PARAMETER is returned.
-  If Attributes is BY_CHILD_CONTROLLER, BY_DRIVER, or BY_DRIVER|EXCULSIVE, and ControllerHandle is not a valid EFI_HANDLE, then EFI_INVALID_PARAMETER is returned.
-  If Attributes is BY_CHILD_CONTROLLER and Handle is identical to ControllerHandle, then EFI_INVALID_PARAMETER is returned.
-  If Attributes is BY_DRIVER , BY_DRIVER|EXCLUSIVE, or EXCLUSIVE, and there are any items on the open list of the protocol interface with an attribute of EXCLUSIVE or BY_DRIVER|EXCLUSIVE, then EFI_ACCESS_DENIED is returned.
-  If Attributes is BY_DRIVER, and there are any items on the open list of the protocol interface with an attribute of BY_DRIVER, and AgentHandle is the same agent handle in the open list item, then EFI_ALREADY_STARTED is returned.
-  If Attributes is BY_DRIVER, and there are any items on the open list of the protocol interface with an attribute of BY_DRIVER, and AgentHandle is different than the agent handle in the open list item, then EFI_ACCESS_DENIED is returned.
-  If Attributes is BY_DRIVER|EXCLUSIVE, and there are any items on the open list of the protocol interface with an attribute of BY_DRIVER|EXCLUSIVE, and AgentHandle is the same agent handle in the open list item, then EFI_ALREADY_STARTED is returned.
-  If Attributes is BY_DRIVER|EXCLUSIVE, and there are any items on the open list of the protocol interface with an attribute of BY_DRIVER|EXCLUSIVE, and AgentHandle is different than the agent handle in the open list item, then EFI_ACCESS_DENIED is returned.
-  If Attributes is BY_DRIVER|EXCLUSIVE or EXCLUSIVE, and there is an item on the open list of the protocol interface with an attribute of BY_DRIVER, then the boot service DisconnectController() is called for the driver on the open list. If there is an item in the open list of the protocol interface with an attribute of BY_DRIVER remaining after the DisconnectController() call has been made, EFI_ACCESS_DENIED is returned.
-  */
-
   ASSERT (Handle != NULL);
   ASSERT (Protocol != NULL);
   ASSERT ((Attributes != 0) && ((Attributes & ~0x3F) == 0));
   ASSERT (((((Attributes & EFI_OPEN_PROTOCOL_TEST_PROTOCOL) == 0) ? 1 : 0) ^ ((Interface != NULL) ? 1 : 0)) != 0);
-  ASSERT (!((Attributes == EFI_OPEN_PROTOCOL_BY_CHILD_CONTROLLER) || (Attributes == EFI_OPEN_PROTOCOL_BY_DRIVER) || (Attributes == EFI_OPEN_PROTOCOL_EXCLUSIVE) || (Attributes == (EFI_OPEN_PROTOCOL_BY_DRIVER | EFI_OPEN_PROTOCOL_EXCLUSIVE))) || (AgentHandle != NULL));
-  ASSERT (!((Attributes == EFI_OPEN_PROTOCOL_BY_CHILD_CONTROLLER) || (Attributes == EFI_OPEN_PROTOCOL_BY_DRIVER) || (Attributes == (EFI_OPEN_PROTOCOL_BY_DRIVER | EFI_OPEN_PROTOCOL_EXCLUSIVE))) || (ControllerHandle != NULL));
+  ASSERT (!((Attributes == EFI_OPEN_PROTOCOL_BY_CHILD_CONTROLLER)
+        || (Attributes == EFI_OPEN_PROTOCOL_BY_DRIVER)
+        || (Attributes == EFI_OPEN_PROTOCOL_EXCLUSIVE)
+        || (Attributes == (EFI_OPEN_PROTOCOL_BY_DRIVER | EFI_OPEN_PROTOCOL_EXCLUSIVE)))
+       || (AgentHandle != NULL));
+
+  ASSERT (!((Attributes == EFI_OPEN_PROTOCOL_BY_CHILD_CONTROLLER)
+        || (Attributes == EFI_OPEN_PROTOCOL_BY_DRIVER)
+        || (Attributes == (EFI_OPEN_PROTOCOL_BY_DRIVER | EFI_OPEN_PROTOCOL_EXCLUSIVE)))
+       || (ControllerHandle != NULL));
+
   ASSERT ((Attributes != EFI_OPEN_PROTOCOL_BY_CHILD_CONTROLLER) || (ControllerHandle != Handle));
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->OpenProtocol (Handle, Protocol, Interface, AgentHandle, ControllerHandle, Attributes);
 
@@ -251,7 +251,7 @@ OpenProtocol (
   return Status;
 }
 
-// CloseProtocol
+// EfiCloseProtocol
 /** Closes a protocol on a handle that was opened using OpenProtocol().
 
   @param[in] Handle            The handle for the protocol interface that was previously opened
@@ -272,7 +272,7 @@ OpenProtocol (
                                  currently open by AgentHandle and ControllerHandle.
 **/
 EFI_STATUS
-CloseProtocol (
+EfiCloseProtocol (
   IN EFI_HANDLE  Handle,
   IN EFI_GUID    *Protocol,
   IN EFI_HANDLE  AgentHandle,
@@ -284,6 +284,7 @@ CloseProtocol (
   ASSERT (Handle != NULL);
   ASSERT (Protocol != NULL);
   ASSERT (AgentHandle != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->CloseProtocol (Handle, Protocol, AgentHandle, ControllerHandle);
 
@@ -292,7 +293,7 @@ CloseProtocol (
   return Status;
 }
 
-// OpenProtocolInformation
+// EfiOpenProtocolInformation
 /** Retrieves the list of agents that currently have a protocol interface opened.
 
   @param[in]  Handle       The handle for the protocol interface that is being queried.
@@ -307,7 +308,7 @@ CloseProtocol (
   @retval EFI_NOT_FOUND         Handle does not support the protocol specified by Protocol.
 **/
 EFI_STATUS
-OpenProtocolInformation (
+EfiOpenProtocolInformation (
   IN  EFI_HANDLE                           Handle,
   IN  EFI_GUID                             *Protocol,
   OUT EFI_OPEN_PROTOCOL_INFORMATION_ENTRY  **EntryBuffer,
@@ -320,7 +321,7 @@ OpenProtocolInformation (
   ASSERT (Protocol != NULL);
   ASSERT (EntryBuffer != NULL);
   ASSERT (EntryCount != NULL);
-  ASSERT (*EntryCount > 0);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->OpenProtocolInformation (Handle, Protocol, EntryBuffer, EntryCount);
 
@@ -333,7 +334,7 @@ OpenProtocolInformation (
   return Status;
 }
 
-// ProtocolsPerHandle
+// EfiProtocolsPerHandle
 /** Retrieves the list of protocol interface GUIDs that are installed on a handle in a Buffer allocated
     from pool.
 
@@ -354,7 +355,7 @@ OpenProtocolInformation (
   @retval EFI_INVALID_PARAMETER  ProtocolBufferCount is NULL.
 **/
 EFI_STATUS
-ProtocolsPerHandle (
+EfiProtocolsPerHandle (
   IN  EFI_HANDLE  Handle,
   OUT EFI_GUID    ***ProtocolBuffer,
   OUT UINTN       *ProtocolBufferCount
@@ -365,6 +366,7 @@ ProtocolsPerHandle (
   ASSERT (Handle != NULL);
   ASSERT (ProtocolBuffer != NULL);
   ASSERT (ProtocolBufferCount != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->ProtocolsPerHandle (Handle, ProtocolBuffer, ProtocolBufferCount);
 
@@ -373,7 +375,7 @@ ProtocolsPerHandle (
   return Status;
 }
 
-// RegisterProtocolNotify
+// EfiRegisterProtocolNotify
 /** Creates an event that is to be signaled whenever an interface is installed for a specified protocol.
 
   @param[in]  Protocol      The numeric ID of the protocol for which the event is to be registered.
@@ -388,7 +390,7 @@ ProtocolsPerHandle (
   @retval EFI_INVALID_PARAMETER  Registration is NULL.
 **/
 EFI_STATUS
-RegisterProtocolNotify (
+EfiRegisterProtocolNotify (
   IN  EFI_GUID   *Protocol,
   IN  EFI_EVENT  Event,
   OUT VOID       **Registration
@@ -399,6 +401,7 @@ RegisterProtocolNotify (
   ASSERT (Protocol != NULL);
   ASSERT (Event != NULL);
   ASSERT (Registration != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->RegisterProtocolNotify (Protocol, Event, Registration);
 
@@ -407,7 +410,7 @@ RegisterProtocolNotify (
   return Status;
 }
 
-// LocateHandle
+// EfiLocateHandle
 /** Returns an array of handles that support a specified protocol.
 
   @param[in]      SearchType  Specifies which handle(s) are to be returned.
@@ -429,7 +432,7 @@ RegisterProtocolNotify (
   @retval EFI_INVALID_PARAMETER  BufferSize is large enough for the result and Buffer is NULL.
 **/
 EFI_STATUS
-LocateHandle (
+EfiLocateHandle (
   IN     EFI_LOCATE_SEARCH_TYPE  SearchType,
   IN     EFI_GUID                *Protocol, OPTIONAL
   IN     VOID                    *SearchKey, OPTIONAL
@@ -442,6 +445,7 @@ LocateHandle (
   ASSERT ((SearchType >= AllHandles) && (SearchType <= ByProtocol));
   ASSERT ((SearchType != ByRegisterNotify) || (SearchKey != NULL));
   ASSERT ((SearchType != ByProtocol) || (Protocol != NULL));
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->LocateHandle (SearchType, Protocol, SearchKey, BufferSize, Buffer);
 
@@ -454,7 +458,7 @@ LocateHandle (
   return Status;
 }
 
-// LocateDevicePath
+// EfiLocateDevicePath
 /** Locates the handle to a device on the device path that supports the specified protocol.
 
   @param[in]      Protocol    Specifies the protocol to search for.
@@ -469,7 +473,7 @@ LocateHandle (
   @retval EFI_INVALID_PARAMETER  A handle matched the search and Device is NULL.
 **/
 EFI_STATUS
-LocateDevicePath (
+EfiLocateDevicePath (
   IN     EFI_GUID                  *Protocol,
   IN OUT EFI_DEVICE_PATH_PROTOCOL  **DevicePath,
   OUT    EFI_HANDLE                *Device
@@ -480,6 +484,7 @@ LocateDevicePath (
   ASSERT (Protocol != NULL);
   ASSERT (DevicePath != NULL);
   ASSERT (Device != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->LocateDevicePath (Protocol, DevicePath, Device);
 
@@ -492,7 +497,7 @@ LocateDevicePath (
   return Status;
 }
 
-// InstallConfigurationTable
+// EfiInstallConfigurationTable
 /** Adds, updates, or removes a configuration table entry from the EFI System Table.
 
   @param[in] Guid   A pointer to the GUID for the entry to add, update, or remove.
@@ -505,14 +510,15 @@ LocateDevicePath (
   @retval EFI_OUT_OF_RESOURCES   There is not enough memory available to complete the operation.
 **/
 EFI_STATUS
-InstallConfigurationTable (
+EfiInstallConfigurationTable (
   IN EFI_GUID  *Guid,
-  IN VOID      *Table
+  IN VOID      *Table OPTIONAL
   )
 {
   EFI_STATUS Status;
 
   ASSERT (Guid != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->InstallConfigurationTable (Guid, Table);
 
@@ -525,7 +531,7 @@ InstallConfigurationTable (
   return Status;
 }
 
-// LocateHandleBuffer
+// EfiLocateHandleBuffer
 /** Returns an array of handles that support the requested protocol in a Buffer allocated from pool.
 
   @param[in]      SearchType  Specifies which handle(s) are to be returned.
@@ -544,7 +550,7 @@ InstallConfigurationTable (
   @retval EFI_INVALID_PARAMETER  Buffer is NULL.
 **/
 EFI_STATUS
-LocateHandleBuffer (
+EfiLocateHandleBuffer (
   IN     EFI_LOCATE_SEARCH_TYPE  SearchType,
   IN     EFI_GUID                *Protocol, OPTIONAL
   IN     VOID                    *SearchKey, OPTIONAL
@@ -557,6 +563,7 @@ LocateHandleBuffer (
   ASSERT ((((SearchType == ByProtocol) ? 1 : 0) ^ ((Protocol == NULL) ? 1 : 0)) != 0);
   ASSERT (NoHandles != NULL);
   ASSERT (Buffer != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->LocateHandleBuffer (SearchType, Protocol, SearchKey, NoHandles, Buffer);
 
@@ -569,7 +576,7 @@ LocateHandleBuffer (
   return Status;
 }
 
-// LocateProtocol
+// EfiLocateProtocol
 /** Returns the first protocol instance that matches the given protocol.
 
   @param[in]  Protocol      Provides the protocol to search for.
@@ -585,7 +592,7 @@ LocateHandleBuffer (
   @retval EFI_INVALID_PARAMETER  Interface is NULL.
 **/
 EFI_STATUS
-LocateProtocol (
+EfiLocateProtocol (
   IN  EFI_GUID  *Protocol,
   IN  VOID      *Registration, OPTIONAL
   OUT VOID      **Interface
@@ -595,6 +602,7 @@ LocateProtocol (
 
   ASSERT (Protocol != NULL);
   ASSERT (Interface != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->LocateProtocol (Protocol, Registration, Interface);
 
@@ -607,7 +615,7 @@ LocateProtocol (
   return Status;
 }
 
-// ConnectController
+// EfiConnectController
 /** Connects one or more drivers to a controller.
 
   @param[in] ControllerHandle     The handle of the controller to which driver(s) are to be connected.
@@ -633,7 +641,7 @@ LocateProtocol (
                                   specified by the RemainingDevicePath.
 **/
 EFI_STATUS
-ConnectController (
+EfiConnectController (
   IN EFI_HANDLE                ControllerHandle,
   IN EFI_HANDLE                *DriverImageHandle, OPTIONAL
   IN EFI_DEVICE_PATH_PROTOCOL  *RemainingDevicePath, OPTIONAL
@@ -643,6 +651,7 @@ ConnectController (
   EFI_STATUS Status;
 
   ASSERT (ControllerHandle != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->ConnectController (ControllerHandle, DriverImageHandle, RemainingDevicePath, Recursive);
 
@@ -655,7 +664,7 @@ ConnectController (
   return Status;
 }
 
-// DisconnectController
+// EfiDisconnectController
 /** Disconnects one or more drivers from a controller.
 
   @param[in] ControllerHandle   The handle of the controller from which driver(s) are to be disconnected.
@@ -679,7 +688,7 @@ ConnectController (
   @retval EFI_DEVICE_ERROR       The controller could not be disconnected because of a device error.
 **/
 EFI_STATUS
-DisconnectController (
+EfiDisconnectController (
   IN EFI_HANDLE  ControllerHandle,
   IN EFI_HANDLE  DriverImageHandle, OPTIONAL
   IN EFI_HANDLE  ChildHandle OPTIONAL
@@ -688,6 +697,7 @@ DisconnectController (
   EFI_STATUS Status;
 
   ASSERT (ControllerHandle != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = gBS->DisconnectController (ControllerHandle, DriverImageHandle, ChildHandle);
 
@@ -717,19 +727,20 @@ SafeInstallProtocolInterface (
   ASSERT (Handle != NULL);
   ASSERT (Protocol != NULL);
   ASSERT (InterfaceType == EFI_NATIVE_INTERFACE);
+  ASSERT (!EfiAtRuntime ());
 
   DEBUG_CODE (
     Buffer = NULL;
     );
 
-  Status = LocateHandleBuffer (ByProtocol, Protocol, NULL, &NoHandles, &Buffer);
+  Status = EfiLocateHandleBuffer (ByProtocol, Protocol, NULL, &NoHandles, &Buffer);
 
   if (!EFI_ERROR (Status)) {
     FreePool ((VOID *)Buffer);
   }
 
   return ((Status == EFI_NOT_FOUND)
-           ? InstallProtocolInterface (Handle, Protocol, InterfaceType, Interface)
+           ? EfiInstallProtocolInterface (Handle, Protocol, InterfaceType, Interface)
            : EFI_ALREADY_STARTED);
 }
 
@@ -752,33 +763,34 @@ InstallVersionedProtocolInterface (
   ASSERT (Protocol != NULL);
   ASSERT (InterfaceType == EFI_NATIVE_INTERFACE);
   ASSERT (Interface != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   if (*Handle != NULL) {
-    Status = HandleProtocol (*Handle, Protocol, &OldInterface);
+    Status = EfiHandleProtocol (*Handle, Protocol, &OldInterface);
 
     if (!EFI_ERROR (Status)) {
       Status = EFI_ALREADY_STARTED;
 
       if (*(UINTN *)OldInterface < *(UINTN *)Interface) {
-        Status = ReinstallProtocolInterface (*Handle, Protocol, OldInterface, Interface);
+        Status = EfiReinstallProtocolInterface (*Handle, Protocol, OldInterface, Interface);
       }
     } else if (Status == EFI_UNSUPPORTED) {
       goto InstallProtocol;
     }
   } else {
-    Status = LocateHandleBuffer (ByProtocol, Protocol, NULL, &NoHandles, &Buffer);
+    Status = EfiLocateHandleBuffer (ByProtocol, Protocol, NULL, &NoHandles, &Buffer);
 
     if (!EFI_ERROR (Status)) {
       Status = EFI_ALREADY_STARTED;
 
       if (NoHandles == 1) {
-        Status = HandleProtocol (Buffer[0], Protocol, &OldInterface);
+        Status = EfiHandleProtocol (Buffer[0], Protocol, &OldInterface);
 
         if (!EFI_ERROR (Status)) {
           Status = EFI_ALREADY_STARTED;
 
           if (*(UINTN *)OldInterface < *(UINTN *)Interface) {
-            Status = UninstallProtocolInterface (Buffer[0], Protocol, OldInterface);
+            Status = EfiUninstallProtocolInterface (Buffer[0], Protocol, OldInterface);
 
             if (!EFI_ERROR (Status)) {
               goto InstallProtocol;
@@ -790,7 +802,7 @@ InstallVersionedProtocolInterface (
       FreePool ((VOID *)Buffer);
     } else if (Status == EFI_NOT_FOUND) {
     InstallProtocol:
-      Status = InstallProtocolInterface (Handle, Protocol, InterfaceType, Interface);
+      Status = EfiInstallProtocolInterface (Handle, Protocol, InterfaceType, Interface);
     }
   }
 
