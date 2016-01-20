@@ -103,17 +103,59 @@ EfiConvertPointer (
   Buffer.  The Buffer returned is aligned on a 4KB boundary.  If Pages is 0, then NULL is returned.
   If there is not enough memory remaining to satisfy the request, then NULL is returned.
 
-  @param[in] Type        The type of allocation to perform.
-  @param[in] MemoryType  The type of memory to allocate.
-  @param[in] Pages       The number of 4 KB pages to allocate.
+  @param[in]      Type        The type of allocation to perform.
+  @param[in]      MemoryType  The type of memory to allocate.
+  @param[in]      Pages       The number of 4 KB pages to allocate.
+  @param[in, out] Memory      The pointer to a physical address. On input, the way in which the address is
+                              used depends on the value of Type.
 
   @return  A pointer to the allocated Buffer or NULL if allocation fails.
 **/
-VOID *
+EFI_STATUS
 EfiAllocatePages (
-  IN EFI_ALLOCATE_TYPE  Type,
-  IN EFI_MEMORY_TYPE    MemoryType,
-  IN UINTN              Pages
+  IN EFI_ALLOCATE_TYPE         Type,
+  IN EFI_MEMORY_TYPE           MemoryType,
+  IN UINTN                     Pages,
+  IN OUT EFI_PHYSICAL_ADDRESS  *Memory
+  );
+
+// AllocatePagesFromTop
+/** Allocates one or more 4KB pages of a certain memory type from the top of memory.
+
+  Allocates the number of 4KB pages of a certain memory type from the top of memory and returns a pointer to the
+  allocated Buffer.  The Buffer returned is aligned on a 4KB boundary.  If Pages is 0, then NULL is returned.  If there
+  is not enough memory remaining to satisfy the request, then NULL is returned.
+  
+  @param[in]      MemoryType  The type of memory to allocate.
+  @param[in]      Pages       The number of 4 KB pages to allocate.
+  @param[in, out] Memory      The pointer to a physical address. On input, it is the highest desired address.
+**/
+EFI_STATUS
+AllocatePagesFromTop (
+  IN     EFI_MEMORY_TYPE       MemoryType,
+  IN     UINTN                 Pages,
+  IN OUT EFI_PHYSICAL_ADDRESS  *Memory
+  );
+
+// GetMemoryMapBuffer
+/** Helper function that calls GetMemoryMap(), allocates space for mem map and returns it.
+**/
+EFI_MEMORY_DESCRIPTOR *
+EFIAPI
+GetMemoryMapBuffer (
+  IN  EFI_GET_MEMORY_MAP  GetMemoryMap,
+  OUT UINTN               *MemoryMapSize,
+  OUT UINTN               *MemoryMapKey,
+  OUT UINTN               *DescriptorSize,
+  OUT UINT32              *DescriptorVersion
+  );
+
+// GetMemoryMapKey
+/** Helper function that calls GetMemoryMap() and returns new MapKey.
+**/
+UINTN
+GetMemoryMapKey (
+  IN EFI_GET_MEMORY_MAP  GetMemoryMap
   );
 
 #endif // EFI_MEMORY_LIB_H_

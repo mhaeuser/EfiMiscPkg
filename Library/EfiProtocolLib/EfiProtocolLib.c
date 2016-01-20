@@ -54,6 +54,11 @@ EfiInstallProtocolInterface (
   ASSERT (Handle != NULL);
   ASSERT (Protocol != NULL);
   ASSERT (InterfaceType == EFI_NATIVE_INTERFACE);
+  DEBUG_CODE (
+    if (*Handle != NULL) {
+      ASSERT_PROTOCOL_ALREADY_INSTALLED (*Handle, Protocol);
+    }
+    );
   ASSERT (!EfiAtRuntime ());
 
   Status = gBS->InstallProtocolInterface (Handle, Protocol, InterfaceType, Interface);
@@ -90,8 +95,11 @@ EfiReinstallProtocolInterface (
 {
   EFI_STATUS Status;
 
+  VOID *Interface;
+
   ASSERT (Handle != NULL);
   ASSERT (Protocol != NULL);
+  ASSERT (EfiHandleProtocol (Handle, Protocol, &Interface) != EFI_UNSUPPORTED);
   ASSERT (!EfiAtRuntime ());
 
   Status = gBS->ReinstallProtocolInterface (Handle, Protocol, OldInterface, NewInterface);

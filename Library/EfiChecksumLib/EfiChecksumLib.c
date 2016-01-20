@@ -45,10 +45,10 @@ CalculateCrc32 (
 {
   EFI_STATUS Status;
 
-  ASSERT (!EfiAtRuntime ());
   ASSERT (Data != NULL);
   ASSERT (DataSize > 0);
   ASSERT (Crc32 != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   *Crc32 = 0;
   Status = gBS->CalculateCrc32 (Data, DataSize, Crc32);

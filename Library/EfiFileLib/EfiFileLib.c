@@ -25,6 +25,7 @@
 #include <Library/DebugLib.h>
 #include <Library/FileHandleLib.h>
 #include <Library/EfiFileLib.h>
+#include <Library/EfiRuntimeLib.h>
 
 // FILE_INFO_IS_DIRECTORY
 #define FILE_INFO_IS_DIRECTORY(DirInfo) (((DirInfo)->Attribute & EFI_FILE_DIRECTORY) != 0)
@@ -50,6 +51,7 @@ FileExists (
 
   ASSERT (Root != NULL);
   ASSERT (FileName != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = Root->Open (Root, &FileHandle, FileName, EFI_FILE_MODE_READ, 0);
   Exists = !EFI_ERROR (Status);
@@ -81,6 +83,7 @@ LoadFile (
   ASSERT (FileName != NULL);
   ASSERT (BufferSize != NULL);
   ASSERT (Buffer != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = Root->Open (Root, &FileHandle, FileName, EFI_FILE_MODE_READ, 0);
 
@@ -88,13 +91,8 @@ LoadFile (
     Status = FileHandleGetSize (FileHandle, &ReadSize);
 
     if (!EFI_ERROR (Status)) {
-      ReadSize += sizeof (CHAR16); // HFSPlus
-
-      if (ReadSize > MAX_UINTN) {
-        ReadSize = MAX_UINTN;
-      }
-
-      FileDataSize = (UINTN)ReadSize;
+      ReadSize     = MIN ((ReadSize + sizeof (CHAR16)), MAX_UINTN);
+      FileDataSize = ReadSize;
       FileData     = AllocateZeroPool (FileDataSize);
       Status       = EFI_OUT_OF_RESOURCES;
 
@@ -105,9 +103,9 @@ LoadFile (
           *BufferSize = FileDataSize;
           *Buffer     = FileData;
           Status      = EFI_SUCCESS;
-        } else {
-          FreePool (FileData);
         }
+        
+        FreePool (FileData);
       }
     }
 
@@ -191,6 +189,7 @@ FindNextFileByExtension (
   ASSERT (DirHandle != NULL);
   ASSERT (Buffer != NULL);
   ASSERT (Extension != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   NoFile = FALSE;
 
@@ -225,6 +224,7 @@ FindFirstFileByExtension (
   ASSERT (DirHandle != NULL);
   ASSERT (Buffer != NULL);
   ASSERT (Extension != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = FileHandleFindFirstFile (DirHandle, Buffer);
 
@@ -252,6 +252,7 @@ FindNextDirectory (
 
   ASSERT (DirHandle != NULL);
   ASSERT (Buffer != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   NoFile = FALSE;
 
@@ -285,6 +286,7 @@ FindFirstDirectory (
 
   ASSERT (DirHandle != NULL);
   ASSERT (Buffer != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = FileHandleFindFirstFile (DirHandle, Buffer);
 
@@ -313,6 +315,7 @@ FindNextDirectoryByExtension (
   ASSERT (DirHandle != NULL);
   ASSERT (Buffer != NULL);
   ASSERT (Extension != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   do {
     Status = FindNextFileByExtension (DirHandle, Buffer, Extension, PrimaryExtension);
@@ -335,6 +338,7 @@ FindFirstDirectoryByExtension (
   ASSERT (DirHandle != NULL);
   ASSERT (Buffer != NULL);
   ASSERT (Extension != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   Status = FileHandleFindFirstFile (DirHandle, Buffer);
 
