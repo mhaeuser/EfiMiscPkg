@@ -86,11 +86,9 @@ EfiGetMemoryMap (
 
   Status = gBS->GetMemoryMap (MemoryMapSize, MemoryMap, MapKey, DescriptorSize, DescriptorVersion);
 
-  DEBUG_CODE (
-    if (Status != EFI_BUFFER_TOO_SMALL) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if (Status != EFI_BUFFER_TOO_SMALL) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -129,17 +127,13 @@ EfiSetVirtualAddressMap (
 
   Status = gRT->SetVirtualAddressMap (MemoryMapSize, DescriptorSize, DescriptorVersion, VirtualMap);
 
-  DEBUG_CODE (
-    if (Status != EFI_BUFFER_TOO_SMALL) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if (Status != EFI_BUFFER_TOO_SMALL) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
-#ifndef MDEPKG_NDEBUG
   if (!EFI_ERROR (Status)) {
     mSetVirtualAddressMapReturned = TRUE;
   }
-#endif
 
   return Status;
 }
@@ -174,11 +168,9 @@ EfiConvertPointer (
   // also, calls to the updated RT pointer with the virtual address are illegal till SetVirtualAddressMap returned.
   Status = gPhysicalRT->ConvertPointer (DebugDisposition, Address);
 
-  DEBUG_CODE (
-    if (Status != EFI_NOT_FOUND) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if (Status != EFI_NOT_FOUND) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -267,20 +259,16 @@ GetMemoryMapBuffer (
   OUT UINT32              *DescriptorVersion
   )
 {
-  ASSERT (GetMemoryMap != NULL);
-  ASSERT (MemoryMapSize != NULL);
-  ASSERT (!EfiAtRuntime ());
-
-  ASSERT (MemoryMapSize != NULL);
-  ASSERT ((*MemoryMapSize == 0) || (MemoryMap != NULL));
-  ASSERT (!EfiAtRuntime ());
-
   EFI_MEMORY_DESCRIPTOR *MemoryMapBuffer;
 
   UINTN                 Size;
   EFI_STATUS            Status;
   UINTN                 MemoryMapBufferSize;
   UINTN                 Index;
+
+  ASSERT (GetMemoryMap != NULL);
+  ASSERT (MemoryMapSize != NULL);
+  ASSERT (!EfiAtRuntime ());
 
   MemoryMapBuffer = NULL;
   Size            = 0;

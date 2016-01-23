@@ -54,12 +54,11 @@ EfiInstallProtocolInterface (
   ASSERT (Handle != NULL);
   ASSERT (Protocol != NULL);
   ASSERT (InterfaceType == EFI_NATIVE_INTERFACE);
-  DEBUG_CODE (
-    if (*Handle != NULL) {
-      ASSERT_PROTOCOL_ALREADY_INSTALLED (*Handle, Protocol);
-    }
-    );
   ASSERT (!EfiAtRuntime ());
+
+  if (*Handle != NULL) {
+    ASSERT_PROTOCOL_ALREADY_INSTALLED (*Handle, Protocol);
+  }
 
   Status = gBS->InstallProtocolInterface (Handle, Protocol, InterfaceType, Interface);
 
@@ -99,16 +98,14 @@ EfiReinstallProtocolInterface (
 
   ASSERT (Handle != NULL);
   ASSERT (Protocol != NULL);
-  ASSERT (EfiHandleProtocol (Handle, Protocol, &Interface) != EFI_UNSUPPORTED);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (EfiHandleProtocol (Handle, Protocol, &Interface) != EFI_UNSUPPORTED);
 
   Status = gBS->ReinstallProtocolInterface (Handle, Protocol, OldInterface, NewInterface);
 
-  DEBUG_CODE (
-    if (Status != EFI_ACCESS_DENIED) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if (Status != EFI_ACCESS_DENIED) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -144,11 +141,9 @@ EfiUninstallProtocolInterface (
 
   Status = gBS->UninstallProtocolInterface (Handle, Protocol, Interface);
 
-  DEBUG_CODE (
-    if (Status != EFI_ACCESS_DENIED) {
-      ASSERT_EFI_ERROR (Status);
-    }
-  );
+  if (Status != EFI_ACCESS_DENIED) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -183,11 +178,9 @@ EfiHandleProtocol (
 
   Status = gBS->HandleProtocol (Handle, Protocol, Interface);
 
-  DEBUG_CODE (
-    if (Status != EFI_UNSUPPORTED) {
-      ASSERT_EFI_ERROR (Status);
-    }
-  );
+  if (Status != EFI_UNSUPPORTED) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -250,11 +243,9 @@ EfiOpenProtocol (
 
   Status = gBS->OpenProtocol (Handle, Protocol, Interface, AgentHandle, ControllerHandle, Attributes);
 
-  DEBUG_CODE (
-    if (Status != EFI_UNSUPPORTED) {
-      ASSERT_EFI_ERROR (Status);
-    }
-  );
+  if (Status != EFI_UNSUPPORTED) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -333,11 +324,9 @@ EfiOpenProtocolInformation (
 
   Status = gBS->OpenProtocolInformation (Handle, Protocol, EntryBuffer, EntryCount);
 
-  DEBUG_CODE (
-    if (Status != EFI_NOT_FOUND) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if (Status != EFI_NOT_FOUND) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -453,15 +442,15 @@ EfiLocateHandle (
   ASSERT ((SearchType >= AllHandles) && (SearchType <= ByProtocol));
   ASSERT ((SearchType != ByRegisterNotify) || (SearchKey != NULL));
   ASSERT ((SearchType != ByProtocol) || (Protocol != NULL));
+  ASSERT (BufferSize != NULL);
+  ASSERT ((((*BufferSize != 0) ? 1 : 0) ^ ((Buffer == NULL) ? 1 : 0)) != 0);
   ASSERT (!EfiAtRuntime ());
 
   Status = gBS->LocateHandle (SearchType, Protocol, SearchKey, BufferSize, Buffer);
 
-  DEBUG_CODE (
-    if ((Status != EFI_NOT_FOUND) && (Status != EFI_BUFFER_TOO_SMALL)) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if ((Status != EFI_NOT_FOUND) && (Status != EFI_BUFFER_TOO_SMALL)) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -496,11 +485,9 @@ EfiLocateDevicePath (
 
   Status = gBS->LocateDevicePath (Protocol, DevicePath, Device);
 
-  DEBUG_CODE (
-    if (Status != EFI_NOT_FOUND) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if (Status != EFI_NOT_FOUND) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -530,11 +517,9 @@ EfiInstallConfigurationTable (
 
   Status = gBS->InstallConfigurationTable (Guid, Table);
 
-  DEBUG_CODE (
-    if (Status != EFI_NOT_FOUND) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if (Status != EFI_NOT_FOUND) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -575,11 +560,9 @@ EfiLocateHandleBuffer (
 
   Status = gBS->LocateHandleBuffer (SearchType, Protocol, SearchKey, NoHandles, Buffer);
 
-  DEBUG_CODE (
-    if (Status != EFI_NOT_FOUND) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if (Status != EFI_NOT_FOUND) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -614,11 +597,9 @@ EfiLocateProtocol (
 
   Status = gBS->LocateProtocol (Protocol, Registration, Interface);
 
-  DEBUG_CODE (
-    if (Status != EFI_NOT_FOUND) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if (Status != EFI_NOT_FOUND) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -663,11 +644,9 @@ EfiConnectController (
 
   Status = gBS->ConnectController (ControllerHandle, DriverImageHandle, RemainingDevicePath, Recursive);
 
-  DEBUG_CODE (
-    if (Status != EFI_NOT_FOUND) {
-      ASSERT_EFI_ERROR (Status);
-    }
-  );
+  if (Status != EFI_NOT_FOUND) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -709,11 +688,9 @@ EfiDisconnectController (
 
   Status = gBS->DisconnectController (ControllerHandle, DriverImageHandle, ChildHandle);
 
-  DEBUG_CODE (
-    if ((Status != EFI_OUT_OF_RESOURCES) && (Status != EFI_DEVICE_ERROR)) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if ((Status != EFI_OUT_OF_RESOURCES) && (Status != EFI_DEVICE_ERROR)) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -736,10 +713,6 @@ SafeInstallProtocolInterface (
   ASSERT (Protocol != NULL);
   ASSERT (InterfaceType == EFI_NATIVE_INTERFACE);
   ASSERT (!EfiAtRuntime ());
-
-  DEBUG_CODE (
-    Buffer = NULL;
-    );
 
   Status = EfiLocateHandleBuffer (ByProtocol, Protocol, NULL, &NoHandles, &Buffer);
 
@@ -814,11 +787,9 @@ InstallVersionedProtocolInterface (
     }
   }
 
-  DEBUG_CODE (
-    if (Status != EFI_ALREADY_STARTED) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if (Status != EFI_ALREADY_STARTED) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }

@@ -64,11 +64,9 @@ EfiGetVariable (
 
   Status = EfiGetVariable (VariableName, VendorGuid, Attributes, DataSize, Data);
 
-  DEBUG_CODE (
-    if ((Status != EFI_NOT_FOUND) && (Status != EFI_BUFFER_TOO_SMALL) && (Status != EFI_SECURITY_VIOLATION)) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if ((Status != EFI_NOT_FOUND) && (Status != EFI_BUFFER_TOO_SMALL) && (Status != EFI_SECURITY_VIOLATION)) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -124,11 +122,9 @@ EfiGetNextVariableName (
 
   Status = EfiGetNextVariableName (VariableNameSize, VariableName, VendorGuid);
 
-  DEBUG_CODE (
-    if ((Status != EFI_NOT_FOUND) && (Status != EFI_BUFFER_TOO_SMALL) && (Status != EFI_DEVICE_ERROR)) {
-      ASSERT_EFI_ERROR (Status);
-    }
-  );
+  if ((Status != EFI_NOT_FOUND) && (Status != EFI_BUFFER_TOO_SMALL) && (Status != EFI_DEVICE_ERROR)) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -195,16 +191,13 @@ EfiSetVariable (
   ASSERT (VariableName != NULL);
   ASSERT (VariableName[0] != L'\0');
   ASSERT (VendorGuid != NULL);
-  ASSERT ((DataSize == 0) || (Data != NULL));
-  ASSERT ((DataSize != 0) || (Data == NULL));
+  ASSERT ((((DataSize > 0) ? 1 : 0) ^ ((Data == NULL) ? 1 : 0)) != 0);
 
   Status = EfiSetVariable (VariableName, VendorGuid, Attributes, DataSize, Data);
 
-  DEBUG_CODE (
-    if ((Status != EFI_WRITE_PROTECTED) && (Status != EFI_SECURITY_VIOLATION) && (Status != EFI_NOT_FOUND)) {
-      ASSERT_EFI_ERROR (Status);
-    }
-  );
+  if ((Status != EFI_WRITE_PROTECTED) && (Status != EFI_SECURITY_VIOLATION) && (Status != EFI_NOT_FOUND)) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -220,8 +213,7 @@ SetEfiGlobalVariable (
 {
   ASSERT (VariableName != NULL);
   ASSERT (VariableName[0] != L'\0');
-  ASSERT ((DataSize == 0) || (Data != NULL));
-  ASSERT ((DataSize != 0) || (Data == NULL));
+  ASSERT ((((DataSize > 0) ? 1 : 0) ^ ((Data == NULL) ? 1 : 0)) != 0);
 
   return EfiSetVariable (VariableName, &gEfiGlobalVariableGuid, Attributes, DataSize, Data);
 }

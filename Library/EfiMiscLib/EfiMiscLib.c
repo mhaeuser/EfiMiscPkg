@@ -102,11 +102,9 @@ EfiSetWatchdogTimer (
 
   Status = gBS->SetWatchdogTimer (Timeout, WatchdogCode, DataSize, WatchdogData);
 
-  DEBUG_CODE (
-    if ((Status != EFI_UNSUPPORTED) && (Status != EFI_DEVICE_ERROR)) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if ((Status != EFI_UNSUPPORTED) && (Status != EFI_DEVICE_ERROR)) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }

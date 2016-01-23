@@ -248,11 +248,9 @@ EfiCheckEvent (
 
   Status = gBS->CheckEvent (Event);
 
-  DEBUG_CODE (
-    if (Status != EFI_NOT_READY) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if (Status != EFI_NOT_READY) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }

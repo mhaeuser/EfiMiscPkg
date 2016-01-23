@@ -71,11 +71,9 @@ EfiLoadImage (
 
   Status = gBS->LoadImage (BootPolicy, ParentImageHandle, DevicePath, SourceBuffer, SourceSize, ImageHandle);
 
-  DEBUG_CODE (
-    if ((Status != EFI_UNSUPPORTED) && (Status != EFI_LOAD_ERROR) && (Status != EFI_ACCESS_DENIED)) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if ((Status != EFI_UNSUPPORTED) && (Status != EFI_LOAD_ERROR) && (Status != EFI_ACCESS_DENIED)) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -107,11 +105,9 @@ EfiStartImage (
 
   Status = gBS->StartImage (ImageHandle, ExitDataSize, ExitData);
 
-  DEBUG_CODE (
-    if (Status != EFI_SECURITY_VIOLATION) {
-      ASSERT_EFI_ERROR (Status);
-    }
-    );
+  if (Status != EFI_SECURITY_VIOLATION) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
