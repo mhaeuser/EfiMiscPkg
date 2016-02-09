@@ -1,0 +1,31 @@
+## @file
+# Copyright (C) 2016, CupertinoNet.  All rights reserved.<BR>
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+#
+##
+
+[Defines]
+  BASE_NAME     = DxeServicesLib
+  LIBRARY_CLASS = DxeServicesLib|DXE_CORE DXE_DRIVER DXE_RUNTIME_DRIVER DXE_SAL_DRIVER DXE_SMM_DRIVER SMM_CORE UEFI_APPLICATION UEFI_DRIVER
+  MODULE_TYPE   = DXE_DRIVER
+  FILE_GUID     = 216445A1-8D64-49E9-8704-769276B5D989
+  INF_VERSION   = 0x00010005
+
+[Packages]
+  MdePkg/MdePkg.dec
+  EfiMiscPkg/EfiMiscPkg.dec
+
+[Sources]
+  DxeServicesLib.c

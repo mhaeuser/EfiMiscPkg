@@ -1,5 +1,5 @@
 ## @file
-# Copyright (C) 2015, CupertinoNet.  All rights reserved.<BR>
+# Copyright (C) 2015 - 2016, CupertinoNet.  All rights reserved.<BR>
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -17,46 +17,46 @@
 ##
 
 [Defines]
-  DEC_SPECIFICATION = 0x00010005
   PACKAGE_NAME      = EfiMiscPkg
   PACKAGE_GUID      = A10BE46B-35C3-4B0B-9B9C-3F02051D782F
+  DEC_SPECIFICATION = 0x0001000
 
 [Includes]
   Include
 
 [LibraryClasses]
   ##  @libraryclass 
-  EfiChecksumLib|Include/Library/EfiChecksumLib.h
+  DxeServicesLib|Include/Library/DxeServicesLib.h
 
   ##  @libraryclass 
-  EfiEventLib|Include/Library/EfiEventLib.h
+  EfiBootServicesLib|Include/Library/EfiBootServicesLib.h
+
+  ##  @libraryclass 
+  EfiRuntimeServicesLib|Include/Library/EfiRuntimeServicesLib.h
+
+  ##  @libraryclass 
+  MiscEventLib|Include/Library/MiscEventLib.h
   
   ##  @libraryclass 
-  EfiFileLib|Include/Library/EfiFileLib.h
+  MiscFileLib|Include/Library/MiscFileLib.h
 
   ##  @libraryclass 
-  EfiImageLib|Include/Library/EfiImageLib.h
+  MiscMemoryLib|Include/Library/MiscMemoryLib.h
 
   ##  @libraryclass 
-  EfiMemoryLib|Include/Library/EfiMemoryLib.h
+  MiscOverrideLib|Include/Library/MiscOverrideLib.h
 
   ##  @libraryclass 
-  EfiMiscLib|Include/Library/EfiMiscLib.h
+  MiscProtocolLib|Include/Library/MiscProtocolLib.h
 
   ##  @libraryclass 
-  EfiOverrideLib|Include/Library/EfiOverrideLib.h
+  MiscRuntimeLib|Include/Library/MiscRuntimeLib.h
 
   ##  @libraryclass 
-  EfiProtocolLib|Include/Library/EfiProtocolLib.h
+  MiscUsbHidLib|Include/Library/MiscUsbHidLib.h
 
   ##  @libraryclass 
-  EfiRuntimeLib|Include/Library/EfiRuntimeLib.h
+  MiscVariableLib|Include/Library/MiscVariableLib.h
 
   ##  @libraryclass 
-  EfiSortLib|Include/Library/EfiSortLib.h
-
-  ##  @libraryclass 
-  EfiVariableLib|Include/Library/EfiVariableLib.h
-
-  ##  @libraryclass 
-  UsbHidLib|Include/Library/UsbHidLib.h
+  SmmServicesLib|Include/Library/SmmServicesLib.h

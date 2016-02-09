@@ -12,16 +12,15 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
+
+  @par Specification Reference:
+    - Universal Serial Bus HID Usage Tables 1.12
 **/
 
 #ifndef USB_HID_H_
 #define USB_HID_H_
 
-// http://www.usb.org/developers/hidpage/Hut1_12v2.pdf
-
-//
 // USB HID Generic
-//
 
 // USB_HID_PAGE_USAGE
 #define USB_HID_USAGE(UsageId, PageId) (((PageId) << 16) | (UsageId))
@@ -78,18 +77,16 @@ typedef UINT16 USB_HID_USAGE_ID;
 // USB_HID_USAGE
 typedef UINT32 USB_HID_USAGE;
 
-//
 // USB HID Consumer
-//
 
-#define USB_HID_CONSUMER_USAGE(UsageId) USB_HID_USAGE (UsbHidConsumerPage, (UsageId))
+#define USB_HID_CONSUMER_USAGE(UsageId)  \
+  USB_HID_USAGE (UsbHidConsumerPage, (UsageId))
 
-//
 // USB HID Keyboard/Keypad
-//
 
 // USB_HID_KEYBOARD_KEY_PAD
-#define USB_HID_KB_KP_USAGE(UsageId) USB_HID_USAGE (UsbHidKeyboardKeypadPage, (UsageId))
+#define USB_HID_KB_KP_USAGE(UsageId)  \
+  USB_HID_USAGE (UsbHidKeyboardKeypadPage, (UsageId))
 
 // USB HID Modifier Map
 /// @{
@@ -105,10 +102,17 @@ typedef UINT32 USB_HID_USAGE;
 
 // Shortcuts for multiple modifers
 /// @{
-#define USB_HID_KB_KP_MODIFIERS_CONTROL  (USB_HID_KB_KP_MODIFIER_LEFT_CONTROL | USB_HID_KB_KP_MODIFIER_RIGHT_CONTROL)
-#define USB_HID_KB_KP_MODIFIERS_SHIFT    (USB_HID_KB_KP_MODIFIER_LEFT_SHIFT | USB_HID_KB_KP_MODIFIER_RIGHT_SHIFT)
-#define USB_HID_KB_KP_MODIFIERS_ALT      (USB_HID_KB_KP_MODIFIER_LEFT_ALT | USB_HID_KB_KP_MODIFIER_RIGHT_ALT)
-#define USB_HID_KB_KP_MODIFIERS_GUI      (USB_HID_KB_KP_MODIFIER_LEFT_GUI | USB_HID_KB_KP_MODIFIER_RIGHT_GUI)
+#define USB_HID_KB_KP_MODIFIERS_CONTROL  \
+  (USB_HID_KB_KP_MODIFIER_LEFT_CONTROL | USB_HID_KB_KP_MODIFIER_RIGHT_CONTROL)
+
+#define USB_HID_KB_KP_MODIFIERS_SHIFT  \
+  (USB_HID_KB_KP_MODIFIER_LEFT_SHIFT | USB_HID_KB_KP_MODIFIER_RIGHT_SHIFT)
+
+#define USB_HID_KB_KP_MODIFIERS_ALT  \
+  (USB_HID_KB_KP_MODIFIER_LEFT_ALT | USB_HID_KB_KP_MODIFIER_RIGHT_ALT)
+
+#define USB_HID_KB_KP_MODIFIERS_GUI  \
+  (USB_HID_KB_KP_MODIFIER_LEFT_GUI | USB_HID_KB_KP_MODIFIER_RIGHT_GUI)
 /// @}
 
 // USB_HID_MODIFIERS
@@ -284,7 +288,7 @@ enum {
   UsbHidUsageIdKbKpKeyClearAgain           = 0xA2,
   UsbHidUsageIdKbKpKeyCrSel                = 0xA3,
   UsbHidUsageIdKbKpKeyExSel                = 0xA4,
-  // A5 - AF = Reserved
+    // A5 - AF = Reserved
   UsbHidUsageIdKbKpPadKeyDoubleZero        = 0xB0,
   UsbHidUsageIdKbKpKeyTrippleZero          = 0xB1,
   UsbHidUsageIdKbKpKeyThousandsSeparator   = 0xB2,
@@ -331,7 +335,7 @@ enum {
   UsbHidUsageIdKbKpPadKeyOctal             = 0xDB,
   UsbHidUsageIdKbKpPadKeyDecimal           = 0xDC,
   UsbHidUsageIdKbKpPadKeyHexadecimal       = 0xDD,
-  // DE - DF = Reserved
+    // DE - DF = Reserved
   UsbHidUsageIdKbKpModifierKeyLeftControl  = 0xE0,
   UsbHidUsageIdKbKpModifierKeyLeftShift    = 0xE1,
   UsbHidUsageIdKbKpModifierKeyLeftAlt      = 0xE2,
@@ -340,7 +344,7 @@ enum {
   UsbHidUsageIdKbKpModifierKeyRightShift   = 0xE5,
   UsbHidUsageIdKbKpModifierKeyRightAlt     = 0xE6,
   UsbHidUsageIdKbKpModifierKeyRightGui     = 0xE7
-  // E8 - FFFF = Reserved
+    // E8 - FFFF = Reserved
 };
 
 // USB_HID_KB_USAGE

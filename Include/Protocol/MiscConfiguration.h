@@ -17,16 +17,16 @@
 #ifndef MISC_CONFIGURATION_H_
 #define MISC_CONFIGURATION_H_
 
-#include <Uefi.h>
-#include <MiscBase.h>
-
 // EFI_MISC_OPTION_DATA
-#define EFI_MISC_OPTION_DATA(EfiMiscOption) \
-  ((UINT8)(((UINTN)(EfiMiscOption)) + sizeof (EfiMiscOption->Hdr) + EfiMiscOption->Hdr.NameSize))
+#define EFI_MISC_OPTION_DATA(EfiMiscOption)  \
+  ((UINT8)(((UINTN)(EfiMiscOption))          \
+    + sizeof (EfiMiscOption->Hdr)            \
+    + EfiMiscOption->Hdr.NameSize))
 
 // EFI_MISC_NEXT_OPTION
-#define EFI_MISC_NEXT_OPTION(EfiMiscOption) \
-  ((EFI_MISC_OPTION)(((UINTN)(EFI_MISC_OPTION_DATA (EfiMiscOption))) + EfiMiscOption->Hdr.DataSize))
+#define EFI_MISC_NEXT_OPTION(EfiMiscOption)                           \
+  ((EFI_MISC_OPTION)(((UINTN)(EFI_MISC_OPTION_DATA (EfiMiscOption)))  \
+                       + EfiMiscOption->Hdr.DataSize))
 
 // EFI_MISC_OPTION_SOURCE
 enum {
@@ -57,29 +57,29 @@ FORWARD_DECLARATION (EFI_MISC_CONFIGURATION_PROTOCOL);
 typedef
 EFI_STATUS
 (EFIAPI *EFI_MISC_GET_OPTION)(
-  IN  EFI_MISC_CONFIGURATION_PROTOCOL *This,
-  IN  CHAR16                          *Name,
-  IN  EFI_GUID                        *VendorGuid, OPTIONAL
-  IN  EFI_MISC_OPTION_LOCATION        Location,
-  OUT EFI_MISC_OPTION                 *Option
+  IN  EFI_MISC_CONFIGURATION_PROTOCOL  *This,
+  IN  CHAR16                           *Name,
+  IN  EFI_GUID                         *VendorGuid, OPTIONAL
+  IN  EFI_MISC_OPTION_LOCATION         Location,
+  OUT EFI_MISC_OPTION                  *Option
   );
 
 // EFI_MISC_SET_OPTION
 typedef
 EFI_STATUS
 (EFIAPI *EFI_MISC_SET_OPTION)(
-  IN EFI_MISC_CONFIGURATION_PROTOCOL *This,
-  IN EFI_MISC_OPTION                 *Option
+  IN EFI_MISC_CONFIGURATION_PROTOCOL  *This,
+  IN EFI_MISC_OPTION                  *Option
   );
 
 // EFI_MISC_GET_ALL_OPTIONS
 typedef
 EFI_STATUS
 (EFIAPI *EFI_MISC_GET_ALL_OPTIONS)(
-  IN  EFI_MISC_CONFIGURATION_PROTOCOL *This,
-  IN  EFI_GUID                        *VendorGuid, OPTIONAL
-  IN  EFI_MISC_OPTION_LOCATION        Location,
-  OUT EFI_MISC_OPTION                 *Option
+  IN  EFI_MISC_CONFIGURATION_PROTOCOL  *This,
+  IN  EFI_GUID                         *VendorGuid, OPTIONAL
+  IN  EFI_MISC_OPTION_LOCATION         Location,
+  OUT EFI_MISC_OPTION                  *Option
   );
 
 // EFI_MISC_CONFIGURATION_PROTOCOL

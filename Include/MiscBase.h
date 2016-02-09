@@ -18,7 +18,7 @@
 #define MISC_BASE_H_
 
 // FORWARD_DECLARATION
-#if defined (EFI_NO_INTERFACE_DECL) || defined (NO_INTERFACE_DECL)
+#if (defined (EFI_NO_INTERFACE_DECL) || defined (NO_INTERFACE_DECL))
   #define FORWARD_DECLARATION(x)
 #else
   #define FORWARD_DECLARATION(x) typedef struct x x
@@ -28,7 +28,8 @@
 #define ARRAY_LENGTH(Array) (sizeof (Array) / sizeof (*(Array)))
 
 // CONVERT_LENGTH
-#define CONVERT_LENGTH(Size, SourceType, DestinationType) (((Size) / sizeof (SourceType)) * sizeof (DestinationType))
+#define CONVERT_LENGTH(Size, SourceType, DestinationType)  \
+  (((Size) / sizeof (SourceType)) * sizeof (DestinationType))
 
 /// @{
 #define BIT(Index)                (1 << (Index))
@@ -43,8 +44,12 @@
 #define TOGGLE_BIT(Mask1, Mask2)  TOGGLE_BITS ((Mask1), (Mask2))
 #define APPLY_MASK(Mask1, Mask2)  ((Mask1) & (Mask2))
 #define SELECT_BITS(Mask1, Mask2) APPLY_MASK ((Mask1), (Mask2))
-#define BIT_SET(Mask1, Mask2)     ((BOOLEAN)(SELECT_BITS ((Mask1), (Mask2)) != 0))
-#define BITS_SET(Mask1, Mask2)    ((BOOLEAN)(SELECT_BITS ((Mask1), (Mask2)) == (Mask2)))
+
+#define BIT_SET(Mask1, Mask2)  \
+  ((BOOLEAN)(SELECT_BITS ((Mask1), (Mask2)) != 0))
+
+#define BITS_SET(Mask1, Mask2)  \
+  ((BOOLEAN)(SELECT_BITS ((Mask1), (Mask2)) == (Mask2)))
 /// @}
 
 #endif // MISC_BASE_H_
