@@ -15,7 +15,7 @@
 **/
 
 #ifndef MISC_PROTOCOL_LIB_H_
-#define EFI_PROTOCOL_LIB_H_
+#define MISC_PROTOCOL_LIB_H_
 
 // SafeInstallProtocolInterface
 EFI_STATUS
