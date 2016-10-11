@@ -107,4 +107,11 @@ FindNextDirectoryByExtension (
   IN  BOOLEAN          PrimaryExtension
   );
 
+// MiscGetFileInformation
+VOID *
+MiscGetFileInformation (
+  IN EFI_FILE  *Root,
+  IN EFI_GUID  *InformationType
+);
+
 #endif // MISC_FILE_LIB_H_

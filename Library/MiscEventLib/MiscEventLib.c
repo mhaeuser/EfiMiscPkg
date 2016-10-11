@@ -42,16 +42,17 @@ CreateTimerEvent (
   Event = NULL;
 
   if (NotifyTpl < TPL_CALLBACK) {
-    Event = EfiCreateEvent (
-              ((NotifyFunction != NULL)
-                ? (EVT_TIMER | EVT_NOTIFY_SIGNAL)
-                : EVT_TIMER),
-              NotifyTpl,
-              NotifyFunction,
-              NotifyContext
-              );
+    Status = EfiCreateEvent (
+               ((NotifyFunction != NULL)
+                 ? (EVT_TIMER | EVT_NOTIFY_SIGNAL)
+                 : EVT_TIMER),
+               NotifyTpl,
+               NotifyFunction,
+               NotifyContext,
+               &Event
+               );
 
-    if (Event != NULL) {
+    if (!EFI_ERROR (Status)) {
       Status = EfiSetTimer (
                  Event,
                  (SignalPeriodic ? TimerPeriodic : TimerRelative),
@@ -125,15 +126,22 @@ CreateSignalEvent (
   IN CONST EFI_GUID    *EventGroup OPTIONAL
   )
 {
+  EFI_EVENT Event;
+
   ASSERT (!EfiAtRuntime ());
+
+  Event = NULL;
 
   return EfiCreateEventEx (
            EVT_NOTIFY_SIGNAL,
            TPL_NOTIFY,
            NotifyFunction,
            NotifyContext,
-           EventGroup
+           EventGroup,
+           &Event
            );
+
+  return Event;
 }
 
 // CreateExitBootServicesEvent

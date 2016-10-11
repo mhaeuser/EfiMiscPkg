@@ -51,7 +51,7 @@ EfiRaiseTpl (
 
   DEBUG_CODE (
     mPreviousTpl = OldTpl;
-  );
+    );
 
   return OldTpl;
 }
@@ -218,8 +218,8 @@ EfiGetMemoryMap (
   EFI_STATUS Status;
 
   ASSERT (MemoryMapSize != NULL);
-  ASSERT ((((*MemoryMapSize == 0) ? 1 : 0)
-             ^ ((MemoryMap != NULL) ? 1 : 0)) != 0);
+  ASSERT ((((*MemoryMapSize > 0) ? 1 : 0)
+             ^ ((MemoryMap == NULL) ? 1 : 0)) != 0);
 
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
@@ -314,32 +314,45 @@ EfiFreePool (
 // EfiCreateEvent
 /** Creates an event.
  
-  @param[in] Type            The type of event to create and its mode and
-                             attributes.
-  @param[in] NotifyTpl       The task priority level of event notifications, if
-                             needed.
-  @param[in] NotifyFunction  The pointer to the event's notification function,
-                             if any.
-  @param[in] NotifyContext   The pointer to the notification function's
-                             context; corresponds to parameter Context in the
-                             notification function.
+  @param[in]  Type            The type of event to create and its mode and
+                              attributes.
+  @param[in]  NotifyTpl       The task priority level of event notifications, if
+                              needed.
+  @param[in]  NotifyFunction  The pointer to the event's notification function,
+                              if any.
+  @param[in]  NotifyContext   The pointer to the notification function's
+                              context; corresponds to parameter Context in the
+                              notification function.
+  @param[out] Event           The pointer to the newly created event if the
+                              call succeeds; undefined otherwise.
 
   @retval EFI_SUCCESS            The event structure was created.
   @retval EFI_INVALID_PARAMETER  One or more parameters are invalid.
   @retval EFI_OUT_OF_RESOURCES   The event could not be allocated.
 **/
-EFI_EVENT
+EFI_STATUS
 EfiCreateEvent (
-  IN UINT32            Type,
-  IN EFI_TPL           NotifyTpl,
-  IN EFI_EVENT_NOTIFY  NotifyFunction,
-  IN VOID              *NotifyContext
+  IN  UINT32            Type,
+  IN  EFI_TPL           NotifyTpl,
+  IN  EFI_EVENT_NOTIFY  NotifyFunction,
+  IN  VOID              *NotifyContext,
+  OUT EFI_EVENT         *Event
   )
 {
-  EFI_EVENT  Event;
-
   EFI_STATUS Status;
 
+  ASSERT (Type != 0);
+  ASSERT ((Type & ~(EVT_TIMER
+                  | EVT_RUNTIME
+                  | EVT_NOTIFY_WAIT
+                  | EVT_NOTIFY_SIGNAL
+                  | EVT_SIGNAL_EXIT_BOOT_SERVICES
+                  | EVT_SIGNAL_VIRTUAL_ADDRESS_CHANGE)) == 0);
+
+  ASSERT ((((Type & (EVT_NOTIFY_SIGNAL | EVT_NOTIFY_WAIT)) != 0) ? 1 : 0)
+         ^ ((NotifyFunction == NULL) ? 1 : 0) != 0);
+
+  ASSERT (Event != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () < TPL_HIGH_LEVEL);
 
@@ -348,18 +361,12 @@ EfiCreateEvent (
                   NotifyTpl,
                   NotifyFunction,
                   NotifyContext,
-                  &Event
+                  Event
                   );
 
   ASSERT_EFI_ERROR (Status);
 
-  if (EFI_ERROR (Status)) {
-    Event = NULL;
-  }
-
-  ASSERT (Event != NULL);
-
-  return Event;
+  return Status;
 }
 
 // EfiSetTimer
@@ -608,7 +615,6 @@ EfiReinstallProtocolInterface (
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
   ASSERT (EfiHandleProtocol (Handle, Protocol, &Interface) != EFI_UNSUPPORTED);
-  ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
 
   Status = gBS->ReinstallProtocolInterface (
                   Handle,
@@ -782,10 +788,14 @@ EfiLocateHandle (
   EFI_STATUS Status;
 
   ASSERT ((SearchType >= AllHandles) && (SearchType <= ByProtocol));
-  ASSERT ((SearchType != ByRegisterNotify) || (SearchKey != NULL));
-  ASSERT ((SearchType != ByProtocol) || (Protocol != NULL));
+  ASSERT ((((SearchType == ByRegisterNotify) ? 1 : 0)
+         ^ ((SearchKey == NULL) ? 1 : 0)) != 0);
+
+  ASSERT ((((SearchType == ByProtocol) ? 1 : 0)
+         ^ ((Protocol == NULL) ? 1 : 0)) != 0);
+
   ASSERT (BufferSize != NULL);
-  ASSERT ((((*BufferSize != 0) ? 1 : 0) ^ ((Buffer == NULL) ? 1 : 0)) != 0);
+  ASSERT ((((*BufferSize > 0) ? 1 : 0) ^ ((Buffer == NULL) ? 1 : 0)) != 0);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
 
@@ -1179,7 +1189,7 @@ EfiSetWatchdogTimer (
 {
   EFI_STATUS Status;
 
-  ASSERT ((((DataSize == 0) ? 1 : 0) ^ ((WatchdogData != NULL) ? 1 : 0)) != 0);
+  ASSERT ((((DataSize > 0) ? 1 : 0) ^ ((WatchdogData == NULL) ? 1 : 0)) != 0);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
 
@@ -1369,8 +1379,8 @@ EfiOpenProtocol (
   ASSERT (Handle != NULL);
   ASSERT (Protocol != NULL);
   ASSERT ((Attributes != 0) && ((Attributes & ~0x3F) == 0));
-  ASSERT (((((Attributes & EFI_OPEN_PROTOCOL_TEST_PROTOCOL) == 0) ? 1 : 0)
-             ^ ((Interface != NULL) ? 1 : 0)) != 0);
+  ASSERT (((((Attributes & EFI_OPEN_PROTOCOL_TEST_PROTOCOL) != 0) ? 1 : 0)
+             ^ ((Interface == NULL) ? 1 : 0)) != 0);
 
   ASSERT (!((Attributes == EFI_OPEN_PROTOCOL_BY_CHILD_CONTROLLER)
         || (Attributes == EFI_OPEN_PROTOCOL_BY_DRIVER)
@@ -1722,22 +1732,22 @@ CalculateCrc32 (
   @retval EFI_INVALID_PARAMETER  One or more parameters are invalid.
   @retval EFI_OUT_OF_RESOURCES   The event could not be allocated.
 **/
-EFI_EVENT
+EFI_STATUS
 EfiCreateEventEx (
-  IN UINT32            Type,
-  IN EFI_TPL           NotifyTpl,
-  IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
-  IN CONST VOID        *NotifyContext, OPTIONAL
-  IN CONST EFI_GUID    *EventGroup OPTIONAL
+  IN  UINT32            Type,
+  IN  EFI_TPL           NotifyTpl,
+  IN  EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
+  IN  CONST VOID        *NotifyContext, OPTIONAL
+  IN  CONST EFI_GUID    *EventGroup, OPTIONAL
+  OUT EFI_EVENT         *Event
   )
 {
-  EFI_EVENT  Event;
-
   EFI_STATUS Status;
 
-  ASSERT ((NotifyFunction != NULL)
-      || ((Type & (EVT_NOTIFY_SIGNAL | EVT_NOTIFY_WAIT)) == 0));
+  ASSERT ((((Type & (EVT_NOTIFY_SIGNAL | EVT_NOTIFY_WAIT)) != 0) ? 1 : 0)
+         ^ ((NotifyFunction == NULL) ? 1 : 0) != 0);
 
+  ASSERT (Event != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () < TPL_HIGH_LEVEL);
 
@@ -1747,17 +1757,12 @@ EfiCreateEventEx (
                   NotifyFunction,
                   NotifyContext,
                   EventGroup,
-                  &Event
+                  Event
                   );
 
   ASSERT_EFI_ERROR (Status);
-  ASSERT (Event != NULL);
 
-  if (EFI_ERROR (Status)) {
-    Event = NULL;
-  }
-
-  return Event;
+  return Status;
 }
 
 // EfiCopyMem

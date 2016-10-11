@@ -1009,7 +1009,7 @@ PeiResetSystem2 (
        && (ResetType <= EfiResetPlatformSpecific));
   ASSERT (((((ResetType == EfiResetPlatformSpecific)
           || (ResetStatus != EFI_SUCCESS)) ? 1 : 0)
-            ^ ((ResetData != NULL) ? 1 : 0)) != 0);
+            ^ ((ResetData == NULL) ? 1 : 0)) != 0);
 
   ASSERT ((((DataSize > 0) ? 1 : 0) ^ ((ResetData == NULL) ? 1 : 0)) != 0);
 

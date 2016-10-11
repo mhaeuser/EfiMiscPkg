@@ -241,15 +241,17 @@ EfiFreePool (
 // EfiCreateEvent
 /** Creates an event.
  
-  @param[in] Type            The type of event to create and its mode and
-                             attributes.
-  @param[in] NotifyTpl       The task priority level of event notifications, if
-                             needed.
-  @param[in] NotifyFunction  The pointer to the event's notification function,
-                             if any.
-  @param[in] NotifyContext   The pointer to the notification function's
-                             context; corresponds to parameter Context in the
-                             notification function.
+  @param[in]  Type            The type of event to create and its mode and
+                              attributes.
+  @param[in]  NotifyTpl       The task priority level of event notifications, if
+                              needed.
+  @param[in]  NotifyFunction  The pointer to the event's notification function,
+                              if any.
+  @param[in]  NotifyContext   The pointer to the notification function's
+                              context; corresponds to parameter Context in the
+                              notification function.
+  @param[out] Event           The pointer to the newly created event if the
+                              call succeeds; undefined otherwise.
 
   @retval EFI_SUCCESS            The event structure was created.
   @retval EFI_INVALID_PARAMETER  One or more parameters are invalid.
@@ -257,10 +259,11 @@ EfiFreePool (
 **/
 EFI_EVENT
 EfiCreateEvent (
-  IN UINT32            Type,
-  IN EFI_TPL           NotifyTpl,
-  IN EFI_EVENT_NOTIFY  NotifyFunction,
-  IN VOID              *NotifyContext
+  IN  UINT32            Type,
+  IN  EFI_TPL           NotifyTpl,
+  IN  EFI_EVENT_NOTIFY  NotifyFunction,
+  IN  VOID              *NotifyContext,
+  OUT EFI_EVENT         *Event
   );
 
 // EfiSetTimer
@@ -1072,13 +1075,14 @@ CalculateCrc32 (
   @retval EFI_INVALID_PARAMETER  One or more parameters are invalid.
   @retval EFI_OUT_OF_RESOURCES   The event could not be allocated.
 **/
-EFI_EVENT
+EFI_STATUS
 EfiCreateEventEx (
-  IN UINT32            Type,
-  IN EFI_TPL           NotifyTpl,
-  IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
-  IN CONST VOID        *NotifyContext, OPTIONAL
-  IN CONST EFI_GUID    *EventGroup OPTIONAL
+  IN  UINT32            Type,
+  IN  EFI_TPL           NotifyTpl,
+  IN  EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
+  IN  CONST VOID        *NotifyContext, OPTIONAL
+  IN  CONST EFI_GUID    *EventGroup, OPTIONAL
+  OUT EFI_EVENT         *Event
   );
 
 // EfiCopyMem

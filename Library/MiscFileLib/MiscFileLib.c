@@ -55,6 +55,14 @@ FileExists (
   ASSERT (!EfiAtRuntime ());
 
   Status = Root->Open (Root, &FileHandle, FileName, EFI_FILE_MODE_READ, 0);
+
+  if ((Status != EFI_NOT_FOUND)
+   && (Status != EFI_NO_MEDIA)
+   && (Status != EFI_MEDIA_CHANGED)
+   && (Status != EFI_WRITE_PROTECTED)) {
+    ASSERT_EFI_ERROR (Status);
+  }
+  
   Exists = !EFI_ERROR (Status);
 
   if (Exists) {
@@ -88,11 +96,20 @@ LoadFile (
 
   Status = Root->Open (Root, &FileHandle, FileName, EFI_FILE_MODE_READ, 0);
 
+  if ((Status != EFI_NOT_FOUND)
+   && (Status != EFI_NO_MEDIA)
+   && (Status != EFI_MEDIA_CHANGED)) {
+    ASSERT_EFI_ERROR (Status);
+  }
+
   if (!EFI_ERROR (Status)) {
     Status = FileHandleGetSize (FileHandle, &ReadSize);
 
     if (!EFI_ERROR (Status)) {
       FileDataSize = (UINTN)MIN ((ReadSize + sizeof (CHAR16)), MAX_UINTN);
+
+      ASSERT (FileDataSize > ReadSize);
+
       FileData     = AllocateZeroPool (FileDataSize);
       Status       = EFI_OUT_OF_RESOURCES;
 
@@ -119,11 +136,12 @@ LoadFile (
 CHAR16 *
 GetFileExtension (
   IN CHAR16  *FileName
-  )
+)
 {
   ASSERT (FileName != NULL);
+  ASSERT (FileName[0] != L'\0');
 
-  while (FileName[0] == L'.') {
+  while ((FileName[0] == L'.') && (FileName[0] != L'0')) {
     ++FileName;
   }
 
@@ -139,6 +157,7 @@ GetFilePrimaryExtension (
   CHAR16 *Extension;
 
   ASSERT (FileName != NULL);
+  ASSERT (FileName[0] != '\0');
 
   Extension = GetFileExtension (FileName);
 
@@ -166,7 +185,9 @@ CompareExtension (
   CHAR16 *CurrentExtension;
 
   ASSERT (FileName != NULL);
+  ASSERT (FileName[0] != L'\0');
   ASSERT (Extension != NULL);
+  ASSERT (Extension[0] != L'\0');
 
   CurrentExtension = (PrimaryExtension
                        ? GetFilePrimaryExtension (FileName)
@@ -191,6 +212,7 @@ FindNextFileByExtension (
   ASSERT (DirHandle != NULL);
   ASSERT (Buffer != NULL);
   ASSERT (Extension != NULL);
+  ASSERT (Extension[0] != L'\0');
   ASSERT (!EfiAtRuntime ());
 
   NoFile = FALSE;
@@ -230,6 +252,7 @@ FindFirstFileByExtension (
   ASSERT (DirHandle != NULL);
   ASSERT (Buffer != NULL);
   ASSERT (Extension != NULL);
+  ASSERT (Extension[0] != L'\0');
   ASSERT (!EfiAtRuntime ());
 
   Status = FileHandleFindFirstFile (DirHandle, Buffer);
@@ -261,9 +284,9 @@ FindNextDirectory (
   OUT EFI_FILE_INFO    *Buffer
   )
 {
-  EFI_STATUS      Status;
+  EFI_STATUS Status;
 
-  BOOLEAN         NoFile;
+  BOOLEAN    NoFile;
 
   ASSERT (DirHandle != NULL);
   ASSERT (Buffer != NULL);
@@ -381,4 +404,47 @@ FindFirstDirectoryByExtension (
   }
 
   return Status;
+}
+
+// MiscGetFileInformation
+VOID *
+MiscGetFileInformation (
+  IN EFI_FILE  *Root,
+  IN EFI_GUID  *InformationType
+  )
+{
+  VOID       *Buffer;
+
+  UINTN      Size;
+  EFI_STATUS Status;
+
+  ASSERT (Root != NULL);
+
+  Buffer = NULL;
+
+  Size   = 0;
+  Status = Root->GetInfo (Root, InformationType, &Size, NULL);
+
+  ASSERT (Status == EFI_BUFFER_TOO_SMALL);
+
+  if (Status == EFI_BUFFER_TOO_SMALL) {
+    Buffer = AllocatePool (Size);
+
+    if (Buffer != NULL) {
+      Status = Root->GetInfo (
+                       Root,
+                       InformationType,
+                       &Size,
+                       Buffer
+                       );
+
+      if (EFI_ERROR (Status)) {
+        FreePool (Buffer);
+
+        Buffer = NULL;
+      }
+    }
+  }
+
+  return Buffer;
 }

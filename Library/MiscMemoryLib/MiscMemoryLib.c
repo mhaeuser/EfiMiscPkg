@@ -17,13 +17,13 @@
 
 #include <Uefi.h>
 
-#include <Library/UefiLib.h>
-#include <Library/UefiBootServicesTableLib.h>
+#include <Library/DebugLib.h>
 #include <Library/EfiBootServicesLib.h>
 #include <Library/MemoryAllocationLib.h>
-#include <Library/DebugLib.h>
 #include <Library/MiscRuntimeLib.h>
 #include <Library/MiscMemoryLib.h>
+#include <Library/UefiLib.h>
+#include <Library/UefiBootServicesTableLib.h>
 
 // GetMemoryMapBuffer
 /** Helper function that calls GetMemoryMap(), allocates space for the Memory
@@ -88,7 +88,7 @@ GetMemoryMapBuffer (
             MemoryMapBufferSize = Size;
 
             if (MemoryMapBuffer == NULL) {
-              Size   = 0;
+              Size = 0;
               break;
             }
           } else {
@@ -115,22 +115,25 @@ GetMemoryMapKey (
   IN EFI_GET_MEMORY_MAP  GetMemoryMap
   )
 {
-  UINTN  MapKey;
+  UINTN                 MapKey;
 
-  UINTN  MemoryMapSize;
-  UINTN  DescriptorSize;
-  UINT32 DescriptorVersion;
+  EFI_MEMORY_DESCRIPTOR *MemoryMap;
+  UINTN                 MemoryMapSize;
+  UINTN                 DescriptorSize;
+  UINT32                DescriptorVersion;
 
   ASSERT (GetMemoryMap != NULL);
   ASSERT (!EfiAtRuntime ());
 
-  GetMemoryMapBuffer (
-    GetMemoryMap,
-    &MemoryMapSize,
-    &MapKey,
-    &DescriptorSize,
-    &DescriptorVersion
-    );
+  MemoryMap = GetMemoryMapBuffer (
+                GetMemoryMap,
+                &MemoryMapSize,
+                &MapKey,
+                &DescriptorSize,
+                &DescriptorVersion
+                );
+
+  FreePool ((VOID *)MemoryMap);
 
   return MapKey;
 }
@@ -201,6 +204,7 @@ AllocatePagesFromTop (
         }
 
         EfiAllocatePages (AllocateAddress, MemoryType, Pages, &Memory);
+
         break;
       }
 

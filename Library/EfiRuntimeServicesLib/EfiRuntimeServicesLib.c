@@ -219,6 +219,8 @@ EfiSetVirtualAddressMap (
 
   ASSERT (MemoryMapSize > 0);
   ASSERT (DescriptorSize > 0);
+  ASSERT (DescriptorSize < MemoryMapSize);
+  ASSERT ((MemoryMapSize % DescriptorSize) == 0);
   ASSERT (VirtualMap != NULL);
   ASSERT (!mSetVirtualAddressMapReturned && !mSetVirtualAddressMapExecution);
   ASSERT (EfiAtRuntime () || EfiGetCurrentTpl () <= TPL_NOTIFY);
@@ -244,7 +246,7 @@ EfiSetVirtualAddressMap (
     if (!EFI_ERROR (Status)) {
       mSetVirtualAddressMapReturned = TRUE;
     }
-  );
+    );
 
   return Status;
 }
@@ -506,7 +508,7 @@ EfiGetNextHighMonotonicCount (
   EFI_STATUS Status;
 
   ASSERT (HighCount != NULL);
-  ASSERT (EfiAtRuntime () || EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (EfiAtRuntime () || (EfiGetCurrentTpl () <= TPL_NOTIFY));
 
   Status = gRT->GetNextHighMonotonicCount (HighCount);
 
@@ -534,8 +536,8 @@ EfiResetSystem (
   IN VOID            *ResetData OPTIONAL
   )
 {
-  ASSERT ((((DataSize == 0) ? 1 : 0) ^ ((ResetData != NULL) ? 1 : 0)) != 0);
-  ASSERT (EfiAtRuntime () || EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT ((((DataSize > 0) ? 1 : 0) ^ ((ResetData == NULL) ? 1 : 0)) != 0);
+  ASSERT (EfiAtRuntime () || (EfiGetCurrentTpl () <= TPL_NOTIFY));
 
   gRT->ResetSystem (ResetType, ResetStatus, DataSize, ResetData);
 

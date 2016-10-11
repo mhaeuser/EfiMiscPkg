@@ -18,9 +18,9 @@
 
 #include <Guid/GlobalVariable.h>
 
-#include <Library/UefiRuntimeLib.h>
 #include <Library/DebugLib.h>
 #include <Library/MiscVariableLib.h>
+#include <Library/UefiRuntimeLib.h>
 
 // GetEfiGlobalVariable
 EFI_STATUS
@@ -119,6 +119,10 @@ VariableExists (
 {
   UINTN      Size;
   EFI_STATUS Status;
+
+  ASSERT (VariableName != NULL);
+  ASSERT (VariableName[0] != L'\0');
+  ASSERT (VendorGuid != NULL);
 
   Size   = 0;
   Status = EfiGetVariable (VariableName, VendorGuid, 0, &Size, NULL);

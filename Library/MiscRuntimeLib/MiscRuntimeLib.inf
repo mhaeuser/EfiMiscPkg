@@ -21,8 +21,8 @@
   BASE_NAME     = MiscRuntimeLib
   LIBRARY_CLASS = MiscRuntimeLib|DXE_RUNTIME_DRIVER DXE_SAL_DRIVER
   MODULE_TYPE   = DXE_RUNTIME_DRIVER
-  CONSTRUCTOR   = RuntimeDriverLibConstruct
-  DESTRUCTOR    = RuntimeDriverLibDeconstruct
+  constructor   = RuntimeDriverLibConstruct
+  DESTRUCTOR    = RuntimeDriverLibDeCONSTruct
   FILE_GUID     = F5A74455-65EA-4C90-ADE1-B9F78843DCD1
   INF_VERSION   = 0x00010005
 

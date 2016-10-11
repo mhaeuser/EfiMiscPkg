@@ -495,7 +495,7 @@ SmmLocateHandle (
   ASSERT ((SearchType != ByRegisterNotify) || (SearchKey != NULL));
   ASSERT ((SearchType != ByProtocol) || (Protocol != NULL));
   ASSERT (BufferSize != NULL);
-  ASSERT ((((*BufferSize != 0) ? 1 : 0) ^ ((Buffer == NULL) ? 1 : 0)) != 0);
+  ASSERT ((((*BufferSize > 0) ? 1 : 0) ^ ((Buffer == NULL) ? 1 : 0)) != 0);
   ASSERT (InSmm ());
 
   Status = gSmst->SmmLocateHandle (
