@@ -37,6 +37,7 @@ CreateTimerEvent (
 
   EFI_STATUS Status;
 
+  ASSERT (NotifyTpl < TPL_CALLBACK);
   ASSERT (!EfiAtRuntime ());
 
   Event = NULL;
@@ -105,7 +106,7 @@ CancelTimer (
 VOID
 CancelEvent (
   IN EFI_EVENT  Event
-  ) // sub_309
+  )
 {
   EFI_STATUS Status;
 
@@ -121,6 +122,30 @@ CancelEvent (
 // CreateSignalEvent
 EFI_EVENT
 CreateSignalEvent (
+  IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
+  IN CONST VOID        *NotifyContext OPTIONAL
+  )
+{
+  EFI_EVENT Event;
+
+  ASSERT (!EfiAtRuntime ());
+
+  Event = NULL;
+
+  return EfiCreateEvent (
+           EVT_NOTIFY_SIGNAL,
+           TPL_NOTIFY,
+           NotifyFunction,
+           NotifyContext,
+           &Event
+           );
+
+  return Event;
+}
+
+// CreateSignalEventEx
+EFI_EVENT
+CreateSignalEventEx (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext, OPTIONAL
   IN CONST EFI_GUID    *EventGroup OPTIONAL

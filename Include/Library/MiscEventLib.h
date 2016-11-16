@@ -42,6 +42,27 @@ CancelEvent (
   IN EFI_EVENT  Event
   );
 
+// CancelTimer
+EFI_STATUS
+CancelTimer (
+  IN EFI_EVENT  Event
+  );
+
+// CreateSignalEvent
+EFI_EVENT
+CreateSignalEvent (
+  IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
+  IN CONST VOID        *NotifyContext OPTIONAL
+  );
+
+// CreateSignalEventEx
+EFI_EVENT
+CreateSignalEventEx (
+  IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
+  IN CONST VOID        *NotifyContext, OPTIONAL
+  IN CONST EFI_GUID    *EventGroup OPTIONAL
+  );
+
 // CreateEfiVirtualAddressChangeEvent
 EFI_EVENT
 CreateEfiVirtualAddressChangeEvent (
