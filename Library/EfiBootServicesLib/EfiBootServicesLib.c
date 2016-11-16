@@ -807,7 +807,8 @@ EfiLocateHandle (
                   Buffer
                   );
 
-  if ((Status != EFI_NOT_FOUND) && (Status != EFI_BUFFER_TOO_SMALL)) {
+  if (((SearchType == ByRegisterNotify) || (Status != EFI_NOT_FOUND))
+   && (Status != EFI_BUFFER_TOO_SMALL)) {
     ASSERT_EFI_ERROR (Status);
   }
 
@@ -1622,7 +1623,7 @@ EfiLocateHandleBuffer (
                   Buffer
                   );
 
-  if (Status != EFI_NOT_FOUND) {
+  if ((SearchType == ByRegisterNotify) || (Status != EFI_NOT_FOUND)) {
     ASSERT_EFI_ERROR (Status);
   }
 
