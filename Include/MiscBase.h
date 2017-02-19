@@ -17,6 +17,8 @@
 #ifndef MISC_BASE_H_
 #define MISC_BASE_H_
 
+// TODO: Replace this file with a cleaner solution...
+
 // FORWARD_DECLARATION
 #if (defined (EFI_NO_INTERFACE_DECL) || defined (NO_INTERFACE_DECL))
   #define FORWARD_DECLARATION(x)
@@ -51,5 +53,9 @@
 #define BITS_SET(Mask1, Mask2)  \
   ((BOOLEAN)(SELECT_BITS ((Mask1), (Mask2)) == (Mask2)))
 /// @}
+
+#define MEMORY_DESCRIPTOR_PHYSICAL_TOP(MemoryDescriptor)      \
+  ((MemoryDescriptor)->PhysicalStart                          \
+    + EFI_PAGES_TO_SIZE ((MemoryDescriptor)->NumberOfPages))
 
 #endif // MISC_BASE_H_

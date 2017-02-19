@@ -23,6 +23,11 @@
   FILE_GUID     = DCE520C5-2527-4F3D-BAF6-10284078E253
   INF_VERSION   = 0x00010005
 
+[LibraryClasses]
+  EfiBootServicesLib
+  MiscRuntimeLib
+  UefiLib
+
 [Packages]
   MdePkg/MdePkg.dec
   EfiMiscPkg/EfiMiscPkg.dec

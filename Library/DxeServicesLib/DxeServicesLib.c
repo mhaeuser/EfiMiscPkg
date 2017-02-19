@@ -69,6 +69,7 @@ DxeAddMemorySpace (
   ASSERT (Length > 0);
   ASSERT ((Length - 1) <= (MAX_ADDRESS - (UINTN)BaseAddress));
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->AddMemorySpace != NULL);
 
   Status = gDS->AddMemorySpace (
                   GcdMemoryType,
@@ -139,6 +140,7 @@ DxeAllocateMemorySpace (
   ASSERT (BaseAddress != NULL);
   ASSERT (ImageHandle != NULL);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->AllocateMemorySpace != NULL);
 
   Status = gDS->AllocateMemorySpace (
                   GcdAllocateType,
@@ -190,6 +192,7 @@ DxeFreeMemorySpace (
   ASSERT (BaseAddress != 0);
   ASSERT (Length > 0);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->FreeMemorySpace != NULL);
 
   Status = gDS->FreeMemorySpace (BaseAddress, Length);
 
@@ -237,6 +240,7 @@ DxeRemoveMemorySpace (
   ASSERT (BaseAddress != 0);
   ASSERT (Length > 0);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->RemoveMemorySpace != NULL);
 
   Status = gDS->RemoveMemorySpace (BaseAddress, Length);
 
@@ -275,6 +279,7 @@ DxeGetMemorySpaceDescriptor (
   ASSERT (BaseAddress != 0);
   ASSERT (Descriptor != NULL);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->GetMemorySpaceDescriptor != NULL);
 
   Status = gDS->GetMemorySpaceDescriptor (BaseAddress, Descriptor);
 
@@ -324,6 +329,7 @@ DxeSetMemorySpaceAttributes (
   ASSERT (BaseAddress != 0);
   ASSERT (Length > 0);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->SetMemorySpaceAttributes != NULL);
 
   Status = gDS->SetMemorySpaceAttributes (BaseAddress, Length, Attributes);
 
@@ -369,6 +375,7 @@ DxeSetMemorySpaceCapabilities (
   ASSERT (BaseAddress != 0);
   ASSERT (Length > 0);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->SetMemorySpaceCapabilities != NULL);
 
   Status = gDS->SetMemorySpaceCapabilities (BaseAddress, Length, Capabilities);
 
@@ -408,6 +415,7 @@ DxeGetMemorySpaceMap (
   ASSERT (NumberOfDescriptors != NULL);
   ASSERT (MemorySpaceMap != NULL);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->GetMemorySpaceMap != NULL);
 
   Status = gDS->GetMemorySpaceMap (NumberOfDescriptors, MemorySpaceMap);
 
@@ -462,6 +470,7 @@ DxeAddIoSpace (
   ASSERT (BaseAddress != 0);
   ASSERT (Length > 0);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->AddIoSpace != NULL);
 
   Status = gDS->AddIoSpace (GcdIoType, BaseAddress, Length);
 
@@ -524,6 +533,7 @@ DxeAllocateIoSpace (
   ASSERT (BaseAddress != NULL);
   ASSERT (ImageHandle != NULL);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->AllocateIoSpace != NULL);
 
   Status = gDS->AllocateIoSpace (
                   GcdAllocateType,
@@ -575,6 +585,7 @@ DxeFreeIoSpace (
   ASSERT (BaseAddress != 0);
   ASSERT (Length > 0);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->FreeIoSpace != NULL);
 
   Status = gDS->FreeIoSpace (BaseAddress, Length);
 
@@ -621,6 +632,7 @@ DxeRemoveIoSpace (
   ASSERT (BaseAddress != 0);
   ASSERT (Length > 0);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->RemoveIoSpace != NULL);
 
   Status = gDS->RemoveIoSpace (BaseAddress, Length);
 
@@ -656,6 +668,7 @@ DxeGetIoSpaceDescriptor (
   ASSERT (BaseAddress != 0);
   ASSERT (Descriptor != NULL);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->GetIoSpaceDescriptor != NULL);
 
   Status = gDS->GetIoSpaceDescriptor (BaseAddress, Descriptor);
 
@@ -695,6 +708,7 @@ DxeGetIoSpaceMap (
   ASSERT (NumberOfDescriptors != NULL);
   ASSERT (IoSpaceMap != NULL);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->GetIoSpaceMap != NULL);
 
   Status = gDS->GetIoSpaceMap (NumberOfDescriptors, IoSpaceMap);
 
@@ -728,6 +742,7 @@ DxeDispatch (
   EFI_STATUS Status;
 
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->Dispatch != NULL);
 
   Status = gDS->Dispatch ();
 
@@ -762,6 +777,7 @@ DxeSchedule (
   ASSERT (FirmwareVolumeHandle != NULL);
   ASSERT (FileName != NULL);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->Schedule != NULL);
 
   Status = gDS->Schedule (FirmwareVolumeHandle, FileName);
 
@@ -794,6 +810,7 @@ DxeTrust (
   ASSERT (FirmwareVolumeHandle != NULL);
   ASSERT (FileName != NULL);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->Trust != NULL);
 
   Status = gDS->Trust (FirmwareVolumeHandle, FileName);
 
@@ -836,6 +853,7 @@ DxeProcessFirmwareVolume (
   ASSERT (Size > 0);
   ASSERT (FirmwareVolumeHandle != NULL);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gDS->ProcessFirmwareVolume != NULL);
 
   Status = gDS->ProcessFirmwareVolume (
                   FirmwareVolumeHeader,

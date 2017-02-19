@@ -19,15 +19,11 @@
 #include <Library/DebugLib.h>
 #include <Library/EfiBootServicesLib.h>
 #include <Library/MiscRuntimeLib.h>
+#include <Library/PcdLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/UefiLib.h>
 
-#ifndef MDE_NDEBUG
-
-// mPreviousTpl
 STATIC EFI_TPL mPreviousTpl = MAX_UINTN;
-
-#endif // !MDE_NDEBUG
 
 // Task Priority Services
 
@@ -46,6 +42,7 @@ EfiRaiseTpl (
   EFI_TPL OldTpl;
 
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gBS->RaiseTPL != NULL);
 
   OldTpl = gBS->RaiseTPL (NewTpl);
 
@@ -69,8 +66,13 @@ EfiRestoreTpl (
   ASSERT (mPreviousTpl != MAX_UINTN);
   ASSERT (OldTpl == mPreviousTpl);
   ASSERT (!EfiAtRuntime ());
+  ASSERT (gBS->RestoreTPL != NULL);
 
   gBS->RestoreTPL (OldTpl);
+
+  DEBUG_CODE (
+    mPreviousTpl = MAX_UINTN;
+    );
 }
 
 // Memory Services
@@ -118,9 +120,7 @@ EfiAllocatePages (
   ASSERT (MemoryType != EfiPersistentMemory);
   ASSERT (Pages > 0);
   ASSERT (Memory != NULL);
-  ASSERT ((*Memory != 0)
-      || ((Type != AllocateMaxAddress)
-       && (Type != AllocateAddress)));
+  ASSERT ((*Memory != 0) || (Type == AllocateAnyPages));
 
   ASSERT ((Type != AllocateMaxAddress)
       || ((EFI_PAGES_TO_SIZE (Pages) - 1) <= (UINTN)*Memory));
@@ -130,6 +130,7 @@ EfiAllocatePages (
 
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->AllocatePages != NULL);
 
   Status = gBS->AllocatePages (Type, MemoryType, Pages, Memory);
 
@@ -165,6 +166,7 @@ EfiFreePages (
   ASSERT (Pages > 0);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->FreePages != NULL);
 
   Status = gBS->FreePages (Memory, Pages);
 
@@ -223,6 +225,7 @@ EfiGetMemoryMap (
 
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->GetMemoryMap != NULL);
 
   Status = gBS->GetMemoryMap (
                   MemoryMapSize,
@@ -275,6 +278,7 @@ EfiAllocatePool (
   ASSERT (Buffer != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->AllocatePool != NULL);
 
   Status = gBS->AllocatePool (PoolType, Size, Buffer);
 
@@ -301,6 +305,7 @@ EfiFreePool (
   ASSERT (Buffer != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->FreePool != NULL);
 
   Status = gBS->FreePool (Buffer);
 
@@ -349,12 +354,13 @@ EfiCreateEvent (
                   | EVT_SIGNAL_EXIT_BOOT_SERVICES
                   | EVT_SIGNAL_VIRTUAL_ADDRESS_CHANGE)) == 0);
 
-  ASSERT ((((Type & (EVT_NOTIFY_SIGNAL | EVT_NOTIFY_WAIT)) != 0) ? 1 : 0)
-         ^ ((NotifyFunction == NULL) ? 1 : 0) != 0);
+  ASSERT (((((Type & (EVT_NOTIFY_SIGNAL | EVT_NOTIFY_WAIT)) != 0) ? 1 : 0)
+          ^ ((NotifyFunction == NULL) ? 1 : 0)) != 0);
 
   ASSERT (Event != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () < TPL_HIGH_LEVEL);
+  ASSERT (gBS->CreateEvent != NULL);
 
   Status = gBS->CreateEvent (
                   Type,
@@ -400,6 +406,7 @@ EfiSetTimer (
   ASSERT ((Type >= TimerCancel) && (Type <= TimerRelative));
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () < TPL_HIGH_LEVEL);
+  ASSERT (gBS->SetTimer != NULL);
 
   Status = gBS->SetTimer (Event, Type, TriggerTime);
 
@@ -436,6 +443,7 @@ EfiWaitForEvent (
   ASSERT (Index != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () == TPL_APPLICATION);
+  ASSERT (gBS->WaitForEvent != NULL);
 
   Status = gBS->WaitForEvent (NumberOfEvents, Event, Index);
 
@@ -461,6 +469,7 @@ EfiSignalEvent (
   ASSERT (Event != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_HIGH_LEVEL);
+  ASSERT (gBS->SignalEvent != NULL);
 
   Status = gBS->SignalEvent (Event);
 
@@ -486,6 +495,7 @@ EfiCloseEvent (
   ASSERT (Event != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () < TPL_HIGH_LEVEL);
+  ASSERT (gBS->CloseEvent != NULL);
 
   Status = gBS->CloseEvent (Event);
 
@@ -513,6 +523,7 @@ EfiCheckEvent (
   ASSERT (Event != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () < TPL_HIGH_LEVEL);
+  ASSERT (gBS->CheckEvent != NULL);
 
   Status = gBS->CheckEvent (Event);
 
@@ -563,6 +574,7 @@ EfiInstallProtocolInterface (
   ASSERT (InterfaceType == EFI_NATIVE_INTERFACE);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->InstallProtocolInterface != NULL);
 
   if (*Handle != NULL) {
     ASSERT_PROTOCOL_ALREADY_INSTALLED (*Handle, Protocol);
@@ -615,6 +627,7 @@ EfiReinstallProtocolInterface (
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
   ASSERT (EfiHandleProtocol (Handle, Protocol, &Interface) != EFI_UNSUPPORTED);
+  ASSERT (gBS->ReinstallProtocolInterface != NULL);
 
   Status = gBS->ReinstallProtocolInterface (
                   Handle,
@@ -659,6 +672,7 @@ EfiUninstallProtocolInterface (
   ASSERT (Protocol != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->UninstallProtocolInterface != NULL);
 
   Status = gBS->UninstallProtocolInterface (Handle, Protocol, Interface);
 
@@ -699,6 +713,7 @@ EfiHandleProtocol (
   ASSERT (Interface != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->HandleProtocol != NULL);
 
   Status = gBS->HandleProtocol (Handle, Protocol, Interface);
 
@@ -741,6 +756,7 @@ EfiRegisterProtocolNotify (
   ASSERT (Registration != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->RegisterProtocolNotify != NULL);
 
   Status = gBS->RegisterProtocolNotify (Protocol, Event, Registration);
 
@@ -798,6 +814,7 @@ EfiLocateHandle (
   ASSERT ((((*BufferSize > 0) ? 1 : 0) ^ ((Buffer == NULL) ? 1 : 0)) != 0);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->LocateHandle != NULL);
 
   Status = gBS->LocateHandle (
                   SearchType,
@@ -847,6 +864,7 @@ EfiLocateDevicePath (
   ASSERT (Device != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->LocateDevicePath != NULL);
 
   Status = gBS->LocateDevicePath (Protocol, DevicePath, Device);
 
@@ -885,6 +903,7 @@ EfiInstallConfigurationTable (
   ASSERT (Guid != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->InstallConfigurationTable != NULL);
 
   Status = gBS->InstallConfigurationTable (Guid, Table);
 
@@ -953,6 +972,7 @@ EfiLoadImage (
   ASSERT (ImageHandle != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () < TPL_CALLBACK);
+  ASSERT (gBS->LoadImage != NULL);
 
   Status = gBS->LoadImage (
                   BootPolicy,
@@ -1000,6 +1020,7 @@ EfiStartImage (
   ASSERT (ImageHandle != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_CALLBACK);
+  ASSERT (gBS->StartImage != NULL);
 
   Status = gBS->StartImage (ImageHandle, ExitDataSize, ExitData);
 
@@ -1048,6 +1069,7 @@ EfiExit (
   ASSERT ((ExitDataSize == 0) || (ExitData != NULL));
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_CALLBACK);
+  ASSERT (gBS->Exit != NULL);
 
   Status = gBS->Exit (ImageHandle, ExitStatus, ExitDataSize, ExitData);
 
@@ -1074,6 +1096,7 @@ EfiUnloadImage (
   ASSERT (ImageHandle != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_CALLBACK);
+  ASSERT (gBS->UnloadImage != NULL);
 
   Status = gBS->UnloadImage (ImageHandle);
 
@@ -1103,6 +1126,7 @@ EfiExitBootServices (
   ASSERT (MapKey != 0);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () == TPL_APPLICATION);
+  ASSERT (gBS->ExitBootServices != NULL);
 
   Status = gBS->ExitBootServices (ImageHandle, MapKey);
 
@@ -1130,6 +1154,7 @@ EfiGetNextMonotonicCount (
   ASSERT (Count != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->GetNextMonotonicCount != NULL);
 
   Status = gBS->GetNextMonotonicCount (Count);
 
@@ -1154,7 +1179,9 @@ EfiStall (
   EFI_STATUS Status;
 
   ASSERT (Microseconds > 0);
+  ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->Stall != NULL);
 
   Status = gBS->Stall (Microseconds);
 
@@ -1193,6 +1220,7 @@ EfiSetWatchdogTimer (
   ASSERT ((((DataSize > 0) ? 1 : 0) ^ ((WatchdogData == NULL) ? 1 : 0)) != 0);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->SetWatchdogTimer != NULL);
 
   Status = gBS->SetWatchdogTimer (
                   Timeout,
@@ -1255,6 +1283,7 @@ EfiConnectController (
   ASSERT (ControllerHandle != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->ConnectController != NULL);
 
   Status = gBS->ConnectController (
                   ControllerHandle,
@@ -1315,6 +1344,7 @@ EfiDisconnectController (
   ASSERT (ControllerHandle != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->DisconnectController != NULL);
 
   Status = gBS->DisconnectController (
                   ControllerHandle,
@@ -1401,6 +1431,7 @@ EfiOpenProtocol (
 
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->OpenProtocol != NULL);
 
   Status = gBS->OpenProtocol (
                   Handle,
@@ -1459,6 +1490,7 @@ EfiCloseProtocol (
   ASSERT (AgentHandle != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->CloseProtocol != NULL);
 
   Status = gBS->CloseProtocol (
                   Handle,
@@ -1508,6 +1540,7 @@ EfiOpenProtocolInformation (
   ASSERT (EntryCount != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->OpenProtocolInformation != NULL);
 
   Status = gBS->OpenProtocolInformation (
                   Handle,
@@ -1561,6 +1594,7 @@ EfiProtocolsPerHandle (
   ASSERT (ProtocolBufferCount != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->ProtocolsPerHandle != NULL);
 
   Status = gBS->ProtocolsPerHandle (
                   Handle,
@@ -1614,6 +1648,7 @@ EfiLocateHandleBuffer (
   ASSERT (Buffer != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->LocateHandleBuffer != NULL);
 
   Status = gBS->LocateHandleBuffer (
                   SearchType,
@@ -1658,6 +1693,7 @@ EfiLocateProtocol (
   ASSERT (Interface != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->LocateProtocol != NULL);
 
   Status = gBS->LocateProtocol (Protocol, Registration, Interface);
 
@@ -1699,6 +1735,7 @@ CalculateCrc32 (
   ASSERT (Crc32 != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->CalculateCrc32 != NULL);
 
   *Crc32 = 0;
   Status = gBS->CalculateCrc32 (Data, DataSize, Crc32);
@@ -1745,12 +1782,13 @@ EfiCreateEventEx (
 {
   EFI_STATUS Status;
 
-  ASSERT ((((Type & (EVT_NOTIFY_SIGNAL | EVT_NOTIFY_WAIT)) != 0) ? 1 : 0)
-         ^ ((NotifyFunction == NULL) ? 1 : 0) != 0);
+  ASSERT (((((Type & (EVT_NOTIFY_SIGNAL | EVT_NOTIFY_WAIT)) != 0) ? 1 : 0)
+          ^ ((NotifyFunction == NULL) ? 1 : 0)) != 0);
 
   ASSERT (Event != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () < TPL_HIGH_LEVEL);
+  ASSERT (gBS->CreateEventEx != NULL);
 
   Status = gBS->CreateEventEx (
                   Type,
@@ -1786,7 +1824,9 @@ EfiCopyMem (
   ASSERT (Length > 0);
   ASSERT ((Length - 1) <= (MAX_ADDRESS - (UINTN)Source));
   ASSERT ((Length - 1) <= (MAX_ADDRESS - (UINTN)Destination));
+  ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->CopyMem != NULL);
 
   gBS->CopyMem (Destination, Source, Length);
 }
@@ -1808,7 +1848,9 @@ EfiSetMem (
   ASSERT (Buffer != 0);
   ASSERT (Size > 0);
   ASSERT ((Size - 1) <= (MAX_ADDRESS - (UINTN)Buffer));
+  ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gBS->SetMem != NULL);
 
   gBS->SetMem (Buffer, Size, Value);
 }

@@ -257,7 +257,7 @@ EfiFreePool (
   @retval EFI_INVALID_PARAMETER  One or more parameters are invalid.
   @retval EFI_OUT_OF_RESOURCES   The event could not be allocated.
 **/
-EFI_EVENT
+EFI_STATUS
 EfiCreateEvent (
   IN  UINT32            Type,
   IN  EFI_TPL           NotifyTpl,

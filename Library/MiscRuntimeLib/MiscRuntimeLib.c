@@ -118,7 +118,7 @@ RuntimeDriverLibConstruct (
   return EFI_SUCCESS;
 }
 
-// RuntimeDriverLibDeCONSTruct
+// RuntimeDriverLibDeconstruct
 /** If a runtime driver exits with an error, it must call this routine 
     to free the allocated resource before the exiting.
     It will ASSERT() if gBS is NULL.
@@ -132,7 +132,7 @@ RuntimeDriverLibConstruct (
 **/
 EFI_STATUS
 EFIAPI
-RuntimeDriverLibDeCONSTruct (
+RuntimeDriverLibDeconstruct (
   IN EFI_HANDLE        ImageHandle,
   IN EFI_SYSTEM_TABLE  *SystemTable
   )

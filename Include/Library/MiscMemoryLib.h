@@ -63,14 +63,14 @@ GetMemoryMapKey (
   
   @param[in]      MemoryType  The type of memory to allocate.
   @param[in]      Pages       The number of 4 KB pages to allocate.
-  @param[in, out] Memory      The pointer to a physical address.  On input, it
+  @param[in, out] MemoryTop   The pointer to a physical address.  On input, it
                               is the highest desired address.
 **/
 VOID *
 AllocatePagesFromTop (
   IN     EFI_MEMORY_TYPE       MemoryType,
   IN     UINTN                 Pages,
-  IN OUT EFI_PHYSICAL_ADDRESS  Memory
+  IN OUT EFI_PHYSICAL_ADDRESS  MemoryTop
   );
 
 #endif // MISC_MEMORY_LIB_H_

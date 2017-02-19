@@ -149,14 +149,14 @@ GetMemoryMapKey (
   
   @param[in]      MemoryType  The type of memory to allocate.
   @param[in]      Pages       The number of 4 KB pages to allocate.
-  @param[in, out] Memory      The pointer to a physical address.  On input, it
+  @param[in, out] MemoryTop   The pointer to a physical address.  On input, it
                               is the highest desired address.
 **/
 VOID *
 AllocatePagesFromTop (
   IN     EFI_MEMORY_TYPE       MemoryType,
   IN     UINTN                 Pages,
-  IN OUT EFI_PHYSICAL_ADDRESS  Memory
+  IN OUT EFI_PHYSICAL_ADDRESS  MemoryTop
   )
 {
   EFI_MEMORY_DESCRIPTOR *MemoryMap;
@@ -171,8 +171,8 @@ AllocatePagesFromTop (
        && (MemoryType < EfiMaxMemoryType));
 
   ASSERT (Pages > 0);
-  ASSERT (Memory != 0);
-  ASSERT (Memory > Pages);
+  ASSERT (MemoryTop != 0);
+  ASSERT (MemoryTop > Pages);
   ASSERT (!EfiAtRuntime ());
 
   MemoryMap = GetMemoryMapBuffer (
@@ -187,23 +187,23 @@ AllocatePagesFromTop (
     MemoryMapEnd = NEXT_MEMORY_DESCRIPTOR (MemoryMap, MemoryMapSize);
     Descriptor   = PREV_MEMORY_DESCRIPTOR (MemoryMapEnd, DescriptorSize);
 
-    while (((UINTN)Descriptor >= (UINTN)MemoryMap) && (Memory != 0)) {
+    while (((UINTN)Descriptor >= (UINTN)MemoryMap) && (MemoryTop != 0)) {
       if ((Descriptor->Type == EfiConventionalMemory)
        && (Pages <= Descriptor->NumberOfPages)
-       && ((Descriptor->PhysicalStart + EFI_PAGES_TO_SIZE (Pages)) <= Memory)) {
+       && ((Descriptor->PhysicalStart + EFI_PAGES_TO_SIZE (Pages)) <= MemoryTop)) {
         if (Descriptor->PhysicalStart
-              + EFI_PAGES_TO_SIZE ((UINTN)Descriptor->NumberOfPages) <= Memory) {
+              + EFI_PAGES_TO_SIZE ((UINTN)Descriptor->NumberOfPages) <= MemoryTop) {
           // The entire range is below Memory. Allocate from the top of the
           // range.
-          Memory = (Descriptor->PhysicalStart
+          MemoryTop = (Descriptor->PhysicalStart
                      + EFI_PAGES_TO_SIZE (Descriptor->NumberOfPages - Pages));
         } else {
           // The range contains enough pages under Memory, but spans above it
           // allocate below Memory.
-          Memory -= EFI_PAGES_TO_SIZE (Pages);
+          MemoryTop -= EFI_PAGES_TO_SIZE (Pages);
         }
 
-        EfiAllocatePages (AllocateAddress, MemoryType, Pages, &Memory);
+        EfiAllocatePages (AllocateAddress, MemoryType, Pages, &MemoryTop);
 
         break;
       }
@@ -214,5 +214,5 @@ AllocatePagesFromTop (
     FreePool ((VOID *)MemoryMap);
   }
 
-  return (VOID *)(UINTN)Memory;
+  return (VOID *)(UINTN)MemoryTop;
 }

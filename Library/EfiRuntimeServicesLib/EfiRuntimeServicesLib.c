@@ -16,20 +16,17 @@
 
 #include <Uefi.h>
 
-#include <Library/UefiLib.h>
-#include <Library/UefiRuntimeServicesTableLib.h>
 #include <Library/DebugLib.h>
 #include <Library/MiscRuntimeLib.h>
-
-#ifndef MDEPKG_NDEBUG
+#include <Library/PcdLib.h>
+#include <Library/UefiLib.h>
+#include <Library/UefiRuntimeServicesTableLib.h>
 
 // mSetVirtualAddressMapExecution
 STATIC BOOLEAN mSetVirtualAddressMapExecution = FALSE;
 
 // mSetVirtualAddressMapReturned
 STATIC BOOLEAN mSetVirtualAddressMapReturned = FALSE;
-
-#endif // !MDEPKG_NDEBUG
 
 // Time Services
 
@@ -57,6 +54,7 @@ EfiGetTime (
 
   ASSERT (Time != NULL);
   ASSERT (EfiAtRuntime () || (EfiGetCurrentTpl () <= TPL_CALLBACK));
+  ASSERT (gRT->GetTime != NULL);
 
   Status = gRT->GetTime (Time, Capabilities);
 
@@ -92,6 +90,7 @@ EfiSetTime (
   ASSERT (Time->Nanosecond < 1000000000);
   ASSERT ((Time->TimeZone >= -1440) && (Time->TimeZone <= 2047));
   ASSERT (EfiAtRuntime () || (EfiGetCurrentTpl () <= TPL_CALLBACK));
+  ASSERT (gRT->SetTime != NULL);
 
   Status = gRT->SetTime (Time);
 
@@ -131,6 +130,7 @@ EfiGetWakeupTime (
   ASSERT (Pending != NULL);
   ASSERT (Time != NULL);
   ASSERT (EfiAtRuntime () || (EfiGetCurrentTpl () <= TPL_CALLBACK));
+  ASSERT (gRT->GetWakeupTime != NULL);
 
   Status = gRT->GetWakeupTime (Enabled, Pending, Time);
 
@@ -169,6 +169,7 @@ EfiSetWakeupTime (
 
   ASSERT ((Time != NULL) || !Enable);
   ASSERT (EfiAtRuntime () || (EfiGetCurrentTpl () <= TPL_CALLBACK));
+  ASSERT (gRT->SetWakeupTime != NULL);
 
   Status = gRT->SetWakeupTime (Enable, Time);
 
@@ -224,6 +225,7 @@ EfiSetVirtualAddressMap (
   ASSERT (VirtualMap != NULL);
   ASSERT (!mSetVirtualAddressMapReturned && !mSetVirtualAddressMapExecution);
   ASSERT (EfiAtRuntime () || EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gRT->SetVirtualAddressMap != NULL);
 
   DEBUG_CODE (
     mSetVirtualAddressMapExecution = TRUE;
@@ -285,6 +287,7 @@ EfiConvertPointer (
   ASSERT ((*Address != NULL) || ((DebugDisposition & EFI_OPTIONAL_PTR) != 0));
   ASSERT (mSetVirtualAddressMapExecution && !mSetVirtualAddressMapReturned);
   ASSERT (EfiAtRuntime () || EfiGetCurrentTpl () <= TPL_NOTIFY);
+  ASSERT (gRT->ConvertPointer != NULL);
 
   Status = gRT->ConvertPointer (DebugDisposition, Address);
 
@@ -341,6 +344,7 @@ EfiGetVariable (
   ASSERT ((*DataSize == 0) || (Data != NULL));
   ASSERT ((*DataSize != 0) || (Data == NULL));
   ASSERT (EfiAtRuntime () || (EfiGetCurrentTpl () <= TPL_CALLBACK));
+  ASSERT (gRT->GetVariable != NULL);
 
   Status = gRT->GetVariable (VariableName, VendorGuid, Attributes, DataSize, Data);
 
@@ -391,6 +395,7 @@ EfiGetNextVariableName (
   ASSERT (VariableName[0] != L'\0');
   ASSERT (VendorGuid != NULL);
   ASSERT (EfiAtRuntime () || (EfiGetCurrentTpl () <= TPL_CALLBACK));
+  ASSERT (gRT->GetNextVariableName != NULL);
 
   Status = gRT->GetNextVariableName (
                   VariableNameSize,
@@ -471,6 +476,7 @@ EfiSetVariable (
   ASSERT (VendorGuid != NULL);
   ASSERT ((((DataSize > 0) ? 1 : 0) ^ ((Data == NULL) ? 1 : 0)) != 0);
   ASSERT (EfiAtRuntime () || (EfiGetCurrentTpl () <= TPL_CALLBACK));
+  ASSERT (gRT->SetVariable != NULL);
 
   Status = gRT->SetVariable (
                   VariableName,
@@ -509,6 +515,7 @@ EfiGetNextHighMonotonicCount (
 
   ASSERT (HighCount != NULL);
   ASSERT (EfiAtRuntime () || (EfiGetCurrentTpl () <= TPL_NOTIFY));
+  ASSERT (gRT->GetNextHighMonotonicCount != NULL);
 
   Status = gRT->GetNextHighMonotonicCount (HighCount);
 
@@ -538,6 +545,7 @@ EfiResetSystem (
 {
   ASSERT ((((DataSize > 0) ? 1 : 0) ^ ((ResetData == NULL) ? 1 : 0)) != 0);
   ASSERT (EfiAtRuntime () || (EfiGetCurrentTpl () <= TPL_NOTIFY));
+  ASSERT (gRT->ResetSystem != NULL);
 
   gRT->ResetSystem (ResetType, ResetStatus, DataSize, ResetData);
 
@@ -588,6 +596,7 @@ EfiQueryVariableInfo (
   ASSERT (RemainingVariableStorageSize != NULL);
   ASSERT (MaximumVariableSize != NULL);
   ASSERT (EfiAtRuntime () || (EfiGetCurrentTpl () <= TPL_CALLBACK));
+  ASSERT (gRT->QueryVariableInfo != NULL);
 
   Status = gRT->QueryVariableInfo (
                   Attributes,
