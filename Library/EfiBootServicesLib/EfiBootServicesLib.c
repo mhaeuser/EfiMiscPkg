@@ -27,7 +27,7 @@ STATIC EFI_TPL mPreviousTpl = MAX_UINTN;
 
 // Task Priority Services
 
-// EfiRaiseTpl
+// EfiRaiseTPL
 /** Raises a task's priority level and returns its previous level.
 
   @param[in] NewTpl  The new task priority level.
@@ -35,7 +35,7 @@ STATIC EFI_TPL mPreviousTpl = MAX_UINTN;
   @return  Previous task priority level
 **/
 EFI_TPL
-EfiRaiseTpl (
+EfiRaiseTPL (
   IN EFI_TPL  NewTpl
   )
 {
@@ -53,13 +53,13 @@ EfiRaiseTpl (
   return OldTpl;
 }
 
-// EfiRestoreTpl
+// EfiRestoreTPL
 /** Restores a task's priority level to its previous value.
 
   @param[in] OldTpl  The previous task priority level to restore.
 **/
 VOID
-EfiRestoreTpl (
+EfiRestoreTPL (
   IN EFI_TPL  OldTpl
   )
 {

@@ -75,7 +75,7 @@
 
 // Task Priority Services
 
-// EfiRaiseTpl
+// EfiRaiseTPL
 /** Raises a task's priority level and returns its previous level.
 
   @param[in] NewTpl  The new task priority level.
@@ -83,17 +83,17 @@
   @return  Previous task priority level
 **/
 EFI_TPL
-EfiRaiseTpl (
+EfiRaiseTPL (
   IN EFI_TPL  NewTpl
   );
 
-// EfiRestoreTpl
+// EfiRestoreTPL
 /** Restores a task's priority level to its previous value.
 
   @param[in] OldTpl  The previous task priority level to restore.
 **/
 VOID
-EfiRestoreTpl (
+EfiRestoreTPL (
   IN EFI_TPL  OldTpl
   );
 
