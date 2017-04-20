@@ -29,6 +29,7 @@
   DxeServicesLib|EfiMiscPkg/Library/DxeServicesLib/DxeServicesLib.inf
   EfiBootServicesLib|EfiMiscPkg/Library/EfiBootServicesLib/EfiBootServicesLib.inf
   EfiRuntimeServicesLib|EfiMiscPkg/Library/EfiRuntimeServicesLib/EfiRuntimeServicesLib.inf
+  MiscDevicePathLib|EfiMiscPkg/Library/MiscDevicePathLib/MiscDevicePathLib.inf
   MiscEventLib|EfiMiscPkg/Library/MiscEventLib/MiscEventLib.inf
   MiscFileLib|EfiMiscPkg/Library/MiscFileLib/MiscFileLib.inf
   MiscMemoryLib|EfiMiscPkg/Library/MiscMemoryLib/MiscMemoryLib.inf
@@ -50,6 +51,7 @@
   EfiMiscPkg/Library/DxeServicesLib/DxeServicesLib.inf
   EfiMiscPkg/Library/EfiBootServicesLib/EfiBootServicesLib.inf
   EfiMiscPkg/Library/EfiRuntimeServicesLib/EfiRuntimeServicesLib.inf
+  EfiMiscPkg/Library/MiscDevicePathLib/MiscDevicePathLib.inf
   EfiMiscPkg/Library/MiscEventLib/MiscEventLib.inf
   EfiMiscPkg/Library/MiscFileLib/MiscFileLib.inf
   EfiMiscPkg/Library/MiscMemoryLib/MiscMemoryLib.inf
