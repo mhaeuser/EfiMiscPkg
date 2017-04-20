@@ -52,7 +52,7 @@ CancelTimer (
 EFI_EVENT
 CreateSignalEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
-  IN CONST VOID        *NotifyContext OPTIONAL
+  IN VOID              *NotifyContext OPTIONAL
   );
 
 // CreateSignalEventEx

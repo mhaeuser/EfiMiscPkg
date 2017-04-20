@@ -191,12 +191,10 @@ AllocatePagesFromTop (
       if ((Descriptor->Type == EfiConventionalMemory)
        && (Pages <= Descriptor->NumberOfPages)
        && ((Descriptor->PhysicalStart + EFI_PAGES_TO_SIZE (Pages)) <= MemoryTop)) {
-        if (Descriptor->PhysicalStart
-              + EFI_PAGES_TO_SIZE ((UINTN)Descriptor->NumberOfPages) <= MemoryTop) {
+        if (Descriptor->PhysicalStart + EFI_PAGES_TO_SIZE ((UINTN)Descriptor->NumberOfPages) <= MemoryTop) {
           // The entire range is below Memory. Allocate from the top of the
           // range.
-          MemoryTop = (Descriptor->PhysicalStart
-                     + EFI_PAGES_TO_SIZE (Descriptor->NumberOfPages - Pages));
+          MemoryTop = (Descriptor->PhysicalStart + EFI_PAGES_TO_SIZE ((UINTN)(Descriptor->NumberOfPages - Pages)));
         } else {
           // The range contains enough pages under Memory, but spans above it
           // allocate below Memory.

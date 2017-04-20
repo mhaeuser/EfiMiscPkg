@@ -123,7 +123,7 @@ CancelEvent (
 EFI_EVENT
 CreateSignalEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
-  IN CONST VOID        *NotifyContext OPTIONAL
+  IN VOID              *NotifyContext OPTIONAL
   )
 {
   EFI_EVENT Event;
@@ -132,13 +132,13 @@ CreateSignalEvent (
 
   Event = NULL;
 
-  return EfiCreateEvent (
-           EVT_NOTIFY_SIGNAL,
-           TPL_NOTIFY,
-           NotifyFunction,
-           NotifyContext,
-           &Event
-           );
+  EfiCreateEvent (
+    EVT_NOTIFY_SIGNAL,
+    TPL_NOTIFY,
+    NotifyFunction,
+    NotifyContext,
+    &Event
+    );
 
   return Event;
 }
@@ -157,14 +157,14 @@ CreateSignalEventEx (
 
   Event = NULL;
 
-  return EfiCreateEventEx (
-           EVT_NOTIFY_SIGNAL,
-           TPL_NOTIFY,
-           NotifyFunction,
-           NotifyContext,
-           EventGroup,
-           &Event
-           );
+  EfiCreateEventEx (
+    EVT_NOTIFY_SIGNAL,
+    TPL_NOTIFY,
+    NotifyFunction,
+    NotifyContext,
+    EventGroup,
+    &Event
+    );
 
   return Event;
 }
@@ -178,7 +178,7 @@ CreateExitBootServicesEvent (
 {
   ASSERT (!EfiAtRuntime ());
 
-  return CreateSignalEvent (
+  return CreateSignalEventEx (
            NotifyFunction,
            NotifyContext,
            &gEfiEventExitBootServicesGuid
@@ -194,7 +194,7 @@ CreateVirtualAddressChangeEvent (
 {
   ASSERT (!EfiAtRuntime ());
 
-  return CreateSignalEvent (
+  return CreateSignalEventEx (
            NotifyFunction,
            NotifyContext,
            &gEfiEventVirtualAddressChangeGuid
@@ -210,7 +210,7 @@ CreateMemoryMapChangeEvent (
 {
   ASSERT (!EfiAtRuntime ());
 
-  return CreateSignalEvent (
+  return CreateSignalEventEx (
            NotifyFunction,
            NotifyContext,
            &gEfiEventMemoryMapChangeGuid
@@ -226,7 +226,7 @@ CreateReadyToBootEvent (
 {
   ASSERT (!EfiAtRuntime ());
 
-  return CreateSignalEvent (
+  return CreateSignalEventEx (
            NotifyFunction,
            NotifyContext,
            &gEfiEventReadyToBootGuid
@@ -242,7 +242,7 @@ CreateDxeDispatchGuidEvent (
 {
   ASSERT (!EfiAtRuntime ());
 
-  return CreateSignalEvent (
+  return CreateSignalEventEx (
            NotifyFunction,
            NotifyContext,
            &gEfiEventDxeDispatchGuid
@@ -258,7 +258,7 @@ CreateEndOfDxeEvent (
 {
   ASSERT (!EfiAtRuntime ());
 
-  return CreateSignalEvent (
+  return CreateSignalEventEx (
            NotifyFunction,
            NotifyContext,
            &gEfiEndOfDxeEventGroupGuid

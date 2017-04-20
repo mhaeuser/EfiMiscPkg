@@ -63,7 +63,7 @@ FileExists (
     ASSERT_EFI_ERROR (Status);
   }
   
-  Exists = !EFI_ERROR (Status);
+  Exists = (BOOLEAN)!EFI_ERROR (Status);
 
   if (Exists) {
     FileHandle->Close (FileHandle);
@@ -143,6 +143,7 @@ GetFileExtension (
   )
 {
   CHAR16 *Extension;
+
   ASSERT (FileName != NULL);
   ASSERT (FileName[0] != L'\0');
 
@@ -162,6 +163,7 @@ GetFilePrimaryExtension (
   )
 {
   CHAR16 *Extension;
+
   CHAR16 *NextExtension;
 
   ASSERT (FileName != NULL);

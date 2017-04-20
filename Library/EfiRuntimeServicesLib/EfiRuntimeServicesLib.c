@@ -18,7 +18,6 @@
 
 #include <Library/DebugLib.h>
 #include <Library/MiscRuntimeLib.h>
-#include <Library/PcdLib.h>
 #include <Library/UefiLib.h>
 #include <Library/UefiRuntimeServicesTableLib.h>
 
@@ -223,7 +222,11 @@ EfiSetVirtualAddressMap (
   ASSERT (DescriptorSize < MemoryMapSize);
   ASSERT ((MemoryMapSize % DescriptorSize) == 0);
   ASSERT (VirtualMap != NULL);
-  ASSERT (!mSetVirtualAddressMapReturned && !mSetVirtualAddressMapExecution);
+
+  DEBUG_CODE (
+    ASSERT (!mSetVirtualAddressMapReturned && !mSetVirtualAddressMapExecution);
+    );
+
   ASSERT (EfiAtRuntime () || EfiGetCurrentTpl () <= TPL_NOTIFY);
   ASSERT (gRT->SetVirtualAddressMap != NULL);
 
@@ -285,7 +288,11 @@ EfiConvertPointer (
 
   ASSERT (Address != NULL);
   ASSERT ((*Address != NULL) || ((DebugDisposition & EFI_OPTIONAL_PTR) != 0));
-  ASSERT (mSetVirtualAddressMapExecution && !mSetVirtualAddressMapReturned);
+
+  DEBUG_CODE (
+    ASSERT (mSetVirtualAddressMapExecution && !mSetVirtualAddressMapReturned);
+    );
+
   ASSERT (EfiAtRuntime () || EfiGetCurrentTpl () <= TPL_NOTIFY);
   ASSERT (gRT->ConvertPointer != NULL);
 

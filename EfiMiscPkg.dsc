@@ -32,7 +32,6 @@
   MiscEventLib|EfiMiscPkg/Library/MiscEventLib/MiscEventLib.inf
   MiscFileLib|EfiMiscPkg/Library/MiscFileLib/MiscFileLib.inf
   MiscMemoryLib|EfiMiscPkg/Library/MiscMemoryLib/MiscMemoryLib.inf
-  MiscOverrideLib|EfiMiscPkg/Library/MiscOverrideLib/MiscOverrideLib.inf
   MiscProtocolLib|EfiMiscPkg/Library/MiscProtocolLib/MiscProtocolLib.inf
   MiscUsbHidLib|EfiMiscPkg/Library/MiscUsbHidLib/MiscUsbHidLib.inf
   MiscVariableLib|EfiMiscPkg/Library/MiscVariableLib/MiscVariableLib.inf
@@ -54,7 +53,6 @@
   EfiMiscPkg/Library/MiscEventLib/MiscEventLib.inf
   EfiMiscPkg/Library/MiscFileLib/MiscFileLib.inf
   EfiMiscPkg/Library/MiscMemoryLib/MiscMemoryLib.inf
-  EfiMiscPkg/Library/MiscOverrideLib/MiscOverrideLib.inf
   EfiMiscPkg/Library/MiscProtocolLib/MiscProtocolLib.inf
   EfiMiscPkg/Library/MiscRuntimeLib/MiscRuntimeLib.inf
   EfiMiscPkg/Library/MiscRuntimeLibNull/MiscRuntimeLibNull.inf

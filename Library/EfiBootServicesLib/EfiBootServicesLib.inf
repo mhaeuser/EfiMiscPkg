@@ -27,5 +27,12 @@
   MdePkg/MdePkg.dec
   EfiMiscPkg/EfiMiscPkg.dec
 
+[LibraryClasses]
+  DebugLib
+  EfiBootServicesLib
+  MiscRuntimeLib
+  UefiBootServicesTableLib
+  UefiLib
+
 [Sources]
   EfiBootServicesLib.c

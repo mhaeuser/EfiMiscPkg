@@ -16,6 +16,7 @@
 
 #include <PiDxe.h>
 
+#include <Library/DxeServicesLib.h>
 #include <Library/DxeServicesTableLib.h>
 #include <Library/DebugLib.h>
 #include <Library/MiscRuntimeLib.h>
@@ -98,7 +99,7 @@ DxeAddMemorySpace (
   @param[in]      Length           The size in bytes of the memory resource
                                    range that is being allocated.
   @param[in, out] BaseAddress      A pointer to a physical address to allocate.
-  @param[in]      Imagehandle      The image handle of the agent that is
+  @param[in]      ImageHandle      The image handle of the agent that is
                                    allocating the memory resource.
   @param[in]      DeviceHandle     The device handle for which the memory
                                    resource is being allocated.
@@ -492,7 +493,7 @@ DxeAddIoSpace (
   @param[in]      Length           The size in bytes of the I/O resource range
                                    that is being allocated.
   @param[in, out] BaseAddress      A pointer to a physical address.
-  @param[in]      Imagehandle      The image handle of the agent that is
+  @param[in]      ImageHandle      The image handle of the agent that is
                                    allocating the I/O resource.
   @param[in]      DeviceHandle     The device handle for which the I/O resource
                                    is being allocated.
@@ -685,7 +686,7 @@ DxeGetIoSpaceDescriptor (
 
   @param[out] NumberOfDescriptors  A pointer to number of descriptors returned
                                    in the IoSpaceMap buffer.
-  @param[out] MemorySpaceMap       A pointer to the array of
+  @param[out] IoSpaceMap           A pointer to the array of
                                    EFI_GCD_IO_SPACE_DESCRIPTORs.
 
   @retval EFI_SUCCESS            The I/O space map was returned in the
@@ -792,7 +793,7 @@ DxeSchedule (
 
   @param[in] FirmwareVolumeHandle  The handle of the firmware volume that
                                    contains the file specified by FileName.
-  @param[in] DriverName            A pointer to the name of the file in a
+  @param[in] FileName              A pointer to the name of the file in a
                                    firmware volume.
 
   @return                Status of promoting FFS from untrusted to trusted

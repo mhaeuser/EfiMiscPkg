@@ -19,7 +19,6 @@
 #include <Library/DebugLib.h>
 #include <Library/EfiBootServicesLib.h>
 #include <Library/MiscRuntimeLib.h>
-#include <Library/PcdLib.h>
 #include <Library/UefiBootServicesTableLib.h>
 #include <Library/UefiLib.h>
 
@@ -63,8 +62,11 @@ EfiRestoreTPL (
   IN EFI_TPL  OldTpl
   )
 {
-  ASSERT (mPreviousTpl != MAX_UINTN);
-  ASSERT (OldTpl == mPreviousTpl);
+  DEBUG_CODE (
+    ASSERT (mPreviousTpl != MAX_UINTN);
+    ASSERT (OldTpl == mPreviousTpl);
+    );
+
   ASSERT (!EfiAtRuntime ());
   ASSERT (gBS->RestoreTPL != NULL);
 

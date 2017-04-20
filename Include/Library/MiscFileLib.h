@@ -19,6 +19,8 @@
 
 #include <Guid/FileInfo.h>
 
+#include <Protocol/SimpleFileSystem.h>
+
 // FILE_PATH_SEPARATOR
 #define FILE_PATH_SEPARATOR  L'\\'
 

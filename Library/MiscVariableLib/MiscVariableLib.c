@@ -127,5 +127,5 @@ VariableExists (
   Size   = 0;
   Status = EfiGetVariable (VariableName, VendorGuid, 0, &Size, NULL);
 
-  return (Status == EFI_BUFFER_TOO_SMALL);
+  return (BOOLEAN)(Status == EFI_BUFFER_TOO_SMALL);
 }
