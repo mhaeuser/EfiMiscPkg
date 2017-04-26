@@ -1,5 +1,5 @@
 /** @file
-  Copyright (C) 2015 - 2016, CupertinoNet.  All rights reserved.<BR>
+  Copyright (C) 2015 - 2017, CupertinoNet.  All rights reserved.<BR>
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -23,9 +23,9 @@
 #include <Library/MiscRuntimeLib.h>
 #include <Library/MiscEventLib.h>
 
-// CreateTimerEvent
+// MiscCreateTimerEvent
 EFI_EVENT
-CreateTimerEvent (
+MiscCreateTimerEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction,
   IN VOID              *NotifyContext,
   IN UINT64            TriggerTime,
@@ -73,9 +73,9 @@ CreateTimerEvent (
   return Event;
 }
 
-// CreateNotifyEvent
+// MiscCreateNotifyTimerEvent
 EFI_EVENT
-CreateNotifyEvent (
+MiscCreateNotifyTimerEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction,
   IN VOID              *NotifyContext,
   IN UINT64            TriggerTime,
@@ -84,7 +84,7 @@ CreateNotifyEvent (
 {
   ASSERT (!EfiAtRuntime ());
 
-  return CreateTimerEvent (
+  return MiscCreateTimerEvent (
            NotifyFunction,
            NotifyContext,
            TriggerTime,
@@ -93,18 +93,18 @@ CreateNotifyEvent (
            );
 }
 
-// CancelTimer
+// MiscCancelTimer
 EFI_STATUS
-CancelTimer (
+MiscCancelTimer (
   IN EFI_EVENT  Event
   )
 {
   return EfiSetTimer (Event, TimerCancel, 0);
 }
 
-// CancelEvent
+// MiscCancelEvent
 VOID
-CancelEvent (
+MiscCancelEvent (
   IN EFI_EVENT  Event
   )
 {
@@ -112,16 +112,16 @@ CancelEvent (
 
   ASSERT (!EfiAtRuntime ());
 
-  Status = CancelTimer (Event);
+  Status = MiscCancelTimer (Event);
 
   if (!EFI_ERROR (Status)) {
     EfiCloseEvent (Event);
   }
 }
 
-// CreateSignalEvent
+// MiscCreateNotifySignalEvent
 EFI_EVENT
-CreateSignalEvent (
+MiscCreateNotifySignalEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN VOID              *NotifyContext OPTIONAL
   )
@@ -143,9 +143,9 @@ CreateSignalEvent (
   return Event;
 }
 
-// CreateSignalEventEx
+// MiscCreateSignalEventEx
 EFI_EVENT
-CreateSignalEventEx (
+MiscCreateSignalEventEx (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext, OPTIONAL
   IN CONST EFI_GUID    *EventGroup OPTIONAL
@@ -169,64 +169,64 @@ CreateSignalEventEx (
   return Event;
 }
 
-// CreateExitBootServicesEvent
+// MiscCreateExitBootServicesEvent
 EFI_EVENT
-CreateExitBootServicesEvent (
+MiscCreateExitBootServicesEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   )
 {
   ASSERT (!EfiAtRuntime ());
 
-  return CreateSignalEventEx (
+  return MiscCreateSignalEventEx (
            NotifyFunction,
            NotifyContext,
            &gEfiEventExitBootServicesGuid
            );
 }
 
-// CreateVirtualAddressChangeEvent
+// MiscCreateVirtualAddressChangeEvent
 EFI_EVENT
-CreateVirtualAddressChangeEvent (
+MiscCreateVirtualAddressChangeEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   )
 {
   ASSERT (!EfiAtRuntime ());
 
-  return CreateSignalEventEx (
+  return MiscCreateSignalEventEx (
            NotifyFunction,
            NotifyContext,
            &gEfiEventVirtualAddressChangeGuid
            );
 }
 
-// CreateMemoryMapChangeEvent
+// MiscCreateMemoryMapChangeEvent
 EFI_EVENT
-CreateMemoryMapChangeEvent (
+MiscCreateMemoryMapChangeEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   )
 {
   ASSERT (!EfiAtRuntime ());
 
-  return CreateSignalEventEx (
+  return MiscCreateSignalEventEx (
            NotifyFunction,
            NotifyContext,
            &gEfiEventMemoryMapChangeGuid
            );
 }
 
-// CreateReadyToBootEvent
+// MiscCreateReadyToBootEvent
 EFI_EVENT
-CreateReadyToBootEvent (
+MiscCreateReadyToBootEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   )
 {
   ASSERT (!EfiAtRuntime ());
 
-  return CreateSignalEventEx (
+  return MiscCreateSignalEventEx (
            NotifyFunction,
            NotifyContext,
            &gEfiEventReadyToBootGuid
@@ -235,30 +235,30 @@ CreateReadyToBootEvent (
 
 // CreateEventDxeDispatchGuidEvent
 EFI_EVENT
-CreateDxeDispatchGuidEvent (
+MiscCreateDxeDispatchGuidEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   )
 {
   ASSERT (!EfiAtRuntime ());
 
-  return CreateSignalEventEx (
+  return MiscCreateSignalEventEx (
            NotifyFunction,
            NotifyContext,
            &gEfiEventDxeDispatchGuid
            );
 }
 
-// CreateEndOfDxeEvent
+// MiscCreateEndOfDxeEvent
 EFI_EVENT
-CreateEndOfDxeEvent (
+MiscCreateEndOfDxeEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   )
 {
   ASSERT (!EfiAtRuntime ());
 
-  return CreateSignalEventEx (
+  return MiscCreateSignalEventEx (
            NotifyFunction,
            NotifyContext,
            &gEfiEndOfDxeEventGroupGuid

@@ -105,12 +105,12 @@ RuntimeDriverLibConstruct (
   ASSERT (gBS != NULL);
 
   gPhysicalRT               = gRT;
-  mEfiVirtualNotifyEvent    = CreateVirtualAddressChangeEvent (
+  mEfiVirtualNotifyEvent    = MiscCreateVirtualAddressChangeEvent (
                                 RuntimeLibVirtualNotifyEvent,
                                 NULL
                                 );
 
-  mEfiExitBootServicesEvent = CreateExitBootServicesEvent (
+  mEfiExitBootServicesEvent = MiscCreateExitBootServicesEvent (
                                 RuntimeLibExitBootServicesEvent,
                                 NULL
                                 );

@@ -1,5 +1,5 @@
 /** @file
-  Copyright (C) 2015 - 2016, CupertinoNet.  All rights reserved.<BR>
+  Copyright (C) 2015 - 2017, CupertinoNet.  All rights reserved.<BR>
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,9 +17,9 @@
 #ifndef MISC_EVENT_LIB_H_
 #define MISC_EVENT_LIB_H_
 
-// CreateTimerEvent
+// MiscCreateTimerEvent
 EFI_EVENT
-CreateTimerEvent (
+MiscCreateTimerEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction,
   IN VOID              *NotifyContext,
   IN UINT64            TriggerTime,
@@ -27,37 +27,37 @@ CreateTimerEvent (
   IN EFI_TPL           NotifyTpl
   );
 
-// CreateNotifyEvent
+// MiscCreateNotifyTimerEvent
 EFI_EVENT
-CreateNotifyEvent (
+MiscCreateNotifyTimerEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction,
   IN VOID              *NotifyContext,
   IN UINT64            TriggerTime,
   IN BOOLEAN           SignalPeriodic
   );
 
-// CancelEvent
+// MiscCancelEvent
 VOID
-CancelEvent (
+MiscCancelEvent (
   IN EFI_EVENT  Event
   );
 
-// CancelTimer
+// MiscCancelTimer
 EFI_STATUS
-CancelTimer (
+MiscCancelTimer (
   IN EFI_EVENT  Event
   );
 
-// CreateSignalEvent
+// MiscCreateNotifySignalEvent
 EFI_EVENT
-CreateSignalEvent (
+MiscCreateNotifySignalEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN VOID              *NotifyContext OPTIONAL
   );
 
-// CreateSignalEventEx
+// MiscCreateSignalEventEx
 EFI_EVENT
-CreateSignalEventEx (
+MiscCreateSignalEventEx (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext, OPTIONAL
   IN CONST EFI_GUID    *EventGroup OPTIONAL
@@ -70,30 +70,30 @@ CreateEfiVirtualAddressChangeEvent (
   IN CONST VOID        *NotifyContext OPTIONAL
   );
 
-// CreateExitBootServicesEvent
+// MiscCreateExitBootServicesEvent
 EFI_EVENT
-CreateExitBootServicesEvent (
+MiscCreateExitBootServicesEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   );
 
-// CreateVirtualAddressChangeEvent
+// MiscCreateVirtualAddressChangeEvent
 EFI_EVENT
-CreateVirtualAddressChangeEvent (
-  IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
-  IN CONST VOID        *NotifyContext OPTIONAL
-  );
-
-// CreateEfiExitBootServicesEvent
-EFI_EVENT
-CreateMemoryMapChangeEvent (
+MiscCreateVirtualAddressChangeEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   );
 
 // CreateEfiExitBootServicesEvent
 EFI_EVENT
-CreateReadyToBootEvent (
+MiscCreateMemoryMapChangeEvent (
+  IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
+  IN CONST VOID        *NotifyContext OPTIONAL
+  );
+
+// CreateEfiExitBootServicesEvent
+EFI_EVENT
+MiscCreateReadyToBootEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   );
@@ -105,9 +105,9 @@ CreateDxeDispatchEvent (
   IN CONST VOID        *NotifyContext OPTIONAL
   );
 
-// CreateEndOfDxeEvent
+// MiscCreateEndOfDxeEvent
 EFI_EVENT
-CreateEndOfDxeEvent (
+MiscCreateEndOfDxeEvent (
   IN EFI_EVENT_NOTIFY  NotifyFunction, OPTIONAL
   IN CONST VOID        *NotifyContext OPTIONAL
   );
