@@ -27,5 +27,12 @@
   MdePkg/MdePkg.dec
   EfiMiscPkg/EfiMiscPkg.dec
 
+[Guids]
+  gEfiEndOfDxeEventGroupGuid
+  gEfiEventMemoryMapChangeGuid
+  gEfiEventDxeDispatchGuid
+  gEfiEventExitBootServicesGuid
+  gEfiEventVirtualAddressChangeGuid
+
 [Sources]
   MiscEventLib.c
