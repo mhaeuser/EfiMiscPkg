@@ -102,9 +102,9 @@ MiscCancelTimer (
   return EfiSetTimer (Event, TimerCancel, 0);
 }
 
-// MiscCancelEvent
+// MiscCancelTimerEvent
 VOID
-MiscCancelEvent (
+MiscCancelTimerEvent (
   IN EFI_EVENT  Event
   )
 {
@@ -126,19 +126,25 @@ MiscCreateNotifySignalEvent (
   IN VOID              *NotifyContext OPTIONAL
   )
 {
-  EFI_EVENT Event;
+  EFI_EVENT  Event;
+
+  EFI_STATUS Status;
 
   ASSERT (!EfiAtRuntime ());
 
   Event = NULL;
 
-  EfiCreateEvent (
-    EVT_NOTIFY_SIGNAL,
-    TPL_NOTIFY,
-    NotifyFunction,
-    NotifyContext,
-    &Event
-    );
+  Status = EfiCreateEvent (
+             EVT_NOTIFY_SIGNAL,
+             TPL_NOTIFY,
+             NotifyFunction,
+             NotifyContext,
+             &Event
+             );
+
+  if (EFI_ERROR (Status)) {
+    ASSERT (Event == NULL);
+  }
 
   return Event;
 }
@@ -151,20 +157,26 @@ MiscCreateSignalEventEx (
   IN CONST EFI_GUID    *EventGroup OPTIONAL
   )
 {
-  EFI_EVENT Event;
+  EFI_EVENT  Event;
+
+  EFI_STATUS Status;
 
   ASSERT (!EfiAtRuntime ());
 
   Event = NULL;
 
-  EfiCreateEventEx (
-    EVT_NOTIFY_SIGNAL,
-    TPL_NOTIFY,
-    NotifyFunction,
-    NotifyContext,
-    EventGroup,
-    &Event
-    );
+  Status = EfiCreateEventEx (
+             EVT_NOTIFY_SIGNAL,
+             TPL_NOTIFY,
+             NotifyFunction,
+             NotifyContext,
+             EventGroup,
+             &Event
+             );
+
+  if (EFI_ERROR (Status)) {
+    ASSERT (Event == NULL);
+  }
 
   return Event;
 }

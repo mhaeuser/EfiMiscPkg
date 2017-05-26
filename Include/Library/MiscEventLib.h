@@ -36,9 +36,9 @@ MiscCreateNotifyTimerEvent (
   IN BOOLEAN           SignalPeriodic
   );
 
-// MiscCancelEvent
+// MiscCancelTimerEvent
 VOID
-MiscCancelEvent (
+MiscCancelTimerEvent (
   IN EFI_EVENT  Event
   );
 

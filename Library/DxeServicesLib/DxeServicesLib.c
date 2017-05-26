@@ -16,9 +16,9 @@
 
 #include <PiDxe.h>
 
+#include <Library/DebugLib.h>
 #include <Library/DxeServicesLib.h>
 #include <Library/DxeServicesTableLib.h>
-#include <Library/DebugLib.h>
 #include <Library/MiscRuntimeLib.h>
 
 // DxeAddMemorySpace
