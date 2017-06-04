@@ -136,7 +136,7 @@ EfiAllocatePages (
 
   Status = gBS->AllocatePages (Type, MemoryType, Pages, Memory);
 
-  if (Status != EFI_NOT_FOUND) {
+  if (Status != EFI_OUT_OF_RESOURCES) {
     ASSERT_EFI_ERROR (Status);
   }
 
@@ -284,7 +284,9 @@ EfiAllocatePool (
 
   Status = gBS->AllocatePool (PoolType, Size, Buffer);
 
-  ASSERT_EFI_ERROR (Status);
+  if (Status != EFI_OUT_OF_RESOURCES) {
+    ASSERT_EFI_ERROR (Status);
+  }
 
   return Status;
 }
@@ -969,8 +971,10 @@ EfiLoadImage (
   EFI_STATUS Status;
 
   ASSERT (ParentImageHandle != NULL);
-  ASSERT ((DevicePath != NULL) || (SourceBuffer != NULL));
-  ASSERT (SourceSize > 0);
+  ASSERT (DevicePath != NULL);
+  ASSERT ((((SourceSize != 0) ? 1 : 0)
+    ^ ((SourceBuffer == NULL) ? 1 : 0)) != 0);
+
   ASSERT (ImageHandle != NULL);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () < TPL_CALLBACK);
@@ -1020,6 +1024,7 @@ EfiStartImage (
   EFI_STATUS Status;
 
   ASSERT (ImageHandle != NULL);
+  ASSERT ((((ExitDataSize != 0) ? 1 : 0) ^ ((ExitData == NULL) ? 1 : 0)) != 0);
   ASSERT (!EfiAtRuntime ());
   ASSERT (EfiGetCurrentTpl () <= TPL_CALLBACK);
   ASSERT (gBS->StartImage != NULL);
