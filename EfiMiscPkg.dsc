@@ -37,6 +37,18 @@
   MiscUsbHidLib|EfiMiscPkg/Library/MiscUsbHidLib/MiscUsbHidLib.inf
   MiscVariableLib|EfiMiscPkg/Library/MiscVariableLib/MiscVariableLib.inf
 
+  BaseLib|MdePkg/Library/BaseLib/BaseLib.inf
+  BaseMemoryLib|MdePkg/Library/BaseMemoryLib/BaseMemoryLib.inf
+  DebugLib|MdePkg/Library/BaseDebugLibNull/BaseDebugLibNull.inf
+  DevicePathLib|MdePkg/Library/UefiDevicePathLib/UefiDevicePathLib.inf
+  MemoryAllocationLib|MdePkg/Library/UefiMemoryAllocationLib/UefiMemoryAllocationLib.inf
+  PcdLib|MdePkg/Library/BasePcdLibNull/BasePcdLibNull.inf
+  PrintLib|MdePkg/Library/BasePrintLib/BasePrintLib.inf
+  UefiLib|MdePkg/Library/UefiLib/UefiLib.inf
+  UefiBootServicesTableLib|MdePkg/Library/UefiBootServicesTableLib/UefiBootServicesTableLib.inf
+  UefiRuntimeServicesTableLib|MdePkg/Library/UefiRuntimeServicesTableLib/UefiRuntimeServicesTableLib.inf
+  UefiApplicationEntryPoint|MdePkg/Library/UefiApplicationEntryPoint/UefiApplicationEntryPoint.inf
+
 [LibraryClasses.IA32, LibraryClasses.X64]
   SmmServicesLib|EfiMiscPkg/Library/SmmServicesLib/SmmServicesLib.inf
   SmmServicesTableLib|EfiMiscPkg/Library/SmmServicesTableLib/SmmServicesTableLib.inf
