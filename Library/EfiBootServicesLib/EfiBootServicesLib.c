@@ -1713,7 +1713,7 @@ EfiLocateProtocol (
 
 // 32-bit CRC Services
 
-// CalculateCrc32
+// EfiCalculateCrc32
 /** Computes and returns a 32-bit CRC for a data Buffer.
 
   @param[in]  Data      A pointer to the Buffer on which the 32-bit CRC is to
@@ -1729,7 +1729,7 @@ EfiLocateProtocol (
   @retval EFI_INVALID_PARAMETER  DataSize is 0.
 **/
 EFI_STATUS
-CalculateCrc32 (
+EfiCalculateCrc32 (
   IN  VOID    *Data,
   IN  UINTN   DataSize,
   OUT UINT32  *Crc32
@@ -1744,7 +1744,6 @@ CalculateCrc32 (
   ASSERT (EfiGetCurrentTpl () <= TPL_NOTIFY);
   ASSERT (gBS->CalculateCrc32 != NULL);
 
-  *Crc32 = 0;
   Status = gBS->CalculateCrc32 (Data, DataSize, Crc32);
 
   ASSERT_EFI_ERROR (Status);

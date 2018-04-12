@@ -1,5 +1,5 @@
 /** @file
-  Copyright (C) 2016, CupertinoNet.  All rights reserved.<BR>
+  Copyright (C) 2016 - 2017, CupertinoNet.  All rights reserved.<BR>
 
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -17,20 +17,13 @@
 #ifndef EFI_BOOT_SERVICES_LIB_H_
 #define EFI_BOOT_SERVICES_LIB_H_
 
-// UPDATE_CRC32
-#define UPDATE_CRC32(Struct, Size, Crc32)                       \
-{                                                               \
-  (Crc32) = 0;                                                  \
-                                                                \
-  CalculateCrc32 ((VOID *)&(Struct), (UINTN)(Size), &(Crc32));  \
-}
+#define UPDATE_EFI_TABLE_HEADER_CRC32(Header)                                  \
+  do {                                                                         \
+    (Header).CRC32 = 0;                                                        \
+    (Header).CRC32 = CalculateCrc32 ((VOID *)&(Header), (Header).HeaderSize);  \
+  } while (FALSE)
 
-// UPDATE_EFI_TABLE_HEADER_CRC32
-#define UPDATE_EFI_TABLE_HEADER_CRC32(Header)                  \
-  UPDATE_CRC32 (Header, (Header).HeaderSize, (Header).CRC32);
-
-// UPDATE_EFI_TABLE_CRC32
-#define UPDATE_EFI_TABLE_CRC32(Table)         \
+#define UPDATE_EFI_TABLE_CRC32(Table)  \
   UPDATE_EFI_TABLE_HEADER_CRC32 (Table->Hdr)
 
 // EfiInstallMultipleProtocolInterfaces
@@ -1044,7 +1037,7 @@ EfiLocateProtocol (
   @retval EFI_INVALID_PARAMETER  DataSize is 0.
 **/
 EFI_STATUS
-CalculateCrc32 (
+EfiCalculateCrc32 (
   IN  VOID    *Data,
   IN  UINTN   DataSize,
   OUT UINT32  *Crc32
